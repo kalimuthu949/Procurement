@@ -574,7 +574,7 @@ async function createContact(ListID)
 
     await sp.web.lists.getByTitle("ContactDetails").items.add(contactdata).then(function(data)
      {
-        console.log('contact created');
+        console.log('contact created successfully');
      }).catch(function(error){ErrorCallBack(error,'createContact')});
   }
 }
