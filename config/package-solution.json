@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "procurement-app-client-side-solution",
+    "id": "dc4bd409-62c2-492c-99d7-ecfb563bf9dd",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "isDomainIsolated": false
+  },
+  "paths": {
+    "zippedPackage": "solution/procurement-app.sppkg"
+  }
+}

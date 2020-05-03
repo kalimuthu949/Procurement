@@ -1,0 +1,66 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "view-request-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/viewRequest/ViewRequestWebPart.js",
+          "manifest": "./src/webparts/viewRequest/ViewRequestWebPart.manifest.json"
+        }
+      ]
+    },
+    "data-process-webpart-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/dataProcessWebpart/DataProcessWebpartWebPart.js",
+          "manifest": "./src/webparts/dataProcessWebpart/DataProcessWebpartWebPart.manifest.json"
+        }
+      ]
+    },
+    "procurement-of-goods-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/procurementOfGoods/ProcurementOfGoodsWebPart.js",
+          "manifest": "./src/webparts/procurementOfGoods/ProcurementOfGoodsWebPart.manifest.json"
+        }
+      ]
+    },
+    "goods-request-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/goodsRequest/GoodsRequestWebPart.js",
+          "manifest": "./src/webparts/goodsRequest/GoodsRequestWebPart.manifest.json"
+        }
+      ]
+    },
+    "request-dashboard-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/requestDashboard/RequestDashboardWebPart.js",
+          "manifest": "./src/webparts/requestDashboard/RequestDashboardWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {
+    "jquery": {
+      "path": "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js",
+      "globalName": "jquery"
+    },
+    "bootstrap": {
+      "path": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js",
+      "globalName": "bootstrap",
+      "globalDependencies": [
+        "jquery"
+      ]
+    }
+  },
+  "localizedResources": {
+    "ViewRequestWebPartStrings": "lib/webparts/viewRequest/loc/{locale}.js",
+    "DataProcessWebpartWebPartStrings": "lib/webparts/dataProcessWebpart/loc/{locale}.js",
+    "ProcurementOfGoodsWebPartStrings": "lib/webparts/procurementOfGoods/loc/{locale}.js",
+    "GoodsRequestWebPartStrings": "lib/webparts/goodsRequest/loc/{locale}.js",
+    "RequestDashboardWebPartStrings": "lib/webparts/requestDashboard/loc/{locale}.js"
+  }
+}
