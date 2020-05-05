@@ -41,7 +41,9 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
     });
   }
 
-  private readonly newGoods = `<div class="row">
+  private readonly newGoods = ` 
+  <h4 class='page-heading'>New Goods Request</h4>
+  <div class="row">
   <div class="col-sm-6">
     <div class="form-group">
       <label>Project name:<span class="star">*</span></label>
@@ -99,7 +101,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
     
 
     <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-3">
     <div class="form-group">
     <input class="radio-stylish" id="neutralspec" type="radio" name="Specifications" value="Neutral Specifications" checked />
     <span class="radio-element"></span>
@@ -107,7 +109,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
     </div>
     </div>
 	
-	<div class="col-sm-6">
+	<div class="col-sm-3">
     <div class="form-group">
     <input class="radio-stylish" id="nonneutralspec" type="radio" name="Specifications" value="Nonneutral Specifications">
     <span class="radio-element"></span>
@@ -200,7 +202,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 
  
 <div class="row">
-<div class="col-sm-10">
+<div class="col-sm-6">
 <div class="form-group">
   <label>Delivery Address :<span class="star">*</span></label>
   <textarea class="form-control" id="deliveryAddress"></textarea>
@@ -211,21 +213,21 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 <div id="lst-contact-details">
 <div class="contact-details contact-detail0">
 <div class="row">
-<div class="col-sm-3">
-<div class="form-gorup">
+<div class="col-sm-4">
+<div class="form-group">
   <label>Name :<span class="star">*</span></label>
   <input type="text" class="contactName form-control" value="">
 </div>
 </div>
 
-<div class="col-sm-3">
-<div class="form-gorup">
+<div class="col-sm-4">
+<div class="form-group">
 <label>Email :<span class="star">*</span></label> <input type="email" class="contactEmail form-control" value="">
 </div>
 </div>
 
-<div class="col-sm-3">
-<div class="form-gorup">
+<div class="col-sm-4">
+<div class="form-group">
 <label>Phone number :<span class="star">*</span></label> <input type="Number" class="contactPhoneNumber form-control" value="">
 </div>
 </div>
@@ -239,6 +241,8 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 <div class="form-group">
 <input class="btn btn-primary" type="button" id="btnContact" value="Add contact">
 </div>
+<div class="row">
+<div class="col-sm-6">
 <div class="form-group">
 <label>Other attachments :</label>
 <div class="input-group">      
@@ -246,10 +250,10 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 <input type="file" name="myFile" id="otherAttachments" multiple class="custom-file-input">
 <label class="custom-file-label" for="otherAttachments">Choose File</label>
 </div>
-</div><span id="otherAttachmentFiles"></span></div>
+</div><span id="otherAttachmentFiles"></span></div></div></div>
 <div class="row">
 <div class="col-sm-6">
-<div class="form-gorup" id="spanKOMP" style='display:none'>
+<div class="form-group" id="spanKOMP" style='display:none'>
 <label >KOMP :</label> <input type="text" id="KompOptPT" value="" class="form-control">
 </div>
 </div>
@@ -259,11 +263,16 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 </div>`;
 
 private readonly newdocHtml=`
+<div class="row">
+<div class="col-sm-6">
+<div class="form-group">
 <div class="input-group">
 <div class="custom-file">
   <input type="file" id="nonneutralFile" class="form-control custom-file-input">
   <label class="custom-file-label" for="nonneutralFile">Attach a justification</label>
-
+  </div>
+  </div>
+  </div>
   </div>
   </div>   
 `;
@@ -278,7 +287,7 @@ private readonly newcostHtml=`
 `;
 
   public render(): void {
-    
+    $('.pageHeader').hide();
     var that=this;
     this.domElement.innerHTML=this.newGoods;
     siteURL = this.context.pageContext.site.absoluteUrl;
@@ -415,17 +424,17 @@ function LoadProjects()
     if ($('.contact-details').length < 3) {
       var newcontact = `<div class="contact-details clsname">
       <div class="row">
-      <div class="col-sm-3">
+      <div class="col-sm-4">
       <div class="form-group">
       <label>Name :<span class="star">*</span></label> <input type="text" class="contactName form-control" value=""></div></div>
-      <div class="col-sm-3"><div class="form-group">
+      <div class="col-sm-4"><div class="form-group">
       <label>Email :<span class="star">*</span></label> <input type="email" class="contactEmail form-control" value=""></div></div>
-      <div class="col-sm-3"><div class="form-group">
-      <label>Phone number :<span class="star">*</span></label> <input type="text" class="contactPhoneNumber form-control" value=""></div></div><div class="col-sm-3">removetag</div></div>
+      <div class="col-sm-4"><div class="form-group">
+      <label>Phone number :<span class="star">*</span></label> <input type="text" class="contactPhoneNumber form-control" value=""><span>removetag</span></div></div></div>
       </div>`;
       var clsname = 'contact-detail' + $('.contact-details').length;
       newcontact = newcontact.replace('clsname', clsname);
-      newcontact = newcontact.replace('removetag', '<a class="remove-contact" data-class="' + clsname + '">Remove</a>');
+      newcontact = newcontact.replace('removetag', '<a class="remove-contact" data-class="' + clsname + '">X</a>');
       $('#lst-contact-details').append(newcontact);
     }
     if ($('.contact-details').length == 3) {
@@ -574,7 +583,7 @@ async function createContact(ListID)
 
     await sp.web.lists.getByTitle("ContactDetails").items.add(contactdata).then(function(data)
      {
-        console.log('contact created successfully');
+        console.log('contact created');
      }).catch(function(error){ErrorCallBack(error,'createContact')});
   }
 }

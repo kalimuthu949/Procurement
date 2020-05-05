@@ -50,40 +50,49 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
   }
   
   public render(): void 
-  {
+  { 
     LoggedUserEmail=this.context.pageContext.user.email;
-    siteURL = this.context.pageContext.site.absoluteUrl;
+    siteURL = this.context.pageContext.site.absoluteUrl;   
     this.domElement.innerHTML = `
     
+    <div class="spinner-border" role="status"> 
+    <span class="sr-only">Loading...</span>
+  </div>
 
-    <div class="row">
-    <div id='btnDiv'>
+
+    <ul class="nav nav-tabs">
+    <li class="active"><a href="#home" data-toggle="tab">Service Request</a></li>
+    <li><a href="#menu1" data-toggle="tab"> Goods Request</a></li>
+    </ul>
+
+    <div class='tab-content'> <div id='home' class='tab-pane fade in active tab-panel'>
+ 
+    <div class='btnDiv'>
+    <div>
+    <input class="btn btn-primary" type='button' id='btnService' value='Create Service Request'>
+    </div>
+    </div>
+   
+    <div id='ServiceTable'>
+    <table id="Service"  style="width:100%">
+    <thead>
+    <tr>
+    <th>Project Name</th>
+    <th>Project Number</th>
+    <th>Name Of AV</th>
+    <th>PN for ZAS</th>
+    <th>Details</th>
+    </tr>
+    </thead>
+    <tbody id='tblService'>
+    </tbody>
+    </table>
+    </div>  </div> <div id='menu1' class='tab-pane fade tab-panel'>    
+    
+    <div class='btnDiv'> 
     <div>
     <input class="btn btn-primary" type='button' id='btnGoods' value='Create Goods Request'>
-    <input class="btn btn-primary" type='button' id='btnService' style='margin: 15px' value='Create Service Request'>
     </div>
-    </div>
-    </div>
-
-
-    <div class="row">
-    
-    <div class="col-sm-6">
-    <div class="form-group">
-    <input class="radio-stylish" id="radServiceRequest" type="radio" name="Request" value="Service Request" checked="">
-    <span class="radio-element"></span>
-    <label class="stylish-label" for="radServiceRequest">Service Request</label>
-    </div>
-    </div>
-	
-	  <div class="col-sm-6">
-    <div class="form-group">
-    <input class="radio-stylish" id="radGoodsRequest" type="radio" name="Request" value="Goods Request">
-    <span class="radio-element"></span>
-    <label class="stylish-label" for="radGoodsRequest">Goods Request</label>
-    </div>
-    </div>
-    
     </div>
     
     <div id='GoodsTable'>
@@ -100,23 +109,14 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <tbody id='tblGoods'>
     </tbody>
     </table>
-    </div>
+    </div> </div> </div>
 
-    <div id='ServiceTable'>
-    <table id="Service"  style="width:100%">
-    <thead>
-    <tr>
-    <th>Project Name</th>
-    <th>Project Number</th>
-    <th>Name Of AV</th>
-    <th>PN for ZAS</th>
-    <th>Details</th>
-    </tr>
-    </thead>
-    <tbody id='tblService'>
-    </tbody>
-    </table>
-    </div>
+
+    
+    
+
+
+
 
     <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
@@ -142,7 +142,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
     `;
 
-    $('#GoodsTable').hide();
+    //$('#GoodsTable').hide();
     
     getLoggedInUserDetails();
     getAllFolders();
@@ -150,24 +150,37 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     LoadGoodsRequest();
     LoadServiceRequest();
 
-    $("input[name='Request']").change(function()
-    {
-      if($("input[name='Request']:checked").val()=='Service Request')
-      {
-        $('#GoodsTable').hide();
-        $('#ServiceTable').show();
-      }
-      else
-      {
-        $('#GoodsTable').show();
-        $('#ServiceTable').hide();
-      }
+    // $("input[name='Request']").change(function()
+    // {
+    //   if($("input[name='Request']:checked").val()=='Service Request')
+    //   {
+    //     $('#GoodsTable').hide();
+    //     $('#ServiceTable').show();
+    //   }
+    //   else
+    //   {
+    //     $('#GoodsTable').show();
+    //     $('#ServiceTable').hide();
+    //   }
 
-    });
+    // });
+
+    // $(".nav-tabs li").click(function() {
+    //   if( $("li.active").text()=="Service Request")
+    //   {
+    //     $('#GoodsTable').hide();
+    //     $('#ServiceTable').show();
+    //   }
+    //   else
+    //   {
+    //     $('#GoodsTable').show();
+    //     $('#ServiceTable').hide();
+    //   }
+    // });
 
     $('#btnService').click(function()
     {
-      location.href = siteURL+'/SitePages/NewService.aspx';
+      location.href = siteURL+'/SitePages/NewServiceRequest.aspx';
     });
     
     $('#btnGoods').click(function()
