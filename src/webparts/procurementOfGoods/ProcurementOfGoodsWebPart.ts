@@ -43,7 +43,9 @@ export default class ProcurementOfGoodsWebPart extends BaseClientSideWebPart <IP
     });
   }
   
-  private readonly HtmlGoods = `<div class="row">
+  private readonly HtmlGoods = `
+  <h4 class='page-heading'>New Service Request</h4>
+  <div class="row">
   <div class="col-sm-6">
     <div class="form-group">
       <label>Project name:<span class="star">*</span></label>
@@ -78,16 +80,13 @@ export default class ProcurementOfGoodsWebPart extends BaseClientSideWebPart <IP
     </div>
 
     <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-6">
     <div class="form-group">
       <label>KOMP Output<span class="star">*</span></label>
       <input class="form-control" type="text" id="KompOptPT" value="">
     </div>
     </div>
-    </div>
-
-    <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-6">
     <div class="form-group">
       <label>Choices of services<span class="star">*</span></label>
       <select class="form-control" id="choicesservices">
@@ -108,14 +107,22 @@ export default class ProcurementOfGoodsWebPart extends BaseClientSideWebPart <IP
 
 private readonly DirectAward=`
 <div class='row'>
-  <div class="col-sm-12">
+<div class="col-sm-3">
     <div class="form-group">
-    <input type="radio" id="ConsultingFirm" name="ConsultingFirm" value="ConsultingFirm" checked>
-    <label for="ConsultingFirm"> ConsultingFirm</label>
-    <input type="radio" id="Appariser" name="ConsultingFirm" value="Appariser">
-    <label for="Appariser"> Appariser</label>
+    <input class="radio-stylish" id="ConsultingFirm" type="radio" name="ConsultingFirm" value="ConsultingFirm" checked />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="ConsultingFirm">ConsultingFirm</label>
     </div>
-    </div></div>
+    </div>
+
+    <div class="col-sm-3">
+    <div class="form-group">
+    <input class="radio-stylish" id="Appariser" type="radio" name="ConsultingFirm" value="Appariser"  />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="Appariser">Appariser</label>
+    </div>
+    </div>
+</div>
 
     <div class='row'>
     <div class="col-sm-6">
@@ -134,20 +141,19 @@ private readonly DirectAward=`
     </div>
 
     <div class='row'>
-    <div class="col-sm-12">
+    <div class="col-sm-6">
     <div class="form-group">
       <label>Short Description:<span class="star">*</span></label>
       <textarea class="form-control" id="shortDescription"></textarea>
     </div>
     </div>
-    </div>
 
-    <div class='row'>
-    <div class="col-sm-12">
-<div class="form-group">
-  <label>Full Address</label>
-  <textarea class="form-control" id="FullAddress"></textarea>
-</div></div></div>
+    <div class="col-sm-6">
+    <div class="form-group">
+      <label>Full Address</label>
+      <textarea class="form-control" id="FullAddress"></textarea>
+    </div></div>
+    </div>
 
 <div class='row'>
 <div class="col-sm-6">
@@ -168,13 +174,13 @@ private readonly DirectAward=`
 
     <div class='row'>
 <div class="col-sm-6">
-<div class="form-gorup">
+<div class="form-group">
 <label>Email :<span class="star">*</span></label> <input type="email" id='Email' id='Email' class="contactEmail form-control" value="">
 </div>
 </div>
 
 <div class="col-sm-6">
-<div class="form-gorup">
+<div class="form-group">
 <label>Mobile number :<span class="star">*</span></label> <input type="text" id='MobileNumber' class="contactPhoneNumber form-control" value="">
 </div>
 </div>
@@ -222,7 +228,7 @@ private readonly DirectAward=`
 </div>
 
 <div class='row'>
-<div class="col-sm-12">
+<div class="col-sm-6">
  <div class="form-group">
   <label>Terms of Reference</label>
   <div class="input-group">
@@ -233,9 +239,7 @@ private readonly DirectAward=`
   </div>
 </div>
 </div>
-</div>
 
-<div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
   <label>other Attachment</label>
@@ -246,7 +250,9 @@ private readonly DirectAward=`
   </div>
   </div>
 </div>
-</div></div>
+</div>
+
+</div>
 `;
 
 
@@ -287,13 +293,13 @@ private readonly Shortlistedtender=`
 </div>
 
 <div class="col-sm-3">
-<div class="form-gorup">
+<div class="form-group">
 <label>JOD :<span class="star">*</span></label> <input type="Number" id='JOD' class="contactEmail form-control" value="">
 </div>
 </div>
 
 <div class="col-sm-3">
-<div class="form-gorup">
+<div class="form-group">
 <label>EUR :<span class="star">*</span></label> <input type="text" id='EUR' class="contactPhoneNumber form-control" value="">
 </div>
 </div>
@@ -372,7 +378,7 @@ private readonly Shortlistedtender=`
 
 private readonly tender=`
 <div class='row'>
-<div class="col-sm-12">
+<div class="col-sm-6">
     <div class="form-group">
       <label>Short Description:<span class="star">*</span></label>
       <textarea class="form-control" id="shortDescription"></textarea>
@@ -393,13 +399,13 @@ private readonly tender=`
 </div>
 
 <div class="col-sm-3">
-<div class="form-gorup">
+<div class="form-group">
 <label>JOD :<span class="star">*</span></label> <input type="Number" id='JOD' class="contactEmail form-control" value="">
 </div>
 </div>
 
 <div class="col-sm-3">
-<div class="form-gorup">
+<div class="form-group">
 <label>EUR :<span class="star">*</span></label> <input type="text" id='EUR' class="contactPhoneNumber form-control" value="">
 </div>
 </div>
@@ -432,6 +438,8 @@ private readonly tender=`
 
 </div>
 
+
+</div>
 <div class='row'>
 <div class="col-sm-6">
 <div class="form-group">
@@ -469,7 +477,6 @@ private readonly tender=`
   <label class="custom-file-label" for="newspaperFile">Choose File</label>
   </div>
   </div>
-</div>
 </div>
 </div>
 </div>
@@ -519,13 +526,13 @@ private readonly LocalSubsidy=`
 </div>
 
   <div class="col-sm-3">
-  <div class="form-gorup">
+  <div class="form-group">
   <label>Email :<span class="star">*</span></label> <input type="email" id='Email' class="contactEmail form-control" value="">
   </div>
   </div>
   
   <div class="col-sm-3">
-  <div class="form-gorup">
+  <div class="form-group">
   <label>Mobile number :<span class="star">*</span></label> <input type="text" id='MobileNumber' class="contactPhoneNumber form-control" value="">
   </div>
   </div>
@@ -612,13 +619,13 @@ private readonly LocalSubsidy=`
 </div>
 
 <div class="col-sm-3">
-<div class="form-gorup">
+<div class="form-group">
 <label>Value of Local Subsidy(JOD):<span class="star">*</span></label> <input type="Number" id='JOD' class="contactEmail form-control" value="">
 </div>
 </div>
 
 <div class="col-sm-3">
-<div class="form-gorup">
+<div class="form-group">
 <label>Value of Local Subsidy(EUR) :<span class="star">*</span></label> <input type="text"  id='EUR' class="contactPhoneNumber form-control" value="">
 </div>
 </div>
@@ -716,14 +723,23 @@ private readonly LeaseAgreement=`
 </div>
 
 <div class='row'>
-<div class="col-sm-12">
-<div class="form-group">
-<input type="radio" id="InduvLessor" class='lessor' name="LessorPapers" value="Lessor is an Individual" checked>
-<label for="InduvLessor"> Lessor is an Individual</label>
-<input type="radio" id="CmpnyLessor" class='lessor' name="LessorPapers" value="Lessor is a Company">
-<label for="CmpnyLessor">Lessor is a Company</label>
-</div>
-</div>
+<div class="col-sm-3">
+    <div class="form-group">
+    <input class="radio-stylish lessor" id="InduvLessor" type="radio" name="LessorPapers" value="Lessor is an Individual" checked />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="InduvLessor">Lessor is an Individual</label>
+    </div>
+    </div>
+
+    <div class="col-sm-3">
+    <div class="form-group">
+    <input class="radio-stylish lessor" id="CmpnyLessor" type="radio" name="LessorPapers" value="Lessor is a Company" />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="CmpnyLessor">Lessor is a Company</label>
+    </div>
+    </div>
+
+
 </div>
 
 <div id='divlessor'>
@@ -733,7 +749,7 @@ private readonly LeaseAgreement=`
 </div>`;
 
 private readonly CompanyLessorHTML=`
-<div class='row' id='DivCmpnyLessor'>
+<div id='DivCmpnyLessor'>
 
 <div class='row'>
 <div class="col-sm-6">
@@ -782,13 +798,13 @@ private readonly CompanyLessorHTML=`
     </div>
 
   <div class="col-sm-3">
-  <div class="form-gorup">
+  <div class="form-group">
   <label>Email :<span class="star">*</span></label> <input type="email" id='Email' class="contactEmail form-control" value="">
   </div>
   </div>
   
   <div class="col-sm-3">
-  <div class="form-gorup">
+  <div class="form-group">
   <label>Mobile number :<span class="star">*</span></label> <input type="text" id='MobileNumber' class="contactPhoneNumber form-control" value="">
   </div>
   </div>
@@ -866,13 +882,13 @@ private readonly InduvLessorHTML=`
 <div class='row'>
 
   <div class="col-sm-6">
-  <div class="form-gorup">
+  <div class="form-group">
   <label>Email :<span class="star">*</span></label> <input type="email" id='Email' class="contactEmail form-control" value="">
   </div>
   </div>
   
   <div class="col-sm-6">
-  <div class="form-gorup">
+  <div class="form-group">
   <label>Mobile number :<span class="star">*</span></label> <input type="text" id='MobileNumber' class="contactPhoneNumber form-control" value="">
   </div>
   </div>
@@ -911,7 +927,7 @@ private readonly InduvLessorHTML=`
 
 private readonly iDPP=`
 <div class='row'>
-<div class="col-sm-12">
+<div class="col-sm-6">
     <div class="form-group">
       <label>Short Description:<span class="star">*</span></label>
       <textarea class="form-control" id="shortDescription"></textarea>
@@ -1075,17 +1091,27 @@ private readonly iDPP=`
 </div>
 `;
 
-private readonly ContractAmendment=`
+private readonly ContractAmendment=` 
 
 <div class='row'>
-  <div class="col-sm-12">
+   
+<div class="col-sm-3">
     <div class="form-group">
-    <input type="radio" id="NoCstExtn" name="CstExtension" class='CstExtension' value="No Cost Extension" checked>
-    <label for="NoCstExtn"> No Cost Extension</label>
-    <input type="radio" id="CstExtn" name="CstExtension" class='CstExtension' value="Cost Extension">
-    <label for="CstExtn"> Cost Extension </label>
+    <input class="radio-stylish CstExtension" id="NoCstExtn" type="radio" name="CstExtension" value="No Cost Extension" checked />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="NoCstExtn">No Cost Extension</label>
     </div>
-    </div></div>
+    </div>
+
+    <div class="col-sm-3">
+    <div class="form-group">
+    <input class="radio-stylish CstExtension" id="CstExtn" type="radio" name="CstExtension" value="Cost Extension" />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="CstExtn">Cost Extension</label>
+    </div>
+    </div>
+
+</div>
 
 <div class='row'>
 <div class="col-sm-6">
@@ -1132,13 +1158,13 @@ private readonly ContractAmendment=`
   </div>
   </div> 
   <div class="col-sm-3">
-  <div class="form-gorup">
+  <div class="form-group">
   <label>Email :<span class="star">*</span></label> <input type="email" id='Email' class="contactEmail form-control" value="">
   </div>
   </div>
   
   <div class="col-sm-3">
-  <div class="form-gorup">
+  <div class="form-group">
   <label>Mobile number :<span class="star">*</span></label> <input type="text" id='MobileNumber' class="contactPhoneNumber form-control" value="">
   </div>
   </div>
