@@ -34,6 +34,8 @@ var ServiceRequest=[];
 var ProcurementServiceFiles=[];
 var filename='';
 var siteURL='';
+var Users='';
+var statusHtml='';
 
 export interface IRequestDashboardWebPartProps {
   description: string;
@@ -81,6 +83,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <th>Project Number</th>
     <th>Name Of AV</th>
     <th>PN for ZAS</th>
+    <th>Assigned To</th>
+    <th>Status</th>
     <th>Details</th>
     </tr>
     </thead>
@@ -103,6 +107,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <th>Project Number</th>
     <th>Name Of AV</th>
     <th>PN for ZAS</th>
+    <th>Assigned To</th>
+    <th>Status</th>
     <th>Details</th>
     </tr>
     </thead>
@@ -146,9 +152,12 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     
     getLoggedInUserDetails();
     getAllFolders();
+    LoadProcurementTeamMembers();
+    LoadStatus();
     LoadProcurementTeam();
     LoadGoodsRequest();
     LoadServiceRequest();
+    
 
     // $("input[name='Request']").change(function()
     // {
@@ -359,7 +368,77 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
     
     });
-    
+
+    /*Edit Fcuntionality*/
+
+    $(document).on('click','.SerEdit',function()
+    {
+      var indexofEdit=$(this).attr('index-value');
+      $(".UserDropdownSER"+indexofEdit+"").attr('disabled',false);
+      $(".StatusDropdownSER"+indexofEdit+"").attr('disabled',false);
+      //alert($(".UserDropdownSER"+indexofEdit+" option:selected").val());
+    });
+
+    $(document).on('click','.GdsEdit',function()
+    {
+      var indexofEdit=$(this).attr('index-value');
+      $(".UserDropdownGDS"+indexofEdit+"").attr('disabled',false);
+      $(".StatusDropdownGDS"+indexofEdit+"").attr('disabled',false);
+    });
+
+    /* Save functionality */
+
+    $(document).on('click','.SerSave',function()
+    {
+      var itemid=$(this).attr('req-id');
+      var indexofEdit=$(this).attr('index-value');
+      var alreadyAssgnUsr=$(this).attr('AssignedUser');
+      var AssignedUser=$(".UserDropdownSER"+indexofEdit+" option:selected").val();
+      var ReqStatus=$(".StatusDropdownSER"+indexofEdit+" option:selected").val();
+
+      if(AssignedUser!='Select')
+      {
+        var data={"AssignedTo1Id":AssignedUser};
+        updaterequest(itemid,data,'ProcurementService',false);
+        if(ReqStatus!='Select')
+        {
+          var dataforStatus={"RequestStatusId":ReqStatus};
+          updaterequest(itemid,dataforStatus,'ProcurementService',true);
+        }
+        else
+        {
+          location.reload();
+        }
+      } 
+
+
+
+      
+    });
+
+    $(document).on('click','.GdsSave',function()
+    {
+      var itemid=$(this).attr('req-id');
+      var indexofEdit=$(this).attr('index-value');
+      var alreadyAssgnUsr=$(this).attr('AssignedUser');
+      var AssignedUser=$(".UserDropdownGDS"+indexofEdit+" option:selected").val();
+      var ReqStatus=$(".StatusDropdownGDS"+indexofEdit+" option:selected").val();
+
+      if(AssignedUser!='Select')
+      {
+        var data={"AssignedTo1Id":AssignedUser};
+        updaterequest(itemid,data,'ProcurementGoods',false);
+        if(ReqStatus!='Select')
+        {
+          var dataforStatus={"RequestStatusId":ReqStatus};
+          updaterequest(itemid,dataforStatus,'ProcurementGoods',true);
+        }
+        else
+        {
+          location.reload();
+        }
+      }
+    });
     
 
     
@@ -395,8 +474,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 async function LoadGoodsRequest()
   {
     await sp.web.lists.getByTitle('ProcurementGoods').items
-    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV')
-    .expand('AVName,Representative')
+    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,RequestStatus/ID,RequestStatus/Title')
+    .expand('AssignedTo1,AVName,Representative,RequestStatus')
     .getAll().then((allItems: any[]) => {
       var goodsHTML='';
       GoodsRequest=allItems;
@@ -404,18 +483,36 @@ async function LoadGoodsRequest()
       {
         if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
         {
+          var assgnuser='select';
+        
+        if(allItems[index].AssignedTo1)
+        assgnuser=allItems[index].AssignedTo1.ID;
+        
         goodsHTML+='<tr>';
         goodsHTML+='<td>'+allItems[index].ProjectName+'</td>';
         goodsHTML+='<td>'+allItems[index].ProjectNumber+'</td>';
         goodsHTML+='<td>'+allItems[index].NameOfAV+'</td>';
         goodsHTML+='<td>'+allItems[index].PNForZAS+'</td>';
-        goodsHTML+='<td><a herf="#" req-id="'+allItems[index].ID+'" class="GdsdetailView" data-toggle="modal" data-target="#myModal">View</a></td>';
+        goodsHTML+='<td><select class="UserDropdownGDS'+index+'" disabled="disabled">'+Users+'<select></td>';
+        goodsHTML+='<td><select class="StatusDropdownGDS'+index+'" disabled="disabled">'+statusHtml+'<select></td>';
+        goodsHTML+='<td><a herf="#" req-id="'+allItems[index].ID+'" class="GdsdetailView" data-toggle="modal" data-target="#myModal">View</a> ';
+        goodsHTML+='<a herf="#" index-value='+index+' class="GdsEdit">Edit</a> <a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="GdsSave">Save</a></td>';
         goodsHTML+='</tr>';
+
         }
 
       }
       $('#tblGoods').html('');
       $('#tblGoods').append(goodsHTML);
+
+      for(var i=0;i<allItems.length;i++)
+      {
+        if(allItems[i].AssignedTo1)
+        $('.UserDropdownGDS'+i+'').val(allItems[i].AssignedTo1.ID);
+
+        if(allItems[i].RequestStatus)
+        $('.StatusDropdownGDS'+i+'').val(allItems[i].RequestStatus.ID);
+      }
 
     }).catch(function(error){ErrorCallBack(error,'InsertService')});
 
@@ -425,21 +522,31 @@ async function LoadGoodsRequest()
   async function LoadServiceRequest()
   {
     await sp.web.lists.getByTitle('ProcurementService').items
-    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV')
-    .expand('AVName,Representative')
+    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID')
+    .expand('AssignedTo1,AVName,Representative,RequestStatus')
     .getAll().then((allItems: any[]) => {
       var serviceHTML='';
       ServiceRequest=allItems;
       for (var index = 0; index < allItems.length; index++) 
       {
         
-        if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID){
+        if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+        {
+        
+        var assgnuser='select';
+        
+        if(allItems[index].AssignedTo1)
+        assgnuser=allItems[index].AssignedTo1.ID;
+
         serviceHTML+='<tr>';
         serviceHTML+='<td>'+allItems[index].ProjectName+'</td>';
         serviceHTML+='<td>'+allItems[index].ProjectNumber+'</td>';
         serviceHTML+='<td>'+allItems[index].NameOfAV+'</td>';
         serviceHTML+='<td>'+allItems[index].PNForZAS+'</td>';
-        serviceHTML+='<td><a herf="#" req-id="'+allItems[index].ID+'" class="serdetailView" data-toggle="modal" data-target="#myModal">View</a></td>';
+        serviceHTML+='<td><select class="UserDropdownSER'+index+'" disabled="disabled">'+Users+'</select></td>';
+        serviceHTML+='<td><select class="StatusDropdownSER'+index+'" disabled="disabled">'+statusHtml+'</select></td>';
+        serviceHTML+='<td><a herf="#" req-id="'+allItems[index].ID+'" class="serdetailView" data-toggle="modal" data-target="#myModal">View</a>';
+        serviceHTML+=' <a herf="#" index-value='+index+' class="SerEdit">Edit</a>  <a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SerSave">Save</a></td>';
         serviceHTML+='</tr>';
         }
 
@@ -447,9 +554,19 @@ async function LoadGoodsRequest()
       $('#tblService').html('');
       $('#tblService').append(serviceHTML);
 
+      for(var i=0;i<allItems.length;i++)
+      {
+        if(allItems[i].AssignedTo1)
+        $('.UserDropdownSER'+i+'').val(allItems[i].AssignedTo1.ID);
+
+        if(allItems[i].RequestStatus)
+        $('.StatusDropdownSER'+i+'').val(allItems[i].RequestStatus.ID);
+      }
+
     }).catch(function(error){ErrorCallBack(error,'LoadServiceRequest')});
 
     $('#Service').DataTable();
+    $('.UserDropdown').attr('disabled',true);
   }
 
   async function LoadProcurementTeam()
@@ -460,6 +577,44 @@ async function LoadGoodsRequest()
         {
           flgProcurementTeam=true;
           console.log(allItems);
+        }
+    }).catch(function(error){ErrorCallBack(error,'LoadProcurementTeam')});
+  }
+
+  async function LoadProcurementTeamMembers()
+  {
+    await sp.web.siteGroups.getByName('ProcurementTeam').users.get().then((allItems: any[]) => 
+    {
+        if(allItems.length>0)
+        {
+          console.log(allItems);
+          Users+='<option value="Select">Select</option>';
+          for(var i=0;i<allItems.length;i++)
+          {
+            //Users+='<select class="UserDropdown">';
+            Users+='<option User-id="' + allItems[i].Id + '"  value="' + allItems[i].Id + '">' + allItems[i].Title + '</option>';
+            //Users+='</select>';
+          }
+          
+        }
+    }).catch(function(error){ErrorCallBack(error,'LoadProcurementTeam')});
+  }
+
+  async function LoadStatus()
+  {
+    await sp.web.lists.getByTitle('Status').items.get().then((allItems: any[]) => 
+    {
+        if(allItems.length>0)
+        {
+          console.log(allItems);
+          statusHtml+='<option value="Select">Select</option>';
+          for(var i=0;i<allItems.length;i++)
+          {
+            //Users+='<select class="UserDropdown">';
+            statusHtml+='<option value="' + allItems[i].Id + '">' + allItems[i].Title + '</option>';
+            //Users+='</select>';
+          }
+          
         }
     }).catch(function(error){ErrorCallBack(error,'LoadProcurementTeam')});
   }
@@ -495,6 +650,17 @@ async function LoadGoodsRequest()
 
   }
 
+  async function updaterequest(itemid,data,listname,close)
+  {
+    await sp.web.lists.getByTitle(listname).items.getById(itemid).update(data).then((allItems: any) => 
+    {
+        alert('updated');
+        if(close)
+        location.reload();
+    }).catch(function(error){ErrorCallBack(error,'updategoodsrequest')});
+  }
+
+  
 function ErrorCallBack(error,methodname)
 {	
 	alert(error);
