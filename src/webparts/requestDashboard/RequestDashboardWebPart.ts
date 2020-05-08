@@ -27,6 +27,7 @@ SPComponentLoader.loadCss("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/b
 
 declare var $;
 var flgProcurementTeam=false;
+var flgSystemAdmin=false;
 var LoggedUserEmail='';
 var CrntUserID='';
 var GoodsRequest=[];
@@ -155,6 +156,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     LoadProcurementTeamMembers();
     LoadStatus();
     LoadProcurementTeam();
+    LoadAdminTeam();
     LoadGoodsRequest();
     LoadServiceRequest();
     
@@ -374,7 +376,12 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     $(document).on('click','.SerEdit',function()
     {
       var indexofEdit=$(this).attr('index-value');
+      var AssignedTo=$(".UserDropdownSER"+indexofEdit+" option:selected").val();
+
+      if(flgSystemAdmin)
       $(".UserDropdownSER"+indexofEdit+"").attr('disabled',false);
+
+      if(CrntUserID==AssignedTo)
       $(".StatusDropdownSER"+indexofEdit+"").attr('disabled',false);
       //alert($(".UserDropdownSER"+indexofEdit+" option:selected").val());
     });
@@ -382,7 +389,12 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     $(document).on('click','.GdsEdit',function()
     {
       var indexofEdit=$(this).attr('index-value');
+      var AssignedTo=$(".UserDropdownGDS"+indexofEdit+" option:selected").val();
+
+      if(flgSystemAdmin)
       $(".UserDropdownGDS"+indexofEdit+"").attr('disabled',false);
+
+      if(CrntUserID==AssignedTo)
       $(".StatusDropdownGDS"+indexofEdit+"").attr('disabled',false);
     });
 
@@ -399,15 +411,16 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       if(AssignedUser!='Select')
       {
         var data={"AssignedTo1Id":AssignedUser};
+
+        if(ReqStatus=='Select')
+        updaterequest(itemid,data,'ProcurementService',true);
+        else
         updaterequest(itemid,data,'ProcurementService',false);
+
         if(ReqStatus!='Select')
         {
           var dataforStatus={"RequestStatusId":ReqStatus};
           updaterequest(itemid,dataforStatus,'ProcurementService',true);
-        }
-        else
-        {
-          location.reload();
         }
       } 
 
@@ -427,15 +440,16 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       if(AssignedUser!='Select')
       {
         var data={"AssignedTo1Id":AssignedUser};
+
+        if(ReqStatus=='Select')
+        updaterequest(itemid,data,'ProcurementGoods',true);
+        else
         updaterequest(itemid,data,'ProcurementGoods',false);
+
         if(ReqStatus!='Select')
         {
           var dataforStatus={"RequestStatusId":ReqStatus};
           updaterequest(itemid,dataforStatus,'ProcurementGoods',true);
-        }
-        else
-        {
-          location.reload();
         }
       }
     });
@@ -576,7 +590,17 @@ async function LoadGoodsRequest()
         if(allItems.length>0)
         {
           flgProcurementTeam=true;
-          console.log(allItems);
+        }
+    }).catch(function(error){ErrorCallBack(error,'LoadProcurementTeam')});
+  }
+
+  async function LoadAdminTeam()
+  {
+    await sp.web.siteGroups.getByName('SystemAdmin').users.filter("Email eq '"+LoggedUserEmail+"'").get().then((allItems: any[]) => 
+    {
+        if(allItems.length>0)
+        {
+          flgSystemAdmin=true;
         }
     }).catch(function(error){ErrorCallBack(error,'LoadProcurementTeam')});
   }
@@ -587,7 +611,6 @@ async function LoadGoodsRequest()
     {
         if(allItems.length>0)
         {
-          console.log(allItems);
           Users+='<option value="Select">Select</option>';
           for(var i=0;i<allItems.length;i++)
           {
@@ -654,7 +677,7 @@ async function LoadGoodsRequest()
   {
     await sp.web.lists.getByTitle(listname).items.getById(itemid).update(data).then((allItems: any) => 
     {
-        alert('updated');
+        //alert('updated');
         if(close)
         location.reload();
     }).catch(function(error){ErrorCallBack(error,'updategoodsrequest')});

@@ -29,6 +29,9 @@ var ChoicesServices = [
 var filesuploaded=0;
 var fileslength=0;
 var siteURL='';
+var CrntUserID='';
+var flgRepUser=false;
+var filesotherAttachment=[];
 export interface IProcurementOfGoodsWebPartProps {
   description: string;
 }
@@ -48,7 +51,7 @@ export default class ProcurementOfGoodsWebPart extends BaseClientSideWebPart <IP
   <div class="row">
   <div class="col-sm-6">
     <div class="form-group">
-      <label>Project name:<span class="star">*</span></label>
+      <label>Project Name:<span class="star">*</span></label>
       <select class="form-control" id="projectName">
         <option value="Select">Select</option>
         </select>
@@ -57,7 +60,7 @@ export default class ProcurementOfGoodsWebPart extends BaseClientSideWebPart <IP
 
       <div class="col-sm-6">
       <div class="form-group">
-      <label>Project number:<span class="star">*</span></label>
+      <label>Project Number:<span class="star">*</span></label>
       <input class="form-control" type="text" id="projectNumber" value="">
     </div>
     </div>
@@ -73,7 +76,7 @@ export default class ProcurementOfGoodsWebPart extends BaseClientSideWebPart <IP
     </div>
     <div class="col-sm-6">
     <div class="form-group">
-      <label>Name of AV:<span class="star">*</span></label>
+      <label>Name Of AV:<span class="star">*</span></label>
       <input class="form-control" type="text" id="NameofAV" value="" disabled>
     </div>
     </div>
@@ -88,7 +91,7 @@ export default class ProcurementOfGoodsWebPart extends BaseClientSideWebPart <IP
     </div>
     <div class="col-sm-6">
     <div class="form-group">
-      <label>Choices of services<span class="star">*</span></label>
+      <label>Choices Of Services<span class="star">*</span></label>
       <select class="form-control" id="choicesservices">
         <option value="Select">Select</option>
         </select>
@@ -109,7 +112,7 @@ private readonly DirectAward=`
 <div class='row'>
 <div class="col-sm-3">
     <div class="form-group">
-    <input class="radio-stylish" id="ConsultingFirm" type="radio" name="ConsultingFirm" value="ConsultingFirm" checked />
+    <input class="radio-stylish" id="ConsultingFirm" type="radio" name="ConsultingFirm" value="ConsultingFirm" />
     <span class="radio-element"></span>
     <label class="stylish-label" for="ConsultingFirm">ConsultingFirm</label>
     </div>
@@ -127,14 +130,14 @@ private readonly DirectAward=`
     <div class='row'>
     <div class="col-sm-6">
     <div class="form-group">
-      <label>Name of Consulting Firm/Appariser</label>
+      <label>Name Of Consulting Firm/Appariser</label>
       <input class="form-control" type="text" id="NameOfFirm" value="">
     </div>
     </div>
     
     <div class="col-sm-6">
     <div class="form-group">
-    <label>Area of Activity</label>
+    <label>Area Of Activity</label>
     <input class="form-control" type="text" id="AreaActivy" value="">
   </div>
     </div>
@@ -165,8 +168,8 @@ private readonly DirectAward=`
 
     <div class="col-sm-6">
     <div class="form-group">
-    <label>Telephone number</label>
-    <input class="form-control" type="text" id="TeleNumber" value="">
+    <label>Telephone Number</label>
+    <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div>
 
@@ -181,7 +184,7 @@ private readonly DirectAward=`
 
 <div class="col-sm-6">
 <div class="form-group">
-<label>Mobile number :<span class="star">*</span></label> <input type="text" id='MobileNumber' class="contactPhoneNumber form-control" value="">
+<label>Mobile Number :<span class="star">*</span></label> <input type="Number" id='MobileNumber' class="contactPhoneNumber form-control" value="">
 </div>
 </div>
 </div>
@@ -216,7 +219,7 @@ private readonly DirectAward=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Justification for direct award</label>
+  <label>Justification For Direct Award</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="justification" value="" class="custom-file-input">
@@ -230,7 +233,7 @@ private readonly DirectAward=`
 <div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Terms of Reference</label>
+  <label>Terms Of Reference</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="terms" value="" class="custom-file-input">
@@ -242,13 +245,14 @@ private readonly DirectAward=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>other Attachment</label>
+  <label>Other Attachments</label>
   <div class="input-group">
   <div class="custom-file">
-  <input type="file" id="others" value="" class="custom-file-input">
+  <input type="file" id="others" value="" class="custom-file-input" multiple>
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
+  <span id="otherAttachmentFiles"></span>
 </div>
 </div>
 
@@ -300,7 +304,7 @@ private readonly Shortlistedtender=`
 
 <div class="col-sm-3">
 <div class="form-group">
-<label>EUR :<span class="star">*</span></label> <input type="text" id='EUR' class="contactPhoneNumber form-control" value="">
+<label>EUR :<span class="star">*</span></label> <input type="Number" id='EUR' class="contactPhoneNumber form-control" value="">
 </div>
 </div>
 </div>
@@ -309,8 +313,8 @@ private readonly Shortlistedtender=`
 
 <div class='row'>
 <div class="col-sm-6">
-<div class="form-group">
- <label>Justification for shortlisted tender</label>
+<div class="form-group" id='divforJustification' style='display:none'>
+ <label>Justification For Shortlisted Tender</label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="justification" value="" class="custom-file-input">
@@ -322,7 +326,7 @@ private readonly Shortlistedtender=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Terms of Reference</label>
+  <label>Terms Of Reference</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="terms" value="" class="custom-file-input">
@@ -363,13 +367,14 @@ private readonly Shortlistedtender=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>other Attachment</label>
+  <label>Other Attachments</label>
   <div class="input-group">
   <div class="custom-file">
-  <input type="file" id="others" value="" class="custom-file-input">
+  <input type="file" id="others" value="" class="custom-file-input" multiple>
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
+  <span id="otherAttachmentFiles"></span>
 </div>
 </div>
 
@@ -406,7 +411,7 @@ private readonly tender=`
 
 <div class="col-sm-3">
 <div class="form-group">
-<label>EUR :<span class="star">*</span></label> <input type="text" id='EUR' class="contactPhoneNumber form-control" value="">
+<label>EUR :<span class="star">*</span></label> <input type="Number" id='EUR' class="contactPhoneNumber form-control" value="">
 </div>
 </div>
 </div>
@@ -415,7 +420,7 @@ private readonly tender=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Terms of Reference</label>
+  <label>Terms Of Reference</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="terms" value="" class="custom-file-input">
@@ -458,25 +463,25 @@ private readonly tender=`
 <div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>other Attachment</label>
-  <div class="input-group">
-  <div class="custom-file">
-  <input type="file" id="others" value="" class="custom-file-input">
-  <label class="custom-file-label" for="others">Choose File</label>
-  </div>
-  </div>
-</div>
-</div>
-
-<div class="col-sm-6">
- <div class="form-group">
-  <label>Text for newspaper advertisement : </label>
+  <label>Text For Newspaper Advertisement : </label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="newspaperFile" value="" class="custom-file-input">
   <label class="custom-file-label" for="newspaperFile">Choose File</label>
   </div>
   </div>
+</div>
+</div>
+<div class="col-sm-6">
+ <div class="form-group">
+  <label>Other Attachments</label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="others" value="" class="custom-file-input" multiple>
+  <label class="custom-file-label" for="others">Choose File</label>
+  </div>
+  </div>
+  <span id="otherAttachmentFiles"></span>
 </div>
 </div>
 </div>
@@ -493,7 +498,7 @@ private readonly LocalSubsidy=`
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>Name of Beneficiary</label>
+    <label>Name Of Beneficiary</label>
     <input class="form-control" type="text" id="NameOfBenficiary" value="">
   </div>
   </div>
@@ -503,14 +508,14 @@ private readonly LocalSubsidy=`
 <div class='row'>
 <div class="col-sm-6">
     <div class="form-group">
-      <label>Full address<span class="star">*</span></label>
+      <label>Full Address<span class="star">*</span></label>
       <textarea class="form-control" id="FullAddress"></textarea>
   </div>
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>Telephone number</label>
-    <input class="form-control" type="text" id="TeleNumber" value="">
+    <label>Telephone Number</label>
+    <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div>
   
@@ -520,7 +525,7 @@ private readonly LocalSubsidy=`
 
 <div class="col-sm-6">
 <div class="form-group">
-    <label>Name of Contact Person</label>
+    <label>Name Of Contact Person</label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
 </div>
@@ -533,7 +538,7 @@ private readonly LocalSubsidy=`
   
   <div class="col-sm-3">
   <div class="form-group">
-  <label>Mobile number :<span class="star">*</span></label> <input type="text" id='MobileNumber' class="contactPhoneNumber form-control" value="">
+  <label>Mobile Number :<span class="star">*</span></label> <input type="Number" id='MobileNumber' class="contactPhoneNumber form-control" value="">
   </div>
   </div>
   
@@ -626,7 +631,7 @@ private readonly LocalSubsidy=`
 
 <div class="col-sm-3">
 <div class="form-group">
-<label>Value of Local Subsidy(EUR) :<span class="star">*</span></label> <input type="text"  id='EUR' class="contactPhoneNumber form-control" value="">
+<label>Value of Local Subsidy(EUR) :<span class="star">*</span></label> <input type="Number"  id='EUR' class="contactPhoneNumber form-control" value="">
 </div>
 </div>
 </div>
@@ -634,7 +639,7 @@ private readonly LocalSubsidy=`
 <div class='row'>
 <div class="col-sm-6">
 <div class="form-group">
- <label>Bank details</label>
+ <label>Bank Details</label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="BankDetails" value="" class="custom-file-input">
@@ -646,13 +651,14 @@ private readonly LocalSubsidy=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>other Attachment</label>
+  <label>Other Attachments</label>
   <div class="input-group">
   <div class="custom-file">
-  <input type="file" id="others" value="" class="custom-file-input">
+  <input type="file" id="others" value="" class="custom-file-input" multiple>
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
+  <span id="otherAttachmentFiles"></span>
 </div>
 </div>
 </div>
@@ -725,7 +731,7 @@ private readonly LeaseAgreement=`
 <div class='row'>
 <div class="col-sm-3">
     <div class="form-group">
-    <input class="radio-stylish lessor" id="InduvLessor" type="radio" name="LessorPapers" value="Lessor is an Individual" checked />
+    <input class="radio-stylish lessor" id="InduvLessor" type="radio" name="LessorPapers" value="Lessor is an Individual" />
     <span class="radio-element"></span>
     <label class="stylish-label" for="InduvLessor">Lessor is an Individual</label>
     </div>
@@ -754,7 +760,7 @@ private readonly CompanyLessorHTML=`
 <div class='row'>
 <div class="col-sm-6">
     <div class="form-group">
-      <label>Name of Firm<span class="star">*</span></label>
+      <label>Name Of Firm<span class="star">*</span></label>
       <input class="form-control" type="text" id="NameOfFirm" value="">
   </div>
   </div>
@@ -775,14 +781,14 @@ private readonly CompanyLessorHTML=`
 <div class='row'>
 <div class="col-sm-6">
     <div class="form-group">
-      <label>Full address<span class="star">*</span></label>
+      <label>Full Address<span class="star">*</span></label>
       <textarea class="form-control" id="FullAddress"></textarea>
   </div>
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>TelePhone number</label>
-    <input class="form-control" type="text" id="TeleNumber" value="">
+    <label>TelePhone Number</label>
+    <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div>
   
@@ -792,7 +798,7 @@ private readonly CompanyLessorHTML=`
 
 <div class="col-sm-6">
     <div class="form-group">
-    <label>Name of Contact Person</label>
+    <label>Name Of Contact Person</label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
     </div>
@@ -805,7 +811,7 @@ private readonly CompanyLessorHTML=`
   
   <div class="col-sm-3">
   <div class="form-group">
-  <label>Mobile number :<span class="star">*</span></label> <input type="text" id='MobileNumber' class="contactPhoneNumber form-control" value="">
+  <label>Mobile Number :<span class="star">*</span></label> <input type="Number" id='MobileNumber' class="contactPhoneNumber form-control" value="">
   </div>
   </div>
   
@@ -826,7 +832,7 @@ private readonly CompanyLessorHTML=`
 </div>
 <div class="col-sm-6">
 <div class="form-group">
- <label>Bank details</label>
+ <label>Bank Details</label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="BankDetails" value="" class="custom-file-input">
@@ -840,7 +846,7 @@ private readonly CompanyLessorHTML=`
 `;
 
 private readonly InduvLessorHTML=`
-<div class='row' id='DivInduvLessor'>
+<div id='DivInduvLessor'>
 
 <div class='row'>
 <div class="col-sm-6">
@@ -866,14 +872,14 @@ private readonly InduvLessorHTML=`
 <div class='row'>
 <div class="col-sm-6">
     <div class="form-group">
-      <label>Full address<span class="star">*</span></label>
+      <label>Full Address<span class="star">*</span></label>
       <textarea class="form-control" id="FullAddress"></textarea>
   </div>
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>Phone number</label>
-    <input class="form-control" type="text" id="PhoneNumber" value="">
+    <label>Phone Number</label>
+    <input class="form-control" type="Number" id="PhoneNumber" value="">
   </div>
   </div>
   
@@ -889,7 +895,7 @@ private readonly InduvLessorHTML=`
   
   <div class="col-sm-6">
   <div class="form-group">
-  <label>Mobile number :<span class="star">*</span></label> <input type="text" id='MobileNumber' class="contactPhoneNumber form-control" value="">
+  <label>Mobile Number :<span class="star">*</span></label> <input type="Number" id='MobileNumber' class="contactPhoneNumber form-control" value="">
   </div>
   </div>
   
@@ -910,7 +916,7 @@ private readonly InduvLessorHTML=`
 </div>
 <div class="col-sm-6">
 <div class="form-group">
- <label>Bank details</label>
+ <label>Bank Details</label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="BankDetails" value="" class="custom-file-input">
@@ -967,7 +973,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>CVs of Experts</label>
+ <label>CVs Of Experts</label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="Experts" value="" class="custom-file-input">
@@ -979,7 +985,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>Bank details</label>
+ <label>Bank Details</label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="BankDetails" value="" class="custom-file-input">
@@ -1023,7 +1029,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>Brief concept for agreement</label>
+ <label>Brief concept For Agreement</label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="Agreement" value="" class="custom-file-input">
@@ -1097,7 +1103,7 @@ private readonly ContractAmendment=`
    
 <div class="col-sm-3">
     <div class="form-group">
-    <input class="radio-stylish CstExtension" id="NoCstExtn" type="radio" name="CstExtension" value="No Cost Extension" checked />
+    <input class="radio-stylish CstExtension" id="NoCstExtn" type="radio" name="CstExtension" value="No Cost Extension" />
     <span class="radio-element"></span>
     <label class="stylish-label" for="NoCstExtn">No Cost Extension</label>
     </div>
@@ -1131,13 +1137,13 @@ private readonly ContractAmendment=`
 <div class='row'>
 <div class="col-sm-6">
     <div class="form-group">
-      <label>Full address<span class="star">*</span></label>
+      <label>Full Address<span class="star">*</span></label>
       <textarea class="form-control" id="FullAddress"></textarea>
   </div>
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>Name of Consulting Firm / Appraiser</label>
+    <label>Name Of Consulting Firm / Appraiser</label>
     <input class="form-control" type="text" id="NameOfFirm" value="">
   </div>
   </div> 
@@ -1147,14 +1153,14 @@ private readonly ContractAmendment=`
 
 <div class="col-sm-3">
 <div class="form-group">
-    <label>contact person</label>
+    <label>contact Person</label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
 </div>
 <div class="col-sm-3">
     <div class="form-group">
-    <label>Telephone number</label>
-    <input class="form-control" type="text" id="TeleNumber" value="">
+    <label>Telephone Number</label>
+    <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div> 
   <div class="col-sm-3">
@@ -1165,7 +1171,7 @@ private readonly ContractAmendment=`
   
   <div class="col-sm-3">
   <div class="form-group">
-  <label>Mobile number :<span class="star">*</span></label> <input type="text" id='MobileNumber' class="contactPhoneNumber form-control" value="">
+  <label>Mobile Number :<span class="star">*</span></label> <input type="Number" id='MobileNumber' class="contactPhoneNumber form-control" value="">
   </div>
   </div>
   </div>
@@ -1173,7 +1179,7 @@ private readonly ContractAmendment=`
   <div class='row'>
   <div class="col-sm-6">
       <div class="form-group">
-        <label>Justification for Extension<span class="star">*</span></label>
+        <label>Justification For Extension<span class="star">*</span></label>
         <textarea class="form-control" id="justification"></textarea>
     </div>
     </div>
@@ -1224,6 +1230,7 @@ private readonly EstimationHMTL=`
   var that=this;
   this.domElement.innerHTML=this.HtmlGoods;
   siteURL = this.context.pageContext.site.absoluteUrl;
+  getLoggedInUserDetails();
   LoadProjects();
   LoadServices(); 
 
@@ -1233,8 +1240,9 @@ private readonly EstimationHMTL=`
       $(this).parent('.custom-file').find('.custom-file-label').text($(this).val().replace(/C:\\fakepath\\/i, ''));
     }
     else {
-      alertify.set('notifier', 'position', 'top-right');
-      alertify.error('Please select file');
+      //alertify.set('notifier', 'position', 'top-right');
+      //alertify.error('Please select file');
+      $(this).parent().find('label').text('Choose File');
       
     }
 
@@ -1244,6 +1252,45 @@ private readonly EstimationHMTL=`
   {
     $("#NameofAV").val($('#projectName option:selected').attr('proj-av'));
   });
+
+  $(document).on('change','#others',function () 
+    {
+      if ($(this)[0].files.length > 0) 
+      {
+        for (let index = 0; index < $(this)[0].files.length; index++) 
+        {
+          const file = $('#others')[0].files[index];
+          filesotherAttachment.push(file);
+          $('#otherAttachmentFiles').append('<p>' + file.name + '<a filename='+file.name+'; class="clsRemove" href="#">Remove</a></p>');
+        }
+        $(this).val('');
+        $(this).parent().find('label').text('Choose File');
+      }
+    });
+
+    $(document).on('click', '.clsRemove', function () 
+    {
+      
+      var filename=$(this).attr('filename');
+      removeOthersfile(filesotherAttachment);
+      $(this).parent().remove();
+    });
+
+
+    $(document).on('blur','#EUR',function () 
+    {
+      if ($(this).val() >= 50000&&$('#choicesservices option:selected').val()=='Shortlisted tender') 
+      {
+        $('#divforJustification').show();
+
+      } else 
+      {
+        $('#divforJustification').hide();
+        $('#justification').val('');
+        $('#justification').text('Choose File');
+        
+      }
+    });
 
   $('#choicesservices').change(function()
   {
@@ -1261,7 +1308,7 @@ private readonly EstimationHMTL=`
         {
           $('#ChoicesField').html(that.LeaseAgreement);
           $('#divlessor').html('');
-          $('#divlessor').append(that.CompanyLessorHTML);
+          //$('#divlessor').append(that.CompanyLessorHTML);
         }
         else if(selectedservice=='iDPP')
         $('#ChoicesField').html(that.iDPP);
@@ -1340,15 +1387,36 @@ $(document).on('change','.lessor',function()
 }
 }
 
-
-  function LoadProjects()
+function removeOthersfile(filename)
+{
+  for(var i=0;i<filesotherAttachment.length;i++)
   {
-    sp.web.lists.getByTitle('Projects').items.select('Title,Id,ProjectAV/Title,ProjectAV/ID,Representative/ID').expand('ProjectAV,Representative').getAll().then((allItems: any[]) => {
+    if(filesotherAttachment[i].name==filename)
+    {
+      filesotherAttachment[i].remove();
+    }
+  }
+}
+
+
+async function LoadProjects()
+  {
+     await sp.web.lists.getByTitle('Projects').items.select('Title,Id,ProjectAV/Title,ProjectAV/ID,Representative/ID').expand('ProjectAV,Representative').getAll().then((allItems: any[]) => {
       for (var index = 0; index < allItems.length; index++) 
       {
         var element = allItems[index];
-        $('#projectName').append('<option Proj-Rp-id="' + element.Representative.ID + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
+        if(CrntUserID==element.Representative.ID)
+        {
+          flgRepUser=true;
+          $('#projectName').append('<option Proj-Rp-id="' + element.Representative.ID + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
+        }
       }
+
+      if(!flgRepUser)
+        {
+          alert('Access Denied');
+        }
+
     });
   }
   function LoadServices()
@@ -1358,6 +1426,27 @@ $(document).on('change','.lessor',function()
         HTML+='<option proj-id="' + key + '" value="' + val+ '">' + val + '</option>'
     });
     $('#choicesservices').append(HTML);
+  }
+
+  async function getLoggedInUserDetails()
+  {
+    
+    await sp.web.currentUser.get().then((allItems: any) => 
+    {
+        if(allItems)
+        {
+          CrntUserID=allItems.Id;
+        }
+    }).catch(function(error){ErrorCallBack(error,'getLoggedInUserDetails')});
+  }
+
+  function isEmail(Email)
+  {
+    var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+    if (testEmail.test(Email))
+    return true;
+    else
+    return false
   }
 
   function CreateService()
@@ -1399,7 +1488,20 @@ $(document).on('change','.lessor',function()
           arrFiles.push({'FolderName':'EstimatedCost','files':$('#Estimation')[0].files});
           arrFiles.push({'FolderName':'Justification','files':$('#justification')[0].files});
           arrFiles.push({'FolderName':'Terms','files':$('#terms')[0].files});
-          arrFiles.push({'FolderName':'Others','files':$('#others')[0].files});
+
+
+          if(filesotherAttachment.length>0)
+          {
+            
+            for(var i=0;i<filesotherAttachment.length;i++)
+            {
+              
+              var files=[];
+              files.push(filesotherAttachment[i]);
+              arrFiles.push({'FolderName':'Others','files':files});
+            }
+            
+          }
 
           InsertService(Servicedata,arrFiles);
         }
@@ -1433,7 +1535,20 @@ $(document).on('change','.lessor',function()
           if($('#justification')[0].files.length>0){
           arrFiles.push({'FolderName':'Justification','files':$('#justification')[0].files});}
           arrFiles.push({'FolderName':'Terms','files':$('#terms')[0].files});
-          arrFiles.push({'FolderName':'Others','files':$('#others')[0].files});
+          
+          if(filesotherAttachment.length>0)
+          {
+            
+            for(var i=0;i<filesotherAttachment.length;i++)
+            {
+              
+              var files=[];
+              files.push(filesotherAttachment[i]);
+              arrFiles.push({'FolderName':'Others','files':files});
+            }
+            
+          }
+
           arrFiles.push({'FolderName':'ShortList','files':$('#shortlist')[0].files});
           arrFiles.push({'FolderName':'TechAssGrid','files':$('#Assessment')[0].files});
 
@@ -1466,7 +1581,20 @@ $(document).on('change','.lessor',function()
           }
           arrFiles.push({'FolderName':'EstimatedCost','files':$('#Estimation')[0].files});
           arrFiles.push({'FolderName':'Terms','files':$('#terms')[0].files});
-          arrFiles.push({'FolderName':'Others','files':$('#others')[0].files});
+          
+          if(filesotherAttachment.length>0)
+          {
+            
+            for(var i=0;i<filesotherAttachment.length;i++)
+            {
+              
+              var files=[];
+              files.push(filesotherAttachment[i]);
+              arrFiles.push({'FolderName':'Others','files':files});
+            }
+            
+          }
+
           arrFiles.push({'FolderName':'NewsAdvertisement','files':$('#newspaperFile')[0].files});
           arrFiles.push({'FolderName':'TechAssGrid','files':$('#Assessment')[0].files});
 
@@ -1513,7 +1641,18 @@ $(document).on('change','.lessor',function()
           arrFiles.push({'FolderName':'BankDetails','files':$('#BankDetails')[0].files});}
           arrFiles.push({'FolderName':'CommercialSuitability','files':$('#Suitability')[0].files});
           arrFiles.push({'FolderName':'RegCert','files':$('#Certificate')[0].files});
-          arrFiles.push({'FolderName':'Others','files':$('#others')[0].files});
+          if(filesotherAttachment.length>0)
+          {
+            
+            for(var i=0;i<filesotherAttachment.length;i++)
+            {
+              
+              var files=[];
+              files.push(filesotherAttachment[i]);
+              arrFiles.push({'FolderName':'Others','files':files});
+            }
+            
+          }
 
           InsertService(Servicedata,arrFiles);
         }
@@ -1547,7 +1686,7 @@ $(document).on('change','.lessor',function()
                   EmailAddress:$("#Email").val(),
                   MobileNumber:$("#MobileNumber").val(),
                   FullAddress:$("#FullAddress").val(),
-                  TelephoneNumber:$("#TeleNumber").val(),
+                  TelephoneNumber:$("#PhoneNumber").val(),
                   DurationFrom:FromDate,
                   DurationTo:Todate
                   
@@ -1585,7 +1724,7 @@ $(document).on('change','.lessor',function()
                   EmailAddress:$("#Email").val(),
                   MobileNumber:$("#MobileNumber").val(),
                   FullAddress:$("#FullAddress").val(),
-                  TelephoneNumber:$("#TeleNumber").val(),
+                  TelephoneNumber:$("#PhoneNumber").val(),
                   DurationFrom:FromDate,
                   DurationTo:Todate
                 }
@@ -1790,7 +1929,12 @@ function mandatoryfordirectaward()
 
   var isAllValueFilled=true;
 	if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
-  if(!$.trim($("#NameOfFirm").val()))
+  if(!$("input[id='ConsultingFirm']").prop('checked')&&!$("input[id='Appariser']").prop('checked'))
+  {
+    alertify.error('Please Select Firm or Appraiser');
+		isAllValueFilled=false;
+  } 
+  else if(!$.trim($("#NameOfFirm").val()))
 	{
 		alertify.error('Please Enter Name of Consulting Firm');
 		isAllValueFilled=false;
@@ -1821,6 +1965,11 @@ function mandatoryfordirectaward()
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#Email").val()))
+	{
+		alertify.error('Please Enter Valid Email');
+		isAllValueFilled=false;
+  }
+  else if(!isEmail($.trim($("#Email").val())))
 	{
 		alertify.error('Please Enter Valid Email');
 		isAllValueFilled=false;
@@ -1861,7 +2010,7 @@ function mandatoryfordirectaward()
 		alertify.error('Please Select Terms of Reference');
 		isAllValueFilled=false;
   }
-  else if($('#others')[0].files.length<=0)
+  else if(filesotherAttachment.length<=0)
 	{
 		alertify.error('Please Select Other Attachment');
 		isAllValueFilled=false;
@@ -1929,7 +2078,7 @@ function mandatoryforshortlisttender()
 		alertify.error('Please Select Technical Assessment Grid');
 		isAllValueFilled=false;
   }  
-  else if($('#others')[0].files.length<=0)
+  else if(filesotherAttachment.length<=0)
 	{
 		alertify.error('Please Select Other Attachment');
 		isAllValueFilled=false;
@@ -1988,7 +2137,7 @@ function mandatoryforpublictender()
 		alertify.error('From  Date Should be lesser than To date');
 		isAllValueFilled=false;
 	}
-  else if($('#others')[0].files.length<=0)
+  else if(filesotherAttachment.length<=0)
 	{
 		alertify.error('Please Select Other Attachment');
 		isAllValueFilled=false;
@@ -2026,6 +2175,11 @@ function mandatoryforsubsidy()
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#Email").val()))
+	{
+		alertify.error('Please Enter Valid Email');
+		isAllValueFilled=false;
+  }
+  else if(!isEmail($.trim($("#Email").val())))
 	{
 		alertify.error('Please Enter Valid Email');
 		isAllValueFilled=false;
@@ -2095,7 +2249,7 @@ function mandatoryforsubsidy()
 		alertify.error('Please Select Bank Details');
 		isAllValueFilled=false;
   }
-  else if($('#others')[0].files.length<=0)
+  else if(filesotherAttachment.length<=0)
 	{
 		alertify.error('Please Select Other Attachment');
 		isAllValueFilled=false;
@@ -2147,6 +2301,11 @@ function mandatoryforLease()
 		alertify.error('Please Select Land Scheme');
 		isAllValueFilled=false;
   }
+  else if(!$("input[id='InduvLessor']").prop('checked')&&!$("input[id='CmpnyLessor']").prop('checked'))
+  {
+    alertify.error('Please Select Lessor Type');
+		isAllValueFilled=false;
+  }
   return isAllValueFilled;
 }
 function mandatoryforindivual()
@@ -2168,7 +2327,17 @@ function mandatoryforindivual()
 		alertify.error('Please Enter Full Address');
 		isAllValueFilled=false;
   }
+  else if(!$.trim($("#PhoneNumber").val()))
+	{
+		alertify.error('Please Enter PhoneNumber');
+		isAllValueFilled=false;
+  }
   else if(!$.trim($("#Email").val()))
+	{
+		alertify.error('Please Enter Valid Email');
+		isAllValueFilled=false;
+  }
+  else if(!isEmail($.trim($("#Email").val())))
 	{
 		alertify.error('Please Enter Valid Email');
 		isAllValueFilled=false;
@@ -2176,11 +2345,6 @@ function mandatoryforindivual()
   else if(!$.trim($("#MobileNumber").val()))
 	{
 		alertify.error('Please Enter Mobile Number');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#TeleNumber").val()))
-	{
-		alertify.error('Please Enter TelePhoneNumber');
 		isAllValueFilled=false;
   }
   else if($('#OwnershipDocs')[0].files.length<=0)
@@ -2225,14 +2389,19 @@ function mandatoryforcompany()
 		alertify.error('Please Enter Valid Email');
 		isAllValueFilled=false;
   }
+  else if(!isEmail($.trim($("#Email").val())))
+	{
+		alertify.error('Please Enter Valid Email');
+		isAllValueFilled=false;
+  }
   else if(!$.trim($("#MobileNumber").val()))
 	{
 		alertify.error('Please Enter Mobile Number');
 		isAllValueFilled=false;
   }
-  else if(!$.trim($("#TeleNumber").val()))
+  else if(!$.trim($("#PhoneNumber").val()))
 	{
-		alertify.error('Please Enter TelePhoneNumber');
+		alertify.error('Please Enter PhoneNumber');
 		isAllValueFilled=false;
   }
   else if($('#Profile')[0].files.length<=0)
@@ -2329,8 +2498,13 @@ function mandatoryforcontract()
 {
 
   var isAllValueFilled=true;
-	if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
-  if(!$.trim($("#CntrctNum").val()))
+  if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
+  if(!$("input[id='NoCstExtn']").prop('checked')&&!$("input[id='CstExtn']").prop('checked'))
+  {
+    alertify.error('Please Select Cost Extension');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#CntrctNum").val()))
 	{
 		alertify.error('Please Enter Contract Number');
 		isAllValueFilled=false;
@@ -2355,6 +2529,11 @@ function mandatoryforcontract()
 		alertify.error('Please Enter Valid Email');
 		isAllValueFilled=false;
   }
+  else if(!isEmail($.trim($("#Email").val())))
+	{
+		alertify.error('Please Enter Valid Email');
+		isAllValueFilled=false;
+  }
   else if(!$.trim($("#MobileNumber").val()))
 	{
 		alertify.error('Please Enter Mobile Number');
@@ -2370,6 +2549,7 @@ function mandatoryforcontract()
 		alertify.error('Please Enter Justification for Extension');
 		isAllValueFilled=false;
   }
+
   else if($('#terms')[0].files.length<=0)
 	{
 		alertify.error('Please Select Modified Terms of Reference');
