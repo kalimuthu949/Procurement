@@ -17,6 +17,7 @@ import '../../ExternalRef/css/style.css';
 import '../../ExternalRef/css/alertify.min.css';
 import '../../ExternalRef/css/bootstrap-datepicker.min.css';
 import '../../ExternalRef/js/bootstrap-datepicker.min.js';
+import { CurrentUser } from '@pnp/sp/src/siteusers';
 //var moment: any =  require('../../../node_modules/moment/min/moment.min.js');
 var alertify: any = require('../../ExternalRef/js/alertify.min.js');
 
@@ -25,6 +26,10 @@ declare var $;
 var filesuploaded=0;
 var fileslength=0;
 var siteURL = '';
+var filesQuantity=[];
+var filesotherAttachment=[];
+var flgRepUser=false;
+var CrntUserID='';
 export interface IGoodsRequestWebPartProps {
   description: string;
 }
@@ -46,7 +51,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
   <div class="row">
   <div class="col-sm-6">
     <div class="form-group">
-      <label>Project name:<span class="star">*</span></label>
+      <label>Project Name:<span class="star">*</span></label>
       <select class="form-control" id="projectName">
         <option value="Select">Select</option>
         </select>
@@ -55,7 +60,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 
       <div class="col-sm-6">
       <div class="form-group">
-      <label>Project number:<span class="star">*</span></label>
+      <label>Project Number:<span class="star">*</span></label>
       <input class="form-control" type="text" id="projectNumber" value="">
     </div>
     </div>
@@ -72,7 +77,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
     <div class="col-sm-6">
 
     <div class="form-group">
-      <label>Name of AV:<span class="star">*</span></label>
+      <label>Name Of AV:<span class="star">*</span></label>
       <input class="form-control" type="text" id="NameofAV" value="" disabled>
     </div>
     </div>
@@ -103,7 +108,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
     <div class="row">
     <div class="col-sm-3">
     <div class="form-group">
-    <input class="radio-stylish" id="neutralspec" type="radio" name="Specifications" value="Neutral Specifications" checked />
+    <input class="radio-stylish" id="neutralspec" type="radio" name="Specifications" value="Neutral Specifications" />
     <span class="radio-element"></span>
     <label class="stylish-label" for="neutralspec">Neutral Specifications</label>
     </div>
@@ -126,15 +131,14 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 <div class="row">
 <div class="col-sm-6">
 <div class="form-group">
-  <label>JOD :<span class="star">*</span></label> 
-  <input class="form-control" type="Number" id="JOD" value="">
+  <label>Estimated Cost :<span class="star">*</span></label> 
+  <input placeholder='JOD' class="form-control" type="Number" id="JOD" value="">
 </div>
 </div>
 <div class="col-sm-6">
-
 <div class="form-group">
-  <label>EUR :<span class="star">*</span></label> 
-  <input class="form-control" type="Number" id="EUR" value="">
+  <label><span class="star"></span></label>
+  <input placeholder='EUR' class="form-control" type="Number" id="EUR" value="">
   </div>
 </div>
 </div>
@@ -160,7 +164,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 <div class="row">
 <div class="col-sm-6">
 <div class="form-group">
-  <label>Shortlist :</label>
+  <label id='lblshortlist'>Shortlist :</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="fileShortlist" class="custom-file-input">        
@@ -172,7 +176,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
  
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Text for newspaper advertisement : </label>
+  <label>Text For Newspaper Advertisement : </label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="newspaperFile" value="" class="custom-file-input">
@@ -228,7 +232,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 
 <div class="col-sm-4">
 <div class="form-group">
-<label>Phone number :<span class="star">*</span></label> <input type="Number" class="contactPhoneNumber form-control" value="">
+<label>Phone Number :<span class="star">*</span></label> <input type="Number" class="contactPhoneNumber form-control" value="">
 </div>
 </div>
 
@@ -244,7 +248,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 <div class="row">
 <div class="col-sm-6">
 <div class="form-group">
-<label>Other attachments :</label>
+<label>Other Attachments :</label>
 <div class="input-group">      
 <div class="custom-file">
 <input type="file" name="myFile" id="otherAttachments" multiple class="custom-file-input">
@@ -293,6 +297,7 @@ private readonly newcostHtml=`
     siteURL = this.context.pageContext.site.absoluteUrl;
     $( "#requestedDeliveryTime" ).datepicker({autoclose:true});
     LoadProjects();
+    getLoggedInUserDetails();
 
     for (let index = 0; index <= 20; index++) {
       $('#requestedWarrantyTime').append('<option value="' + index + '">' + index + '</option>');
@@ -319,6 +324,54 @@ private readonly newcostHtml=`
 
     });
 
+
+    $('#fileQuantities').on('change', function () 
+    {
+      if ($(this)[0].files.length > 0) 
+      {
+        for (let index = 0; index < $(this)[0].files.length; index++) 
+        {
+          const file = $('#fileQuantities')[0].files[index];
+          filesQuantity.push(file);
+          $('#quantityFiles').append('<p>' + file.name + '<a filename='+file.name+'; class="clsRemove" href="#">Remove</a></p>');
+        }
+        $(this).val('');
+        $(this).parent().find('label').text('Choose File');
+      }
+    });
+
+    $('#otherAttachments').on('change', function () 
+    {
+      if ($(this)[0].files.length > 0) 
+      {
+        for (let index = 0; index < $(this)[0].files.length; index++) 
+        {
+          const file = $('#otherAttachments')[0].files[index];
+          filesotherAttachment.push(file);
+          $('#otherAttachmentFiles').append('<p>' + file.name + '<a filename='+file.name+'; class="clsothersRemove" href="#">Remove</a></p>');
+        }
+        $(this).val('');
+        $(this).parent().find('label').text('Choose File');
+      }
+    });
+
+    $(document).on('click', '.clsRemove', function () 
+    {
+      
+      console.log(filesQuantity);
+      var filename=$(this).attr('filename');
+      removeQuantityfile(filename);
+      $(this).parent().remove();
+    });
+
+    $(document).on('click', '.clsothersRemove', function () 
+    {
+      
+      var filename=$(this).attr('filename');
+      removeOthersfile(filename);
+      $(this).parent().remove();
+    });
+
     $(document).on('click', '.remove-contact', function () {
       $('#btnContact').show();
       var clsname = $(this).attr('data-class');
@@ -334,9 +387,10 @@ private readonly newcostHtml=`
       $(this).parent('.custom-file').find('.custom-file-label').text($(this).val().replace(/C:\\fakepath\\/i, ''));
     }
     else {
-      alertify.set('notifier', 'position', 'top-right');
-      alertify.error('Please select file');
-      
+      //alertify.set('notifier', 'position', 'top-right');
+      //alertify.error('Please select file');
+      $(this).parent().find('label').text('Choose File');
+  
     }
 
   });
@@ -346,8 +400,11 @@ private readonly newcostHtml=`
       $('#fileShortlist').val('');
       $('#fileShortlistFileName').text('Choose File');
       $('#fileShortlist').prop("disabled", true);
-    } else {
+      $('#lblshortlist').text('Shortlist : (Not Selectable)');  
+    } else 
+    {
       $('#fileShortlist').prop("disabled", false);
+      $('#lblshortlist').text('Shortlist :');
     }
   });
 
@@ -407,14 +464,70 @@ private readonly newcostHtml=`
 }
 }
 
+function removeQuantityfile(filename)
+{
+  for(var i=0;i<filesQuantity.length;i++)
+  {
+    if(filesQuantity[i].name==filename)
+    {
+      filesQuantity[i].remove();
+    }
+  }
+}
+
+
+function removeOthersfile(filename)
+{
+  for(var i=0;i<filesotherAttachment.length;i++)
+  {
+    if(filesotherAttachment[i].name==filename)
+    {
+      filesotherAttachment[i].remove();
+    }
+  }
+}
+
+function isEmail(Email)
+{
+  var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+  if (testEmail.test(Email))
+  return true;
+  else
+  return false
+}
+
+
+async function getLoggedInUserDetails()
+  {
+    
+    await sp.web.currentUser.get().then((allItems: any) => 
+    {
+        if(allItems)
+        {
+          CrntUserID=allItems.Id;
+        }
+    }).catch(function(error){ErrorCallBack(error,'getLoggedInUserDetails')});
+  }
+
 function LoadProjects()
   {
     sp.web.lists.getByTitle('Projects').items.select('Title,Id,ProjectAV/Title,ProjectAV/ID,Representative/ID').expand('ProjectAV,Representative').getAll().then((allItems: any[]) => {
       for (var index = 0; index < allItems.length; index++) 
       {
         var element = allItems[index];
-        $('#projectName').append('<option Proj-Rp-id="' + element.Representative.ID + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
+
+        if(CrntUserID==element.Representative.ID)
+        {
+          flgRepUser=true;
+          $('#projectName').append('<option Proj-Rp-id="' + element.Representative.ID + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
+        }
       }
+
+        if(!flgRepUser)
+        {
+          alert('Access Denied');
+        }
+
     });
 
     console.log(siteURL);
@@ -480,7 +593,7 @@ function LoadProjects()
       if($("#chkMoreItem").prop('checked'))
       {
         if($('#costFile')[0].files.length>0)
-        arrFiles.push({'FolderName':'CostFile','files':$('#costFile')[0].files});
+        arrFiles.push({'FolderName':'CostFile','files':$('#costFile')[0].files[0]});
       }
 
       if($("input[name='Specifications']:checked").val()=='Nonneutral Specifications')
@@ -492,14 +605,35 @@ function LoadProjects()
       if($('#newspaperFile')[0].files.length>0)
       arrFiles.push({'FolderName':'NewsAdvertisement','files':$('#newspaperFile')[0].files});
 
-      if($('#fileQuantities')[0].files.length>0)
-      arrFiles.push({'FolderName':'Quantities','files':$('#fileQuantities')[0].files});
+      if(filesQuantity.length>0)
+      {
+        
+        for(var i=0;i<filesQuantity.length;i++)
+        {
+           
+          var files=[];
+          files.push(filesQuantity[i]);
+          arrFiles.push({'FolderName':'Quantities','files':files});
+        }
+        
+      }
+      
 
       if($('#fileShortlist')[0].files.length>0){
       arrFiles.push({'FolderName':'ShortList','files':$('#fileShortlist')[0].files});}
 
-      if($('#otherAttachments')[0].files.length>0)
-      arrFiles.push({'FolderName':'Others','files':$('#otherAttachments')[0].files});
+      if(filesotherAttachment.length>0)
+      {
+        
+        for(var i=0;i<filesotherAttachment.length;i++)
+        {
+           
+          var files=[];
+          files.push(filesotherAttachment[i]);
+          arrFiles.push({'FolderName':'Others','files':files});
+        }
+        
+      }
 
       InsertGoodsRequest(Servicedata,arrFiles);
     }
@@ -640,11 +774,16 @@ function ErrorCallBack(error,methodname)
 		alertify.error('Please Enter Short Description');
 		isAllValueFilled=false;
   }
-  else if($('#fileQuantities')[0].files.length<=0)
+  else if(filesQuantity.length<=0)
 	{
 		alertify.error('Please Select Specifications and Quantities');
 		isAllValueFilled=false;
-  }  
+  } 
+  else if(!$("input[id='nonneutralspec']").prop('checked')&&!$("input[id='neutralspec']").prop('checked'))
+  {
+    alertify.error('Please Select Specifications');
+		isAllValueFilled=false;
+  } 
   else if($("input[name='Specifications']:checked").val()=='Nonneutral Specifications'&&$('#nonneutralFile')[0].files.length<=0)
 	{
 		alertify.error('Please Select justification');
@@ -685,13 +824,13 @@ function ErrorCallBack(error,methodname)
 		alertify.error('Please Enter deliveryAddress');
 		isAllValueFilled=false;
   }
-  else if($('#otherAttachments')[0].files.length<=0)
+  else if(filesotherAttachment.length<=0)
 	{
 		alertify.error('Please Select other Attachments');
 		isAllValueFilled=false;
   }
 
-  else if(!$.trim($("#KompOptPT").val())&&$("#projectName").val() == 'MWR II' || $("#projectName").val() == 'RWU II')
+  else if($.trim($("#KompOptPT").val())==''&&($("#projectName").val() == 'MWR II' || $("#projectName").val() == 'RWU II'))
   {
     alertify.error('Please Enter KOMP Output');
 		isAllValueFilled=false;
@@ -711,6 +850,14 @@ function ErrorCallBack(error,methodname)
         // alert('Contact email is required');
         //alertify.set('notifier', 'position', 'top-right');
         alertify.error('Please enter Contact email');
+        $('.contactEmail:eq(' + index + ')').focus();
+        isAllValueFilled=false;
+        return isAllValueFilled;
+      }
+      if (!isEmail($('.contactEmail')[index].value)) {
+        // alert('Contact email is required');
+        //alertify.set('notifier', 'position', 'top-right');
+        alertify.error('Please enter valid Contact email');
         $('.contactEmail:eq(' + index + ')').focus();
         isAllValueFilled=false;
         return isAllValueFilled;
