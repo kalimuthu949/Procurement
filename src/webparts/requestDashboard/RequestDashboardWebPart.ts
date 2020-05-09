@@ -58,9 +58,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     siteURL = this.context.pageContext.site.absoluteUrl;   
     this.domElement.innerHTML = `
     
-    <div class="spinner-border" role="status"> 
-    <span class="sr-only">Loading...</span>
-  </div>
+
 
 
     <ul class="nav nav-tabs">
@@ -250,28 +248,53 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
       
       let HTMLGoods='';
-      HTMLGoods+='<table>';
-      HTMLGoods+='<tbody>  ';         
-      HTMLGoods+='<tr><td>Project Name : '+GoodsRequest[index].ProjectName +'</td></tr>';
-      HTMLGoods+='<tr><td>Project ID : '+GoodsRequest[index].ID +'</td></tr>';
-      HTMLGoods+='<tr><td>Name Of AV : '+GoodsRequest[index].NameOfAV+'</td></tr>';
-      HTMLGoods+='<tr><td>PN for ZAS : '+GoodsRequest[index].PNForZAS +'</td></tr>';
-      HTMLGoods+='<tr><td>Project Number : '+GoodsRequest[index].ProjectNumber +'</td></tr>';
-      HTMLGoods+='<tr><td>Quantities : <a href='+encodeURI(arrFiles[0].FileURl)+' target="_blank">'+arrFiles[0].FileName+'</a></td></tr>';
-      HTMLGoods+='<tr><td>ShortList : <a href='+encodeURI(arrFiles[1].FileURl)+' target="_blank">'+arrFiles[1].FileName+'</a></td></tr>';
-      HTMLGoods+='<tr><td>NewsAdvertisement : <a href='+encodeURI(arrFiles[2].FileURl)+' target="_blank">'+arrFiles[2].FileName+'</a></td></tr>';
-      HTMLGoods+='<tr><td>Others : <a href='+encodeURI(arrFiles[3].FileURl)+' target="_blank"> '+arrFiles[3].FileName+'</a></td></tr>';
+
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ProjectName +'</p></div></div>';
+
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ID +'</p></div></div>';
+
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].NameOfAV +'</p></div></div>';
+
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].PNForZAS +'</p></div></div>';
+
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ProjectNumber +'</p></div></div>';
+
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Quantities</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[0].FileURl)+' target="_blank">'+arrFiles[0].FileName+'</a></p></div></div>';
+
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">ShortList</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[1].FileURl)+' target="_blank">'+arrFiles[1].FileName+'</a></p></div></div>';
+
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">NewsAdvertisement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[2].FileURl)+' target="_blank">'+arrFiles[2].FileName+'</a></p></div></div>';
+
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Others</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[3].FileURl)+' target="_blank"> '+arrFiles[3].FileName+'</a></p></div></div>';
+
+      // HTMLGoods+='<table>';
+      // HTMLGoods+='<tbody>  ';         
+      // HTMLGoods+='<tr><td>Project Name : '+GoodsRequest[index].ProjectName +'</td></tr>';
+      // HTMLGoods+='<tr><td>Project ID : '+GoodsRequest[index].ID +'</td></tr>';
+      // HTMLGoods+='<tr><td>Name Of AV : '+GoodsRequest[index].NameOfAV+'</td></tr>';
+      // HTMLGoods+='<tr><td>PN for ZAS : '+GoodsRequest[index].PNForZAS +'</td></tr>';
+      // HTMLGoods+='<tr><td>Project Number : '+GoodsRequest[index].ProjectNumber +'</td></tr>';
+      // HTMLGoods+='<tr><td>Quantities : <a href='+encodeURI(arrFiles[0].FileURl)+' target="_blank">'+arrFiles[0].FileName+'</a></td></tr>';
+      // HTMLGoods+='<tr><td>ShortList : <a href='+encodeURI(arrFiles[1].FileURl)+' target="_blank">'+arrFiles[1].FileName+'</a></td></tr>';
+      // HTMLGoods+='<tr><td>NewsAdvertisement : <a href='+encodeURI(arrFiles[2].FileURl)+' target="_blank">'+arrFiles[2].FileName+'</a></td></tr>';
+      // HTMLGoods+='<tr><td>Others : <a href='+encodeURI(arrFiles[3].FileURl)+' target="_blank"> '+arrFiles[3].FileName+'</a></td></tr>';
       
       if(GoodsRequest[index].RequestItem=='Yes')
       {
-        HTMLGoods+='<tr><td>Cost Item : <a href='+encodeURI(arrFiles[4].FileURl)+' target="_blank"> '+arrFiles[4].FileName+'</a></td></tr>';
+
+        
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Cost Item</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[4].FileURl)+' target="_blank"> '+arrFiles[4].FileName+'</a></p></div></div>';
+
+        // HTMLGoods+='<tr><td>Cost Item : <a href='+encodeURI(arrFiles[4].FileURl)+' target="_blank"> '+arrFiles[4].FileName+'</a></td></tr>';
       }
       if(GoodsRequest[index].Specifications=='Nonneutral Specifications')
       {
-        HTMLGoods+='<tr><td>Specification : <a href='+encodeURI(arrFiles[5].FileURl)+' target="_blank"> '+arrFiles[5].FileName+'</a></td></tr>';
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Specification</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[5].FileURl)+' target="_blank"> '+arrFiles[5].FileName+'</a></p></div></div>';
+
+        // HTMLGoods+='<tr><td>Specification : <a href='+encodeURI(arrFiles[5].FileURl)+' target="_blank"> '+arrFiles[5].FileName+'</a></td></tr>';
       }
 
-      HTMLGoods+='</tbody></table>';
+      // HTMLGoods+='</tbody></table>';
       
 
       $('#modalbody').html('');
@@ -348,21 +371,34 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       });
 
       let HTMLservice='';
-      HTMLservice+='<table>';
-      HTMLservice+='<tbody>  ';         
-      HTMLservice+='<tr><td>Project Name : '+ServiceRequest[index].ProjectName +'</td></tr>';
-      HTMLservice+='<tr><td>Project ID : '+ServiceRequest[index].ID +'</td></tr>';
-      HTMLservice+='<tr><td>Project Number : '+ServiceRequest[index].ProjectNumber +'</td></tr>';
-      HTMLservice+='<tr><td>Name Of AV : '+ServiceRequest[index].NameOfAV+'</td></tr>';
-      HTMLservice+='<tr><td>PN for ZAS : '+ServiceRequest[index].PNForZAS +'</td></tr>';
+
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].ProjectName +'</p></div></div>';
+
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].ID +'</p></div></div>';
+
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].NameOfAV +'</p></div></div>';
+
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].PNForZAS +'</p></div></div>';
+
+
+      // HTMLservice+='<table>';
+      // HTMLservice+='<tbody>  ';         
+      // HTMLservice+='<tr><td>Project Name : '+ServiceRequest[index].ProjectName +'</td></tr>';
+      // HTMLservice+='<tr><td>Project ID : '+ServiceRequest[index].ID +'</td></tr>';
+      // HTMLservice+='<tr><td>Project Number : '+ServiceRequest[index].ProjectNumber +'</td></tr>';
+      // HTMLservice+='<tr><td>Name Of AV : '+ServiceRequest[index].NameOfAV+'</td></tr>';
+      // HTMLservice+='<tr><td>PN for ZAS : '+ServiceRequest[index].PNForZAS +'</td></tr>';
       for(var i=0;i<arrFiles.length;i++)
       {
         if(arrFiles[i].FileURl!='N/A')
         {
-          HTMLservice+='<tr><td>'+ arrFiles[i].Name +' : <a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></td></tr>';
+
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
+
+          // HTMLservice+='<tr><td>'+ arrFiles[i].Name +' : <a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></td></tr>';
         }
       }
-      HTMLservice+='</tbody></table>';
+      // HTMLservice+='</tbody></table>';
 
       $('#modalbody').html('');
       $('#modalbody').append(HTMLservice);
@@ -509,8 +545,8 @@ async function LoadGoodsRequest()
         goodsHTML+='<td>'+allItems[index].PNForZAS+'</td>';
         goodsHTML+='<td><select class="UserDropdownGDS'+index+'" disabled="disabled">'+Users+'<select></td>';
         goodsHTML+='<td><select class="StatusDropdownGDS'+index+'" disabled="disabled">'+statusHtml+'<select></td>';
-        goodsHTML+='<td><a herf="#" req-id="'+allItems[index].ID+'" class="GdsdetailView" data-toggle="modal" data-target="#myModal">View</a> ';
-        goodsHTML+='<a herf="#" index-value='+index+' class="GdsEdit">Edit</a> <a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="GdsSave">Save</a></td>';
+        goodsHTML+='<td><a herf="#" req-id="'+allItems[index].ID+'" class="GdsdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></span></a> ';
+        goodsHTML+='<a herf="#" index-value='+index+' class="GdsEdit"><span class="icon-action icon-edit"></span></a> <a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="GdsSave"><span class="icon-action icon-save"></span></a></td>';
         goodsHTML+='</tr>';
 
         }
@@ -550,7 +586,7 @@ async function LoadGoodsRequest()
         var assgnuser='select';
         
         if(allItems[index].AssignedTo1)
-        assgnuser=allItems[index].AssignedTo1.ID;
+        assgnuser=allItems[index].AssignedTo1.ID; 
 
         serviceHTML+='<tr>';
         serviceHTML+='<td>'+allItems[index].ProjectName+'</td>';
@@ -559,8 +595,8 @@ async function LoadGoodsRequest()
         serviceHTML+='<td>'+allItems[index].PNForZAS+'</td>';
         serviceHTML+='<td><select class="UserDropdownSER'+index+'" disabled="disabled">'+Users+'</select></td>';
         serviceHTML+='<td><select class="StatusDropdownSER'+index+'" disabled="disabled">'+statusHtml+'</select></td>';
-        serviceHTML+='<td><a herf="#" req-id="'+allItems[index].ID+'" class="serdetailView" data-toggle="modal" data-target="#myModal">View</a>';
-        serviceHTML+=' <a herf="#" index-value='+index+' class="SerEdit">Edit</a>  <a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SerSave">Save</a></td>';
+        serviceHTML+='<td><a herf="#" req-id="'+allItems[index].ID+'" class="serdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
+        serviceHTML+=' <a herf="#" index-value='+index+' class="SerEdit"><span class="icon-action icon-edit"></a>  <a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SerSave"><span class="icon-action icon-save"></a></td>';
         serviceHTML+='</tr>';
         }
 

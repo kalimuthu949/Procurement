@@ -47,6 +47,10 @@ export default class ProcurementOfGoodsWebPart extends BaseClientSideWebPart <IP
   }
   
   private readonly HtmlGoods = `
+  <div class="loading-modal"> 
+  <div class="spinner-border" role="status"> 
+  <span class="sr-only">Loading...</span>
+</div></div>
   <h4 class='page-heading'>New Service Request</h4>
   <div class="row">
   <div class="col-sm-6">
@@ -252,7 +256,7 @@ private readonly DirectAward=`
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
-  <span id="otherAttachmentFiles"></span>
+  <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
 </div>
 </div>
 
@@ -298,13 +302,13 @@ private readonly Shortlistedtender=`
 
 <div class="col-sm-3">
 <div class="form-group">
-<label>JOD :<span class="star">*</span></label> <input type="Number" id='JOD' class="contactEmail form-control" value="">
+<label>&nbsp;<span class="star"></span></label> <input type="Number"  placeholder="JOD" id='JOD' class="contactEmail form-control" value=""> 
 </div>
 </div>
 
 <div class="col-sm-3">
 <div class="form-group">
-<label>EUR :<span class="star">*</span></label> <input type="Number" id='EUR' class="contactPhoneNumber form-control" value="">
+<label>&nbsp;<span class="star"></span></label> <input type="Number" placeholder="EUR" id='EUR' class="contactPhoneNumber form-control" value="">
 </div>
 </div>
 </div>
@@ -374,7 +378,7 @@ private readonly Shortlistedtender=`
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
-  <span id="otherAttachmentFiles"></span>
+  <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
 </div>
 </div>
 
@@ -405,13 +409,13 @@ private readonly tender=`
 
 <div class="col-sm-3">
 <div class="form-group">
-<label>JOD :<span class="star">*</span></label> <input type="Number" id='JOD' class="contactEmail form-control" value="">
+<label>&nbsp;<span class="star"></span></label> <input type="Number" id='JOD' placeholder='JOD' class="contactEmail form-control" value="">
 </div>
 </div>
 
 <div class="col-sm-3">
 <div class="form-group">
-<label>EUR :<span class="star">*</span></label> <input type="Number" id='EUR' class="contactPhoneNumber form-control" value="">
+<label>&nbsp;<span class="star"></span></label> <input type="Number" id='EUR' placeholder='EUR'  class="contactPhoneNumber form-control" value="">
 </div>
 </div>
 </div>
@@ -481,7 +485,7 @@ private readonly tender=`
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
-  <span id="otherAttachmentFiles"></span>
+  <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
 </div>
 </div>
 </div>
@@ -625,13 +629,13 @@ private readonly LocalSubsidy=`
 
 <div class="col-sm-3">
 <div class="form-group">
-<label>Value of Local Subsidy(JOD):<span class="star">*</span></label> <input type="Number" id='JOD' class="contactEmail form-control" value="">
+<label>Value of Local Subsidy:<span class="star">*</span></label> <input type="Number" id='JOD' placeholder='JOD' class="contactEmail form-control" value="">
 </div>
 </div>
 
 <div class="col-sm-3">
 <div class="form-group">
-<label>Value of Local Subsidy(EUR) :<span class="star">*</span></label> <input type="Number"  id='EUR' class="contactPhoneNumber form-control" value="">
+<label>Value of Local Subsidy:<span class="star">*</span></label> <input type="Number" placeholder='EUR'  id='EUR' class="contactPhoneNumber form-control" value="">
 </div>
 </div>
 </div>
@@ -658,7 +662,7 @@ private readonly LocalSubsidy=`
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
-  <span id="otherAttachmentFiles"></span>
+  <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
 </div>
 </div>
 </div>
@@ -1261,7 +1265,7 @@ private readonly EstimationHMTL=`
         {
           const file = $('#others')[0].files[index];
           filesotherAttachment.push(file);
-          $('#otherAttachmentFiles').append('<p>' + file.name + '<a filename='+file.name+'; class="clsRemove" href="#">Remove</a></p>');
+          $('#otherAttachmentFiles').append('<div class="quantityFiles">' + '<span class="upload-filename">'+file.name+'</span>' + '<a filename='+file.name+'; class="clsRemove" href="#">x</a></div>');
         }
         $(this).val('');
         $(this).parent().find('label').text('Choose File');
@@ -1451,6 +1455,8 @@ async function LoadProjects()
 
   function CreateService()
   {
+    $('.loading-modal').addClass('active');
+    $('body').addClass('body-hidden');
     let arrFiles=[];
     
     if(MandatoryValidation())
@@ -1858,6 +1864,8 @@ async function UploadFile(FolderUrl,files)
       console.log('Added');
       if(filesuploaded==fileslength)
       {
+        $('.loading-modal').removeClass('active');
+        $('body').removeClass('body-hidden');
         AlertMessage("Service Created");
       }
   }).catch(function(error){ErrorCallBack(error,'uploadFiles')});
