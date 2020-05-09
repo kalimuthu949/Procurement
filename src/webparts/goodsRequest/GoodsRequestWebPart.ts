@@ -533,7 +533,7 @@ function LoadProjects()
 
         if(!flgRepUser)
         {
-          alert('Access Denied');
+          AlertMessage("Access Denied");
         }
 
     });
@@ -753,7 +753,8 @@ function AlertMessage(strMewssageEN) {
 
 function ErrorCallBack(error,methodname)
 {	
-	alert(error);
+  $('.loading-modal').removeClass('active');
+  alert(error);
 };
   
   

@@ -37,6 +37,7 @@ var filename='';
 var siteURL='';
 var Users='';
 var statusHtml='';
+var flgRepUser=false;
 
 export interface IRequestDashboardWebPartProps {
   description: string;
@@ -81,7 +82,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <th>Project Name</th>
     <th>Project Number</th>
     <th>Name Of AV</th>
-    <th>PN for ZAS</th>
+    <th>Date of Request</th>
     <th>Assigned To</th>
     <th>Status</th>
     <th>Details</th>
@@ -105,7 +106,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <th>Project Name</th>
     <th>Project Number</th>
     <th>Name Of AV</th>
-    <th>PN for ZAS</th>
+    <th>Date of Request</th>
     <th>Assigned To</th>
     <th>Status</th>
     <th>Details</th>
@@ -153,6 +154,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     getAllFolders();
     LoadProcurementTeamMembers();
     LoadStatus();
+    LoadProjects();
     LoadProcurementTeam();
     LoadAdminTeam();
     LoadGoodsRequest();
@@ -524,7 +526,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 async function LoadGoodsRequest()
   {
     await sp.web.lists.getByTitle('ProcurementGoods').items
-    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,RequestStatus/ID,RequestStatus/Title')
+    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,RequestStatus/ID,RequestStatus/Title,Created')
     .expand('AssignedTo1,AVName,Representative,RequestStatus')
     .getAll().then((allItems: any[]) => {
       var goodsHTML='';
@@ -542,11 +544,17 @@ async function LoadGoodsRequest()
         goodsHTML+='<td>'+allItems[index].ProjectName+'</td>';
         goodsHTML+='<td>'+allItems[index].ProjectNumber+'</td>';
         goodsHTML+='<td>'+allItems[index].NameOfAV+'</td>';
-        goodsHTML+='<td>'+allItems[index].PNForZAS+'</td>';
+        goodsHTML+='<td>'+moment(allItems[index].Created).format('DD MMMM YYYY')+'</td>';
         goodsHTML+='<td><select class="UserDropdownGDS'+index+'" disabled="disabled">'+Users+'<select></td>';
         goodsHTML+='<td><select class="StatusDropdownGDS'+index+'" disabled="disabled">'+statusHtml+'<select></td>';
-        goodsHTML+='<td><a herf="#" req-id="'+allItems[index].ID+'" class="GdsdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></span></a> ';
-        goodsHTML+='<a herf="#" index-value='+index+' class="GdsEdit"><span class="icon-action icon-edit"></span></a> <a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="GdsSave"><span class="icon-action icon-save"></span></a></td>';
+        goodsHTML+='<td>';
+        goodsHTML+='<a herf="#" req-id="'+allItems[index].ID+'" class="GdsdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></span></a>';
+        if(flgSystemAdmin||CrntUserID==assgnuser)
+        {
+        goodsHTML+='<a herf="#" index-value='+index+' class="GdsEdit"><span class="icon-action icon-edit"></span></a>';
+        goodsHTML+='<a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="GdsSave"><span class="icon-action icon-save"></span></a>';
+        }
+        goodsHTML+='</td>';
         goodsHTML+='</tr>';
 
         }
@@ -572,7 +580,7 @@ async function LoadGoodsRequest()
   async function LoadServiceRequest()
   {
     await sp.web.lists.getByTitle('ProcurementService').items
-    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID')
+    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created')
     .expand('AssignedTo1,AVName,Representative,RequestStatus')
     .getAll().then((allItems: any[]) => {
       var serviceHTML='';
@@ -592,11 +600,16 @@ async function LoadGoodsRequest()
         serviceHTML+='<td>'+allItems[index].ProjectName+'</td>';
         serviceHTML+='<td>'+allItems[index].ProjectNumber+'</td>';
         serviceHTML+='<td>'+allItems[index].NameOfAV+'</td>';
-        serviceHTML+='<td>'+allItems[index].PNForZAS+'</td>';
+        serviceHTML+='<td>'+moment(allItems[index].Created).format('DD MMMM YYYY')+'</td>';
         serviceHTML+='<td><select class="UserDropdownSER'+index+'" disabled="disabled">'+Users+'</select></td>';
         serviceHTML+='<td><select class="StatusDropdownSER'+index+'" disabled="disabled">'+statusHtml+'</select></td>';
-        serviceHTML+='<td><a herf="#" req-id="'+allItems[index].ID+'" class="serdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
-        serviceHTML+=' <a herf="#" index-value='+index+' class="SerEdit"><span class="icon-action icon-edit"></a>  <a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SerSave"><span class="icon-action icon-save"></a></td>';
+        serviceHTML+='<td>';
+        serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" class="serdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
+        if(flgSystemAdmin||CrntUserID==assgnuser){
+        serviceHTML+='<a herf="#" index-value='+index+' class="SerEdit"><span class="icon-action icon-edit"></a>';  
+        serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SerSave"><span class="icon-action icon-save"></a>';
+        }
+        serviceHTML+='</td>';
         serviceHTML+='</tr>';
         }
 
@@ -678,6 +691,29 @@ async function LoadGoodsRequest()
     }).catch(function(error){ErrorCallBack(error,'LoadProcurementTeam')});
   }
 
+
+  async function LoadProjects()
+  {
+     await sp.web.lists.getByTitle('Projects').items.select('Title,Id,ProjectAV/Title,ProjectAV/ID,Representative/ID').expand('ProjectAV,Representative').getAll().then((allItems: any[]) => {
+      for (var index = 0; index < allItems.length; index++) 
+      {
+        var element = allItems[index];
+        if(CrntUserID==element.Representative.ID)
+        {
+          flgRepUser=true;
+          $('#projectName').append('<option Proj-Rp-id="' + element.Representative.ID + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
+        }
+      }
+
+      if(!flgRepUser)
+        {
+          $('#btnGoods').prop('disabled',true);
+          $('#btnService').prop('disabled',true);
+        }
+
+    });
+  }
+
   async function getLoggedInUserDetails()
   {
     
@@ -711,16 +747,23 @@ async function LoadGoodsRequest()
 
   async function updaterequest(itemid,data,listname,close)
   {
+    $('.loading-modal').addClass('active');
+    $('body').addClass('body-hidden');
     await sp.web.lists.getByTitle(listname).items.getById(itemid).update(data).then((allItems: any) => 
     {
         //alert('updated');
-        if(close)
-        location.reload();
+        if(close){
+          $('.loading-modal').removeClass('active');
+          $('body').removeClass('body-hidden');
+          location.reload(); 
+        }
+        
     }).catch(function(error){ErrorCallBack(error,'updategoodsrequest')});
   }
 
   
 function ErrorCallBack(error,methodname)
 {	
-	alert(error);
+  $('.loading-modal').removeClass('active');
+  alert(error);
 }
