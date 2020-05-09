@@ -46,7 +46,12 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
     });
   }
 
-  private readonly newGoods = ` 
+  private readonly newGoods = `
+  <div class="loading-modal"> 
+  <div class="spinner-border" role="status"> 
+  <span class="sr-only">Loading...</span>
+</div>
+</div>
   <h4 class='page-heading'>New Goods Request</h4>
   <div class="row">
   <div class="col-sm-6">
@@ -99,7 +104,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
       <label class="custom-file-label" for="fileQuantities">Choose File</label>
       </div>
       </div>
-      <span id="quantityFiles"></span>
+      <div id="quantityFilesContainer" class="quantityFilesContainer"></div>
     </div>
     </div>
     </div>
@@ -129,15 +134,15 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 </div>
 
 <div class="row">
-<div class="col-sm-6">
+<div class="col-sm-3">
 <div class="form-group">
   <label>Estimated Cost :<span class="star">*</span></label> 
   <input placeholder='JOD' class="form-control" type="Number" id="JOD" value="">
 </div>
 </div>
-<div class="col-sm-6">
+<div class="col-sm-3">
 <div class="form-group">
-  <label><span class="star"></span></label>
+  <label>&nbsp;<span class="star"></span></label>
   <input placeholder='EUR' class="form-control" type="Number" id="EUR" value="">
   </div>
 </div>
@@ -153,12 +158,13 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 </div>
 </div>
 
+</div>
+<div class="row">
 <div class="col-sm-6">
 <div class="form-group" id="divcostFile">
 
 </div>
-</div>
-</div>
+</div></div>
 
 
 <div class="row">
@@ -245,6 +251,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 <div class="form-group">
 <input class="btn btn-primary" type="button" id="btnContact" value="Add contact">
 </div>
+
 <div class="row">
 <div class="col-sm-6">
 <div class="form-group">
@@ -254,7 +261,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 <input type="file" name="myFile" id="otherAttachments" multiple class="custom-file-input">
 <label class="custom-file-label" for="otherAttachments">Choose File</label>
 </div>
-</div><span id="otherAttachmentFiles"></span></div></div></div>
+</div><div class="quantityFilesContainer quantityFilesContainer-static" id="otherAttachmentFiles"></div></div></div></div>  
 <div class="row">
 <div class="col-sm-6">
 <div class="form-group" id="spanKOMP" style='display:none'>
@@ -329,14 +336,14 @@ private readonly newcostHtml=`
     {
       if ($(this)[0].files.length > 0) 
       {
-        for (let index = 0; index < $(this)[0].files.length; index++) 
+        for (let index = 0; index < $(this)[0].files.length; index++)  
         {
           const file = $('#fileQuantities')[0].files[index];
           filesQuantity.push(file);
-          $('#quantityFiles').append('<p>' + file.name + '<a filename='+file.name+'; class="clsRemove" href="#">Remove</a></p>');
+          $('#quantityFilesContainer').append('<div class="quantityFiles">' + '<span class="upload-filename">'+file.name+'</span>' + '<a filename='+file.name+'; class="clsRemove" href="#">x</a></div>');
         }
         $(this).val('');
-        $(this).parent().find('label').text('Choose File');
+        $(this).parent().find('label').text('Choose File'); 
       }
     });
 
@@ -348,7 +355,8 @@ private readonly newcostHtml=`
         {
           const file = $('#otherAttachments')[0].files[index];
           filesotherAttachment.push(file);
-          $('#otherAttachmentFiles').append('<p>' + file.name + '<a filename='+file.name+'; class="clsothersRemove" href="#">Remove</a></p>');
+          
+          $('#otherAttachmentFiles').append('<div class="quantityFiles">' + '<span class="upload-filename">'+file.name+'</span>' + '<a filename='+file.name+'; class="clsothersRemove" href="#">x</a></div>');
         }
         $(this).val('');
         $(this).parent().find('label').text('Choose File');
@@ -543,7 +551,7 @@ function LoadProjects()
       <div class="col-sm-4"><div class="form-group">
       <label>Email :<span class="star">*</span></label> <input type="email" class="contactEmail form-control" value=""></div></div>
       <div class="col-sm-4"><div class="form-group">
-      <label>Phone number :<span class="star">*</span></label> <input type="text" class="contactPhoneNumber form-control" value=""><span>removetag</span></div></div></div>
+      <label>Phone number :<span class="star">*</span></label> <input type="text" class="contactPhoneNumber form-control" value=""><span class='cross-pos'>removetag</span></div></div></div>
       </div>`;
       var clsname = 'contact-detail' + $('.contact-details').length;
       newcontact = newcontact.replace('clsname', clsname);
@@ -559,6 +567,8 @@ function LoadProjects()
 
   function CreateGoodsRequest()
   {
+    $('.loading-modal').addClass('active');
+    $('body').addClass('body-hidden');
     let arrFiles=[];
     if(MandatoryValidation())
     {
@@ -681,6 +691,8 @@ async function UploadFile(FolderUrl,files)
       console.log('Added');
       if(filesuploaded==fileslength)
       {
+        $('.loading-modal').removeClass('active');
+        $('body').removeClass('body-hidden');
         AlertMessage("Goods Created")
       }
   }).catch(function(error){ErrorCallBack(error,'uploadFiles')});
