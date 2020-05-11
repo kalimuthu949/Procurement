@@ -303,8 +303,9 @@ private readonly newcostHtml=`
     this.domElement.innerHTML=this.newGoods;
     siteURL = this.context.pageContext.site.absoluteUrl;
     $( "#requestedDeliveryTime" ).datepicker({autoclose:true});
-    LoadProjects();
+    
     getLoggedInUserDetails();
+    LoadProjects();
 
     for (let index = 0; index <= 20; index++) {
       $('#requestedWarrantyTime').append('<option value="' + index + '">' + index + '</option>');
@@ -517,9 +518,9 @@ async function getLoggedInUserDetails()
     }).catch(function(error){ErrorCallBack(error,'getLoggedInUserDetails')});
   }
 
-function LoadProjects()
+async function LoadProjects()
   {
-    sp.web.lists.getByTitle('Projects').items.select('Title,Id,ProjectAV/Title,ProjectAV/ID,Representative/ID').expand('ProjectAV,Representative').getAll().then((allItems: any[]) => {
+    await sp.web.lists.getByTitle('Projects').items.select('Title,Id,ProjectAV/Title,ProjectAV/ID,Representative/ID').expand('ProjectAV,Representative').getAll().then((allItems: any[]) => {
       for (var index = 0; index < allItems.length; index++) 
       {
         var element = allItems[index];
@@ -533,7 +534,7 @@ function LoadProjects()
 
         if(!flgRepUser)
         {
-          alert('Access Denied');
+          AlertMessage("Access Denied");
         }
 
     });
@@ -567,12 +568,12 @@ function LoadProjects()
 
   function CreateGoodsRequest()
   {
-    $('.loading-modal').addClass('active');
-    $('body').addClass('body-hidden');
+
     let arrFiles=[];
     if(MandatoryValidation())
     {
-      
+      $('.loading-modal').addClass('active');
+      $('body').addClass('body-hidden');
       
       let DelivertimeTime=(new Date(Date.parse(moment($("#requestedDeliveryTime").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
 
@@ -603,7 +604,7 @@ function LoadProjects()
       if($("#chkMoreItem").prop('checked'))
       {
         if($('#costFile')[0].files.length>0)
-        arrFiles.push({'FolderName':'CostFile','files':$('#costFile')[0].files[0]});
+        arrFiles.push({'FolderName':'CostFile','files':$('#costFile')[0].files});
       }
 
       if($("input[name='Specifications']:checked").val()=='Nonneutral Specifications')
@@ -688,7 +689,7 @@ async function UploadFile(FolderUrl,files)
   .files.add(files[0].name, files[0], true).then(function(data)
    {
       filesuploaded++;
-      console.log('Added');
+      console.log(files[0].name+'Added');
       if(filesuploaded==fileslength)
       {
         $('.loading-modal').removeClass('active');
@@ -753,7 +754,9 @@ function AlertMessage(strMewssageEN) {
 
 function ErrorCallBack(error,methodname)
 {	
-	alert(error);
+  $('.loading-modal').removeClass('active');
+  $('body').addClass('body-hidden');
+  alert(error);
 };
   
   
