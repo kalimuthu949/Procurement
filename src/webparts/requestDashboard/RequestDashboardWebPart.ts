@@ -60,7 +60,11 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     this.domElement.innerHTML = `
     
 
-
+    <div class="loading-modal"> 
+    <div class="spinner-border" role="status"> 
+    <span class="sr-only">Loading...</span>
+    </div>
+    </div>
 
     <ul class="nav nav-tabs">
     <li class="active"><a href="#home" data-toggle="tab">Service Request</a></li>
@@ -448,6 +452,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
       if(AssignedUser!='Select')
       {
+        $('.loading-modal').addClass('active');
+        $('body').addClass('body-hidden');
+        
         var data={"AssignedTo1Id":AssignedUser};
 
         if(ReqStatus=='Select')
@@ -678,7 +685,6 @@ async function LoadGoodsRequest()
     {
         if(allItems.length>0)
         {
-          console.log(allItems);
           statusHtml+='<option value="Select">Select</option>';
           for(var i=0;i<allItems.length;i++)
           {

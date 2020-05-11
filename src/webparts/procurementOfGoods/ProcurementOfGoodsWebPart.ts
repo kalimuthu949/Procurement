@@ -1455,8 +1455,7 @@ async function LoadProjects()
 
   function CreateService()
   {
-    $('.loading-modal').addClass('active');
-    $('body').addClass('body-hidden');
+
     let arrFiles=[];
     
     if(MandatoryValidation())
@@ -1466,6 +1465,9 @@ async function LoadProjects()
         if(mandatoryfordirectaward())
         {
           
+          $('.loading-modal').addClass('active');
+          $('body').addClass('body-hidden');
+
           let FromDate=(new Date(Date.parse(moment($("#Fromdate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
           let Todate=(new Date(Date.parse(moment($("#Todate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
 
@@ -1518,6 +1520,9 @@ async function LoadProjects()
         if(mandatoryforshortlisttender())
         {
           
+          $('.loading-modal').addClass('active');
+          $('body').addClass('body-hidden');
+
           let FromDate=(new Date(Date.parse(moment($("#Fromdate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
           let Todate=(new Date(Date.parse(moment($("#Todate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
 
@@ -1566,6 +1571,8 @@ async function LoadProjects()
       {
         if(mandatoryforpublictender())
         {
+          $('.loading-modal').addClass('active');
+          $('body').addClass('body-hidden');
           let FromDate=(new Date(Date.parse(moment($("#Fromdate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
           let Todate=(new Date(Date.parse(moment($("#Todate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
 
@@ -1613,6 +1620,8 @@ async function LoadProjects()
         if(mandatoryforsubsidy())
         {
           
+          $('.loading-modal').addClass('active');
+          $('body').addClass('body-hidden');
           let FromDate=(new Date(Date.parse(moment($("#Fromdate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
           let Todate=(new Date(Date.parse(moment($("#Todate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
 
@@ -1676,6 +1685,9 @@ async function LoadProjects()
           {
               if(mandatoryforindivual())
               {
+                $('.loading-modal').addClass('active');
+                $('body').addClass('body-hidden');
+
                 let Servicedata=
                 {
                   ProjectName:$("#projectName option:selected").val(),
@@ -1712,6 +1724,9 @@ async function LoadProjects()
           {
               if(mandatoryforcompany())
               {
+                $('.loading-modal').addClass('active');
+                $('body').addClass('body-hidden');
+
                 let Servicedata=
                 {
                   ProjectName:$("#projectName option:selected").val(),
@@ -1751,6 +1766,8 @@ async function LoadProjects()
       {
         if(mandatoryforiDPP())
         {
+          $('.loading-modal').addClass('active');
+          $('body').addClass('body-hidden');
           let FromDate=(new Date(Date.parse(moment($("#Fromdate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
           let Todate=(new Date(Date.parse(moment($("#Todate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
 
@@ -1789,6 +1806,8 @@ async function LoadProjects()
       {
         if(mandatoryforcontract())
         {
+          $('.loading-modal').addClass('active');
+          $('body').addClass('body-hidden');
           let Servicedata=
                 {
                   ProjectName:$("#projectName option:selected").val(),
@@ -2408,9 +2427,9 @@ function mandatoryforcompany()
 		alertify.error('Please Enter Mobile Number');
 		isAllValueFilled=false;
   }
-  else if(!$.trim($("#PhoneNumber").val()))
+  else if(!$.trim($("#TeleNumber").val()))
 	{
-		alertify.error('Please Enter PhoneNumber');
+		alertify.error('Please Enter Tele PhoneNumber');
 		isAllValueFilled=false;
   }
   else if($('#Profile')[0].files.length<=0)
