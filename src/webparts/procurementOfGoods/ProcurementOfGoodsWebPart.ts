@@ -134,14 +134,14 @@ private readonly DirectAward=`
     <div class='row'>
     <div class="col-sm-6">
     <div class="form-group">
-      <label>Name Of Consulting Firm/Appariser</label>
+      <label>Name Of Consulting Firm/Appariser<span class="star">*</span></label>
       <input class="form-control" type="text" id="NameOfFirm" value="">
     </div>
     </div>
     
     <div class="col-sm-6">
     <div class="form-group">
-    <label>Area Of Activity</label>
+    <label>Area Of Activity<span class="star">*</span></label>
     <input class="form-control" type="text" id="AreaActivy" value="">
   </div>
     </div>
@@ -157,7 +157,7 @@ private readonly DirectAward=`
 
     <div class="col-sm-6">
     <div class="form-group">
-      <label>Full Address</label>
+      <label>Full Address<span class="star">*</span></label>
       <textarea class="form-control" id="FullAddress"></textarea>
     </div></div>
     </div>
@@ -165,14 +165,14 @@ private readonly DirectAward=`
 <div class='row'>
 <div class="col-sm-6">
     <div class="form-group">
-    <label>Contact Person</label>
+    <label>Contact Person<span class="star">*</span></label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
     </div>
 
     <div class="col-sm-6">
     <div class="form-group">
-    <label>Telephone Number</label>
+    <label>Telephone Number<span class="star">*</span></label>
     <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div>
@@ -211,7 +211,7 @@ private readonly DirectAward=`
 <div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Estimated Cost</label>
+  <label>Estimated Cost<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="Estimation" value="" class="custom-file-input">
@@ -223,7 +223,7 @@ private readonly DirectAward=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Justification For Direct Award</label>
+  <label>Justification For Direct Award<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="justification" value="" class="custom-file-input">
@@ -237,7 +237,7 @@ private readonly DirectAward=`
 <div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Terms Of Reference</label>
+  <label>Terms Of Reference<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="terms" value="" class="custom-file-input">
@@ -249,7 +249,7 @@ private readonly DirectAward=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Other Attachments</label>
+  <label>Other Attachments<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="others" value="" class="custom-file-input" multiple>
@@ -275,7 +275,7 @@ private readonly Shortlistedtender=`
 
   <div class="col-sm-6">
     <div class="form-group">
-     <label>Shortlist</label>
+     <label>Shortlist<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="shortlist" value="" class="custom-file-input">
@@ -290,7 +290,7 @@ private readonly Shortlistedtender=`
   <div class='row'> 
   <div class="col-sm-6">
  <div class="form-group">
-  <label>Estimated Cost</label>
+  <label>Estimated Cost<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="Estimation" value="" class="custom-file-input">
@@ -318,7 +318,7 @@ private readonly Shortlistedtender=`
 <div class='row'>
 <div class="col-sm-6">
 <div class="form-group" id='divforJustification' style='display:none'>
- <label>Justification For Shortlisted Tender</label>
+ <label>Justification For Shortlisted Tender<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="justification" value="" class="custom-file-input">
@@ -330,7 +330,7 @@ private readonly Shortlistedtender=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Terms Of Reference</label>
+  <label>Terms Of Reference<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="terms" value="" class="custom-file-input">
@@ -359,7 +359,7 @@ private readonly Shortlistedtender=`
 <div class='row'>
 <div class="col-sm-6">
 <div class="form-group">
- <label>Technical Assessment Grid</label>
+ <label>Technical Assessment Grid<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="Assessment" value="" class="custom-file-input">
@@ -371,7 +371,7 @@ private readonly Shortlistedtender=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Other Attachments</label>
+  <label>Other Attachments<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="others" value="" class="custom-file-input" multiple>
@@ -397,7 +397,7 @@ private readonly tender=`
 <div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Estimated Cost</label>
+  <label>Estimated Cost<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="Estimation" value="" class="custom-file-input">
@@ -424,7 +424,7 @@ private readonly tender=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Terms Of Reference</label>
+  <label>Terms Of Reference<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="terms" value="" class="custom-file-input">
@@ -436,7 +436,7 @@ private readonly tender=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>Technical Assessment Grid</label>
+ <label>Technical Assessment Grid<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="Assessment" value="" class="custom-file-input">
@@ -467,7 +467,7 @@ private readonly tender=`
 <div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Text For Newspaper Advertisement : </label>
+  <label>Text For Newspaper Advertisement<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="newspaperFile" value="" class="custom-file-input">
@@ -478,7 +478,7 @@ private readonly tender=`
 </div>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Other Attachments</label>
+  <label>Other Attachments<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="others" value="" class="custom-file-input" multiple>
@@ -502,7 +502,7 @@ private readonly LocalSubsidy=`
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>Name Of Beneficiary</label>
+    <label>Name Of Beneficiary<span class="star">*</span></label>
     <input class="form-control" type="text" id="NameOfBenficiary" value="">
   </div>
   </div>
@@ -518,7 +518,7 @@ private readonly LocalSubsidy=`
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>Telephone Number</label>
+    <label>Telephone Number<span class="star">*</span></label>
     <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div>
@@ -529,7 +529,7 @@ private readonly LocalSubsidy=`
 
 <div class="col-sm-6">
 <div class="form-group">
-    <label>Name Of Contact Person</label>
+    <label>Name Of Contact Person<span class="star">*</span></label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
 </div>
@@ -567,7 +567,7 @@ private readonly LocalSubsidy=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Project Proposal</label>
+  <label>Project Proposal<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="Proposal" value="" class="custom-file-input">
@@ -579,7 +579,7 @@ private readonly LocalSubsidy=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Commercial Suitability</label>
+  <label>Commercial Suitability<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="Suitability" value="" class="custom-file-input">
@@ -595,7 +595,7 @@ private readonly LocalSubsidy=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Budget Break-down</label>
+  <label>Budget Break-down<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="Budget" value="" class="custom-file-input">
@@ -604,7 +604,7 @@ private readonly LocalSubsidy=`
   </div></div></div>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Registration Certificate</label>
+  <label>Registration Certificate<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="Certificate" value="" class="custom-file-input">
@@ -617,7 +617,7 @@ private readonly LocalSubsidy=`
 <div class='row'> 
 <div class="col-sm-6">
 <div class="form-group">
-<label>Profile</label>
+<label>Profile<span class="star">*</span></label>
 <div class="input-group">
 <div class="custom-file">
 <input type="file" id="Profile" value="" class="custom-file-input">
@@ -643,7 +643,7 @@ private readonly LocalSubsidy=`
 <div class='row'>
 <div class="col-sm-6">
 <div class="form-group">
- <label>Bank Details</label>
+ <label>Bank Details<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="BankDetails" value="" class="custom-file-input">
@@ -655,7 +655,7 @@ private readonly LocalSubsidy=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Other Attachments</label>
+  <label>Other Attachments<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="others" value="" class="custom-file-input" multiple>
@@ -680,7 +680,7 @@ private readonly LeaseAgreement=`
 
   <div class="col-sm-6">
 <div class="form-group">
- <label>Land Scheme</label>
+ <label>Land Scheme<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="LandScheme" value="" class="custom-file-input">
@@ -694,7 +694,7 @@ private readonly LeaseAgreement=`
 <div class='row'>
 <div class="col-sm-6">
 <div class="form-group">
- <label>RMO Approval</label>
+ <label>RMO Approval<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="RMOApproval" value="" class="custom-file-input">
@@ -706,7 +706,7 @@ private readonly LeaseAgreement=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Country Director Approval</label>
+  <label>Country Director Approval<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="DirectorApproval" value="" class="custom-file-input">
@@ -771,7 +771,7 @@ private readonly CompanyLessorHTML=`
 
   <div class="col-sm-6">
 <div class="form-group">
- <label>Registration Certificate</label>
+ <label>Registration Certificate<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="RegCert" value="" class="custom-file-input">
@@ -791,7 +791,7 @@ private readonly CompanyLessorHTML=`
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>TelePhone Number</label>
+    <label>TelePhone Number<span class="star">*</span></label>
     <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div>
@@ -802,7 +802,7 @@ private readonly CompanyLessorHTML=`
 
 <div class="col-sm-6">
     <div class="form-group">
-    <label>Name Of Contact Person</label>
+    <label>Name Of Contact Person<span class="star">*</span></label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
     </div>
@@ -825,7 +825,7 @@ private readonly CompanyLessorHTML=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Company Profile</label>
+  <label>Company Profile<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="Profile" value="" class="custom-file-input">
@@ -836,7 +836,7 @@ private readonly CompanyLessorHTML=`
 </div>
 <div class="col-sm-6">
 <div class="form-group">
- <label>Bank Details</label>
+ <label>Bank Details<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="BankDetails" value="" class="custom-file-input">
@@ -862,7 +862,7 @@ private readonly InduvLessorHTML=`
 
   <div class="col-sm-6">
 <div class="form-group">
- <label>Lessor ID</label>
+ <label>Lessor ID<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="LessorID" value="" class="custom-file-input">
@@ -882,7 +882,7 @@ private readonly InduvLessorHTML=`
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>Phone Number</label>
+    <label>Phone Number<span class="star">*</span></label>
     <input class="form-control" type="Number" id="PhoneNumber" value="">
   </div>
   </div>
@@ -909,7 +909,7 @@ private readonly InduvLessorHTML=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Estate Ownership Documents</label>
+  <label>Estate Ownership Documents<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="OwnershipDocs" value="" class="custom-file-input">
@@ -920,7 +920,7 @@ private readonly InduvLessorHTML=`
 </div>
 <div class="col-sm-6">
 <div class="form-group">
- <label>Bank Details</label>
+ <label>Bank Details<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="BankDetails" value="" class="custom-file-input">
@@ -949,7 +949,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>Company’s Registration Certificate</label>
+ <label>Company’s Registration Certificate<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="RegCert" value="" class="custom-file-input">
@@ -961,7 +961,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Company Profile</label>
+  <label>Company Profile<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="Profile" value="" class="custom-file-input">
@@ -977,7 +977,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>CVs Of Experts</label>
+ <label>CVs Of Experts<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="Experts" value="" class="custom-file-input">
@@ -989,7 +989,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>Bank Details</label>
+ <label>Bank Details<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="BankDetails" value="" class="custom-file-input">
@@ -1005,7 +1005,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>Financial Reports</label>
+ <label>Financial Reports<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="FinReport" value="" class="custom-file-input">
@@ -1017,7 +1017,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>Summary Action Plan</label>
+ <label>Summary Action Plan<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="Actionplan" value="" class="custom-file-input">
@@ -1033,7 +1033,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>Brief concept For Agreement</label>
+ <label>Brief concept For Agreement<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="Agreement" value="" class="custom-file-input">
@@ -1045,7 +1045,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>Budget Plan</label>
+ <label>Budget Plan<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="Budget" value="" class="custom-file-input">
@@ -1061,7 +1061,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>Vergabedok</label>
+ <label>Vergabedok<span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="Vergabedok" value="" class="custom-file-input">
@@ -1073,7 +1073,7 @@ private readonly iDPP=`
 
 <div class="col-sm-6">
 <div class="form-group">
- <label>Competition Report </label>
+ <label>Competition Report <span class="star">*</span></label>
  <div class="input-group">
  <div class="custom-file">
  <input type="file" id="CompetitionReport" value="" class="custom-file-input">
@@ -1147,7 +1147,7 @@ private readonly ContractAmendment=`
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>Name Of Consulting Firm / Appraiser</label>
+    <label>Name Of Consulting Firm / Appraiser<span class="star">*</span></label>
     <input class="form-control" type="text" id="NameOfFirm" value="">
   </div>
   </div> 
@@ -1157,13 +1157,13 @@ private readonly ContractAmendment=`
 
 <div class="col-sm-3">
 <div class="form-group">
-    <label>contact Person</label>
+    <label>Contact Person<span class="star">*</span></label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
 </div>
 <div class="col-sm-3">
     <div class="form-group">
-    <label>Telephone Number</label>
+    <label>Telephone Number<span class="star">*</span></label>
     <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div> 
@@ -1190,7 +1190,7 @@ private readonly ContractAmendment=`
 
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Modified Terms of Reference</label>
+     <label>Modified Terms of Reference<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="terms" value="" class="custom-file-input">
@@ -1218,7 +1218,7 @@ private readonly EstimationHMTL=`
 <div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Estimated Cost for the Extension</label>
+  <label>Estimated Cost for the Extension<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="Estimation" value="" class="custom-file-input">
@@ -1265,7 +1265,7 @@ private readonly EstimationHMTL=`
         {
           const file = $('#others')[0].files[index];
           filesotherAttachment.push(file);
-          $('#otherAttachmentFiles').append('<div class="quantityFiles">' + '<span class="upload-filename">'+file.name+'</span>' + '<a filename='+file.name+'; class="clsRemove" href="#">x</a></div>');
+          $('#otherAttachmentFiles').append('<div class="quantityFiles">' + '<span class="upload-filename">'+file.name+'</span>' + '<a filename='+file.name+' class="clsRemove" href="#">x</a></div>');
         }
         $(this).val('');
         $(this).parent().find('label').text('Choose File');
@@ -2164,18 +2164,17 @@ function mandatoryforpublictender()
 	{
 		alertify.error('From  Date Should be lesser than To date');
 		isAllValueFilled=false;
-	}
-  else if(filesotherAttachment.length<=0)
-	{
-		alertify.error('Please Select Other Attachment');
-		isAllValueFilled=false;
   }
   else if($('#newspaperFile')[0].files.length<=0)
 	{
 		alertify.error('Please Select Text for newspaper advertisement');
 		isAllValueFilled=false;
   }
-
+  else if(filesotherAttachment.length<=0)
+	{
+		alertify.error('Please Select Other Attachment');
+		isAllValueFilled=false;
+  }
   return isAllValueFilled;
 }
 function mandatoryforsubsidy()
@@ -2187,7 +2186,7 @@ function mandatoryforsubsidy()
 		alertify.error('Please Enter Short Description');
 		isAllValueFilled=false;
   }
-  if(!$.trim($("#NameOfBenficiary").val()))
+  else if(!$.trim($("#NameOfBenficiary").val()))
 	{
 		alertify.error('Please Enter Name Of Benficiary');
 		isAllValueFilled=false;
@@ -2195,6 +2194,11 @@ function mandatoryforsubsidy()
   else if(!$.trim($("#FullAddress").val()))
 	{
 		alertify.error('Please Enter Full Address');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#TeleNumber").val()))
+	{
+		alertify.error('Please Enter TelePhone Number');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#CntctPrsn").val()))
@@ -2217,19 +2221,14 @@ function mandatoryforsubsidy()
 		alertify.error('Please Enter Mobile Number');
 		isAllValueFilled=false;
   }
-  else if(!$.trim($("#TeleNumber").val()))
-	{
-		alertify.error('Please Enter TelePhoneNumber');
-		isAllValueFilled=false;
-  }
   else if(!$.trim($("#Fromdate").val()))
 	{
-		alertify.error('Please Enter Duration of the assignment (From Date)');
+		alertify.error('Please Enter assignment (From Date)');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#Todate").val()))
 	{
-		alertify.error('Please Enter Duration of the assignment (To Date)');
+		alertify.error('Please Enter assignment (To Date)');
 		isAllValueFilled=false;
   }
   else if((moment($("#Fromdate").val(), "MM-DD-YYYY").toISOString())>(moment($("#Todate").val(), "MM-DD-YYYY").toISOString()))
@@ -2552,6 +2551,11 @@ function mandatoryforcontract()
 		alertify.error('Please Enter Contact Person');
 		isAllValueFilled=false;
   }
+  else if(!$.trim($("#TeleNumber").val()))
+	{
+		alertify.error('Please Enter TelePhoneNumber');
+		isAllValueFilled=false;
+  }
   else if(!$.trim($("#Email").val()))
 	{
 		alertify.error('Please Enter Valid Email');
@@ -2565,11 +2569,6 @@ function mandatoryforcontract()
   else if(!$.trim($("#MobileNumber").val()))
 	{
 		alertify.error('Please Enter Mobile Number');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#TeleNumber").val()))
-	{
-		alertify.error('Please Enter TelePhoneNumber');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#justification").val()))

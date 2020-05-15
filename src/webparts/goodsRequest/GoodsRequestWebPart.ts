@@ -341,7 +341,7 @@ private readonly newcostHtml=`
         {
           const file = $('#fileQuantities')[0].files[index];
           filesQuantity.push(file);
-          $('#quantityFilesContainer').append('<div class="quantityFiles">' + '<span class="upload-filename">'+file.name+'</span>' + '<a filename='+file.name+'; class="clsRemove" href="#">x</a></div>');
+          $('#quantityFilesContainer').append('<div class="quantityFiles">' + '<span class="upload-filename">'+file.name+'</span>' + '<a filename='+file.name+' class="clsRemove" href="#">x</a></div>');
         }
         $(this).val('');
         $(this).parent().find('label').text('Choose File'); 
@@ -357,7 +357,7 @@ private readonly newcostHtml=`
           const file = $('#otherAttachments')[0].files[index];
           filesotherAttachment.push(file);
           
-          $('#otherAttachmentFiles').append('<div class="quantityFiles">' + '<span class="upload-filename">'+file.name+'</span>' + '<a filename='+file.name+'; class="clsothersRemove" href="#">x</a></div>');
+          $('#otherAttachmentFiles').append('<div class="quantityFiles">' + '<span class="upload-filename">'+file.name+'</span>' + '<a filename='+file.name+' class="clsothersRemove" href="#">x</a></div>');
         }
         $(this).val('');
         $(this).parent().find('label').text('Choose File');
@@ -368,7 +368,8 @@ private readonly newcostHtml=`
     {
       
       console.log(filesQuantity);
-      var filename=$(this).attr('filename');
+      //var filename=$(this).attr('filename');
+      var filename=$(this).parent().children()[0].innerText;
       removeQuantityfile(filename);
       $(this).parent().remove();
     });
@@ -376,7 +377,8 @@ private readonly newcostHtml=`
     $(document).on('click', '.clsothersRemove', function () 
     {
       
-      var filename=$(this).attr('filename');
+      //var filename=$(this).attr('filename');
+      var filename=$(this).parent().children()[0].innerText;
       removeOthersfile(filename);
       $(this).parent().remove();
     });
@@ -479,7 +481,8 @@ function removeQuantityfile(filename)
   {
     if(filesQuantity[i].name==filename)
     {
-      filesQuantity[i].remove();
+      ///filesQuantity[i].remove();
+      filesQuantity.splice(i,1);
     }
   }
 }
@@ -491,7 +494,8 @@ function removeOthersfile(filename)
   {
     if(filesotherAttachment[i].name==filename)
     {
-      filesotherAttachment[i].remove();
+      //filesotherAttachment[i].remove();
+      filesotherAttachment[i].splice(i,1);
     }
   }
 }
@@ -756,7 +760,7 @@ function ErrorCallBack(error,methodname)
 {	
   $('.loading-modal').removeClass('active');
   $('body').addClass('body-hidden');
-  alert(error);
+  alert(error+"-"+methodname);
 };
   
   
@@ -819,12 +823,12 @@ function ErrorCallBack(error,methodname)
 		alertify.error('Please Enter EUR');
 		isAllValueFilled=false;
   }
-  else if($("#EUR").val()<='20000'&&$('#fileShortlist')[0].files.length<=0)
+  else if($("#EUR").val()<=20000&&$('#fileShortlist')[0].files.length<=0)
 	{
 		alertify.error('Please Select Short list');
 		isAllValueFilled=false;
   } 
-  else if($("#EUR").val()>='20000'&&$('#newspaperFile')[0].files.length<=0)
+  else if($("#EUR").val()>=20000&&$('#newspaperFile')[0].files.length<=0)
 	{
 		alertify.error('Please Select Text for newspaper advertisement');
 		isAllValueFilled=false;
@@ -839,7 +843,7 @@ function ErrorCallBack(error,methodname)
 		alertify.error('Please Enter deliveryAddress');
 		isAllValueFilled=false;
   }
-  else if(filesotherAttachment.length<=0)
+  /*else if(filesotherAttachment.length<=0)
 	{
 		alertify.error('Please Select other Attachments');
 		isAllValueFilled=false;
@@ -849,7 +853,7 @@ function ErrorCallBack(error,methodname)
   {
     alertify.error('Please Enter KOMP Output');
 		isAllValueFilled=false;
-  }
+  }*/
   else
   {
     for (let index = 0; index < $('.contact-details').length; index++) {
@@ -886,6 +890,21 @@ function ErrorCallBack(error,methodname)
         return isAllValueFilled;
       }
     }
+
+    if(filesotherAttachment.length<=0)
+    {
+      alertify.error('Please Select other Attachments');
+      isAllValueFilled=false;
+      return isAllValueFilled;
+    }
+  
+    if($.trim($("#KompOptPT").val())==''&&($("#projectName").val() == 'MWR II' || $("#projectName").val() == 'RWU II'))
+    {
+      alertify.error('Please Enter KOMP Output');
+      isAllValueFilled=false;
+      return isAllValueFilled;
+    }
+
   }
 
   return isAllValueFilled;

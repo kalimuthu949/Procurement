@@ -83,6 +83,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <table id="Service"  style="width:100%">
     <thead>
     <tr>
+    <th>Id</th>
     <th>Project Name</th>
     <th>Project Number</th>
     <th>Name Of AV</th>
@@ -107,6 +108,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <table id="Goods" style="width:100%">
     <thead>
     <tr>
+    <th>Id</th>
     <th>Project Name</th>
     <th>Project Number</th>
     <th>Name Of AV</th>
@@ -155,12 +157,12 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     //$('#GoodsTable').hide();
     
     getLoggedInUserDetails();
+    LoadAdminTeam();
     getAllFolders();
     LoadProcurementTeamMembers();
     LoadStatus();
     LoadProjects();
     LoadProcurementTeam();
-    LoadAdminTeam();
     LoadGoodsRequest();
     LoadServiceRequest();
     
@@ -455,18 +457,14 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
         $('.loading-modal').addClass('active');
         $('body').addClass('body-hidden');
         
-        var data={"AssignedTo1Id":AssignedUser};
-
-        if(ReqStatus=='Select')
-        updaterequest(itemid,data,'ProcurementService',true);
-        else
-        updaterequest(itemid,data,'ProcurementService',false);
-
+        var data; 
+        data={"AssignedTo1Id":AssignedUser};
         if(ReqStatus!='Select')
         {
-          var dataforStatus={"RequestStatusId":ReqStatus};
-          updaterequest(itemid,dataforStatus,'ProcurementService',true);
+          data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus};
         }
+
+        updaterequest(itemid,data,'ProcurementService',true);
       } 
 
 
@@ -484,18 +482,15 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
       if(AssignedUser!='Select')
       {
-        var data={"AssignedTo1Id":AssignedUser};
-
-        if(ReqStatus=='Select')
-        updaterequest(itemid,data,'ProcurementGoods',true);
-        else
-        updaterequest(itemid,data,'ProcurementGoods',false);
+        var data; 
+        data={"AssignedTo1Id":AssignedUser};
 
         if(ReqStatus!='Select')
         {
-          var dataforStatus={"RequestStatusId":ReqStatus};
-          updaterequest(itemid,dataforStatus,'ProcurementGoods',true);
+          data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus};
         }
+
+        updaterequest(itemid,data,'ProcurementGoods',true);
       }
     });
     
@@ -533,9 +528,11 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 async function LoadGoodsRequest()
   {
     await sp.web.lists.getByTitle('ProcurementGoods').items
-    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,RequestStatus/ID,RequestStatus/Title,Created')
+    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,RequestStatus/ID,RequestStatus/Title,Created,Modified')
+    .orderBy("Modified",false)
     .expand('AssignedTo1,AVName,Representative,RequestStatus')
-    .getAll().then((allItems: any[]) => {
+    .top(5000)
+    .get().then((allItems: any[]) => {
       var goodsHTML='';
       GoodsRequest=allItems;
       for (var index = 0; index < allItems.length; index++) 
@@ -548,6 +545,7 @@ async function LoadGoodsRequest()
         assgnuser=allItems[index].AssignedTo1.ID;
         
         goodsHTML+='<tr>';
+        goodsHTML+='<td>'+allItems[index].Modified+'</td>';
         goodsHTML+='<td>'+allItems[index].ProjectName+'</td>';
         goodsHTML+='<td>'+allItems[index].ProjectNumber+'</td>';
         goodsHTML+='<td>'+allItems[index].NameOfAV+'</td>';
@@ -581,15 +579,25 @@ async function LoadGoodsRequest()
 
     }).catch(function(error){ErrorCallBack(error,'InsertService')});
 
-    $('#Goods').DataTable();
+    $('#Goods').DataTable({
+      "order": [[ 0, "desc" ]],
+      "columnDefs": [
+        {
+            "targets": [ 0 ],
+            "visible": false,
+        }  
+    ]
+  });
   }
 
   async function LoadServiceRequest()
   {
     await sp.web.lists.getByTitle('ProcurementService').items
-    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created')
+    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified')
+    .orderBy("Modified", false)
     .expand('AssignedTo1,AVName,Representative,RequestStatus')
-    .getAll().then((allItems: any[]) => {
+    .top(5000)
+    .get().then((allItems: any[]) => {
       var serviceHTML='';
       ServiceRequest=allItems;
       for (var index = 0; index < allItems.length; index++) 
@@ -604,6 +612,7 @@ async function LoadGoodsRequest()
         assgnuser=allItems[index].AssignedTo1.ID; 
 
         serviceHTML+='<tr>';
+        serviceHTML+='<td>'+allItems[index].Modified+'</td>';
         serviceHTML+='<td>'+allItems[index].ProjectName+'</td>';
         serviceHTML+='<td>'+allItems[index].ProjectNumber+'</td>';
         serviceHTML+='<td>'+allItems[index].NameOfAV+'</td>';
@@ -635,7 +644,14 @@ async function LoadGoodsRequest()
 
     }).catch(function(error){ErrorCallBack(error,'LoadServiceRequest')});
 
-    $('#Service').DataTable();
+    $('#Service').DataTable({
+      "order": [[ 0, "desc" ]],
+      "columnDefs": [
+        {
+            "targets": [ 0 ],
+            "visible": false,
+        }]
+  });
     $('.UserDropdown').attr('disabled',true);
   }
 
@@ -738,7 +754,7 @@ async function LoadGoodsRequest()
     await sp.web.getFolderByServerRelativeUrl('ProcurementServices')
     .expand('Files,Folders/Folders/Files')
     .get()
-    .then((allItems: any[]) => 
+    .then((allItems: any[]) =>
     {
       
       console.log(allItems);
@@ -755,13 +771,14 @@ async function LoadGoodsRequest()
   {
     $('.loading-modal').addClass('active');
     $('body').addClass('body-hidden');
-    await sp.web.lists.getByTitle(listname).items.getById(itemid).update(data).then((allItems: any) => 
+    let lstupdate=await sp.web.lists.getByTitle(listname);
+    lstupdate.items.getById(itemid).update(data).then((allItems: any) => 
     {
         //alert('updated');
         if(close){
           $('.loading-modal').removeClass('active');
           $('body').removeClass('body-hidden');
-          location.reload(); 
+          location.reload(true); 
         }
         
     }).catch(function(error){ErrorCallBack(error,'updategoodsrequest')});
