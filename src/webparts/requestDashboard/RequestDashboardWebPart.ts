@@ -222,10 +222,11 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       let arrFiles=[];
       
 
-      arrFiles.push({'Name':'Quantities','FileName':'N/A','FileURl':'N/A'});
+      // arrFiles.push({'Name':'Quantities','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Quantities','Files':[]});
       arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Others','Files':[]});
       arrFiles.push({'Name':'CostFile','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'NeutralSpecfication','FileName':'N/A','FileURl':'N/A'});
 
@@ -241,8 +242,20 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
                 {
                   for(var k=0;k<ProcurementServiceFiles['Folders'][i].Folders[j].Files.length;k++)
                   {
-                    arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
-                    arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                    if(val.Name=="Quantities")
+                    {
+                      arrFiles[key].Files.push({"FileName":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,"FileURI":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
+                    }
+                    else if(val.Name=="Others")
+                    {
+                      arrFiles[key].Files.push({"FileName":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,"FileURI":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
+                    }
+                    else
+                    {
+                      arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
+                      arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                    }
+
                   
                   }
                 }
@@ -267,13 +280,23 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ProjectNumber +'</p></div></div>';
 
-      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Quantities</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[0].FileURl)+' target="_blank">'+arrFiles[0].FileName+'</a></p></div></div>';
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Quantities</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'
+        for(let i=0;i<arrFiles[0].Files.length;i++)
+        {
+          HTMLGoods+='<a href='+encodeURI(arrFiles[0].Files[i].FileURI)+' target="_blank">'+arrFiles[0].Files[i].FileName+'</a><br>'
+        }
+     HTMLGoods+='</p></div></div>';
 
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">ShortList</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[1].FileURl)+' target="_blank">'+arrFiles[1].FileName+'</a></p></div></div>';
 
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">NewsAdvertisement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[2].FileURl)+' target="_blank">'+arrFiles[2].FileName+'</a></p></div></div>';
 
-      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Others</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[3].FileURl)+' target="_blank"> '+arrFiles[3].FileName+'</a></p></div></div>';
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Others</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'
+      for(let i=0;i<arrFiles[3].Files.length;i++)
+      {
+        HTMLGoods+='<a href='+encodeURI(arrFiles[3].Files[i].FileURI)+' target="_blank"> '+arrFiles[3].Files[i].FileName+'</a><br>'
+      }
+      HTMLGoods+='</p></div></div>';
 
       // HTMLGoods+='<table>';
       // HTMLGoods+='<tbody>  ';         
@@ -333,7 +356,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       arrFiles.push({'Name':'EstimatedCost','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'Terms','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Others','Files':[]});
+      // arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'TechAssGrid','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
@@ -368,8 +392,16 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
                 {
                   for(var k=0;k<ProcurementServiceFiles['Folders'][i].Folders[j].Files.length;k++)
                   {
-                    arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
-                    arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                    if(val.Name=="Others")
+                    {
+                      arrFiles[key].Files.push({"FileName":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,"FileURl":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
+                    }
+                    else
+                    {
+                      arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
+                      arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                    }
+
                   
                   }
                 }
@@ -401,7 +433,23 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
         if(arrFiles[i].FileURl!='N/A')
         {
 
-          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
+          if(arrFiles[i].Name=='Others')
+          {
+            HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">';
+            
+            for(let j=0;j<arrFiles[i].Files.length;j++)
+            {
+              HTMLservice+='<a href='+encodeURI(arrFiles[i].Files[j].FileURl)+' target="_blank"> '+arrFiles[i].Files[j].FileName+'</a><br>'
+            }
+
+            HTMLservice+='</p></div></div>';
+          }
+          else
+          {
+            HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
+          }
+
+
 
           // HTMLservice+='<tr><td>'+ arrFiles[i].Name +' : <a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></td></tr>';
         }

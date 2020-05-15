@@ -97,7 +97,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
     </div>
     <div class="col-sm-6">
     <div class="form-group">
-      <label>Specifications and Quantities:</label>     
+      <label>Specifications and Quantities:<span class="star">*</span></label>     
       <div class="input-group">
       <div class="custom-file">
       <input class="custom-file-input" type="file" id="fileQuantities"  multiple>
@@ -255,7 +255,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
 <div class="row">
 <div class="col-sm-6">
 <div class="form-group">
-<label>Other Attachments :</label>
+<label>Other Attachments :<span class="star">*</span></label>
 <div class="input-group">      
 <div class="custom-file">
 <input type="file" name="myFile" id="otherAttachments" multiple class="custom-file-input">
@@ -495,7 +495,7 @@ function removeOthersfile(filename)
     if(filesotherAttachment[i].name==filename)
     {
       //filesotherAttachment[i].remove();
-      filesotherAttachment[i].splice(i,1);
+      filesotherAttachment.splice(i,1);
     }
   }
 }
@@ -775,12 +775,12 @@ function ErrorCallBack(error,methodname)
   }
   else if(!$.trim($("#projectNumber").val()))
 	{
-		alertify.error('Please Enter project Number');
+		alertify.error('Please Enter Project Number');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#pnForZAS").val()))
 	{
-		alertify.error('Please Enter pn For ZAS');
+		alertify.error('Please Enter PN For ZAS');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#NameofAV").val()))

@@ -791,7 +791,7 @@ private readonly CompanyLessorHTML=`
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>TelePhone Number<span class="star">*</span></label>
+    <label>Telephone Number<span class="star">*</span></label>
     <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div>
@@ -1275,8 +1275,9 @@ private readonly EstimationHMTL=`
     $(document).on('click', '.clsRemove', function () 
     {
       
-      var filename=$(this).attr('filename');
-      removeOthersfile(filesotherAttachment);
+      // var filename=$(this).attr('filename');
+      var filename=$(this).parent().children()[0].innerText;
+      removeOthersfile(filename);
       $(this).parent().remove();
     });
 
@@ -1397,7 +1398,8 @@ function removeOthersfile(filename)
   {
     if(filesotherAttachment[i].name==filename)
     {
-      filesotherAttachment[i].remove();
+     // filesotherAttachment[i].remove();
+     filesotherAttachment.splice(i,1);
     }
   }
 }
@@ -1925,12 +1927,12 @@ function MandatoryValidation()
   }
   else if(!$.trim($("#projectNumber").val()))
 	{
-		alertify.error('Please Enter project Number');
+		alertify.error('Please Enter Project Number');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#pnForZAS").val()))
 	{
-		alertify.error('Please Enter pn For ZAS');
+		alertify.error('Please Enter PN For ZAS');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#NameofAV").val()))
@@ -1989,7 +1991,7 @@ function mandatoryfordirectaward()
   }
   else if(!$.trim($("#TeleNumber").val()))
 	{
-		alertify.error('Please Enter TelePhoneNumber');
+		alertify.error('Please Enter Telephone Number');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#Email").val()))
@@ -2198,7 +2200,7 @@ function mandatoryforsubsidy()
   }
   else if(!$.trim($("#TeleNumber").val()))
 	{
-		alertify.error('Please Enter TelePhone Number');
+		alertify.error('Please Enter Telephone Number');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#CntctPrsn").val()))
@@ -2406,6 +2408,11 @@ function mandatoryforcompany()
 		alertify.error('Please Enter Full Address');
 		isAllValueFilled=false;
   }
+  else if(!$.trim($("#TeleNumber").val()))
+	{
+		alertify.error('Please Enter Tele PhoneNumber');
+		isAllValueFilled=false;
+  }
   else if(!$.trim($("#CntctPrsn").val()))
 	{
 		alertify.error('Please Enter Contact Person');
@@ -2426,11 +2433,7 @@ function mandatoryforcompany()
 		alertify.error('Please Enter Mobile Number');
 		isAllValueFilled=false;
   }
-  else if(!$.trim($("#TeleNumber").val()))
-	{
-		alertify.error('Please Enter Tele PhoneNumber');
-		isAllValueFilled=false;
-  }
+
   else if($('#Profile')[0].files.length<=0)
 	{
 		alertify.error('Please Select Company Profile');
@@ -2553,7 +2556,7 @@ function mandatoryforcontract()
   }
   else if(!$.trim($("#TeleNumber").val()))
 	{
-		alertify.error('Please Enter TelePhoneNumber');
+		alertify.error('Please Enter Telephone Number');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#Email").val()))
