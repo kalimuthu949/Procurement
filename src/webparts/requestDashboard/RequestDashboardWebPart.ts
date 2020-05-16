@@ -436,14 +436,18 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
           if(arrFiles[i].Name=='Others')
           {
-            HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">';
-            
-            for(let j=0;j<arrFiles[i].Files.length;j++)
+            if(arrFiles[i].Files.length>0)
             {
-              HTMLservice+='<a href='+encodeURI(arrFiles[i].Files[j].FileURl)+' target="_blank"> '+arrFiles[i].Files[j].FileName+'</a><br>'
+              HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">';
+            
+              for(let j=0;j<arrFiles[i].Files.length;j++)
+              {
+                HTMLservice+='<a href='+encodeURI(arrFiles[i].Files[j].FileURl)+' target="_blank"> '+arrFiles[i].Files[j].FileName+'</a><br>'
+              }
+  
+              HTMLservice+='</p></div></div>';
             }
 
-            HTMLservice+='</p></div></div>';
           }
           else
           {
@@ -586,7 +590,7 @@ async function LoadGoodsRequest()
       GoodsRequest=allItems;
       for (var index = 0; index < allItems.length; index++) 
       {
-        if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+        if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
         {
           var assgnuser='select';
         
@@ -652,7 +656,7 @@ async function LoadGoodsRequest()
       for (var index = 0; index < allItems.length; index++) 
       {
         
-        if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+        if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
         {
         
         var assgnuser='select';

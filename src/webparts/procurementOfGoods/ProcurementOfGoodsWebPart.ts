@@ -846,6 +846,22 @@ private readonly CompanyLessorHTML=`
  </div>
 </div>
 </div>
+</div>
+
+<div class='row'>
+<div class="col-sm-6">
+ <div class="form-group">
+  <label>Other Attachments<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="others" value="" class="custom-file-input" multiple>
+  <label class="custom-file-label" for="others">Choose File</label>
+  </div>
+  </div>
+  <div class="quantityFilesContainer quantityFilesContainer-static" id="otherAttachmentFiles"></div>
+</div>
+</div>
+</div>
 
 </div>
 `;
@@ -931,7 +947,20 @@ private readonly InduvLessorHTML=`
 </div>
 </div>
 </div>
-
+<div class='row'>
+<div class="col-sm-6">
+ <div class="form-group">
+  <label>Other Attachments<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="others" value="" class="custom-file-input" multiple>
+  <label class="custom-file-label" for="others">Choose File</label>
+  </div>
+  </div>
+  <div class="quantityFilesContainer quantityFilesContainer-static" id="otherAttachmentFiles"></div>
+</div>
+</div>
+</div>
 
 </div>
 `;
@@ -1408,6 +1437,7 @@ function removeOthersfile(filename)
     {
      // filesotherAttachment[i].remove();
      filesotherAttachment.splice(i,1);
+     break;
     }
   }
 }
@@ -1725,7 +1755,19 @@ async function LoadProjects()
                 arrFiles.push({'FolderName':'RmoApproval','files':$('#RMOApproval')[0].files});
                 arrFiles.push({'FolderName':'DirectorApproval','files':$('#DirectorApproval')[0].files});
                 arrFiles.push({'FolderName':'LandScheme','files':$('#LandScheme')[0].files});
-                
+
+                if(filesotherAttachment.length>0)
+                {
+                  
+                  for(var i=0;i<filesotherAttachment.length;i++)
+                  {
+                    
+                    var files=[];
+                    files.push(filesotherAttachment[i]);
+                    arrFiles.push({'FolderName':'Others','files':files});
+                  }
+                  
+                }
 
                 InsertService(Servicedata,arrFiles);
               }
@@ -1765,7 +1807,18 @@ async function LoadProjects()
                 arrFiles.push({'FolderName':'RmoApproval','files':$('#RMOApproval')[0].files});
                 arrFiles.push({'FolderName':'DirectorApproval','files':$('#DirectorApproval')[0].files});
                 arrFiles.push({'FolderName':'LandScheme','files':$('#LandScheme')[0].files});
-
+                if(filesotherAttachment.length>0)
+                {
+                  
+                  for(var i=0;i<filesotherAttachment.length;i++)
+                  {
+                    
+                    var files=[];
+                    files.push(filesotherAttachment[i]);
+                    arrFiles.push({'FolderName':'Others','files':files});
+                  }
+                  
+                }
                 InsertService(Servicedata,arrFiles);
               }
           }
@@ -2394,6 +2447,11 @@ function mandatoryforindivual()
 		alertify.error('Please Select Bank Details');
 		isAllValueFilled=false;
   }
+  else if(filesotherAttachment.length<=0)
+	{
+		alertify.error('Please Select Other Attachment');
+		isAllValueFilled=false;
+  }
   return isAllValueFilled;
 }
 
@@ -2450,6 +2508,11 @@ function mandatoryforcompany()
   else if($('#BankDetails')[0].files.length<=0)
 	{
 		alertify.error('Please Select Bank Details');
+		isAllValueFilled=false;
+  }
+  else if(filesotherAttachment.length<=0)
+	{
+		alertify.error('Please Select Other Attachment');
 		isAllValueFilled=false;
   }
   return isAllValueFilled;
@@ -2555,6 +2618,11 @@ function mandatoryforcontract()
   else if(!$.trim($("#FullAddress").val()))
 	{
 		alertify.error('Please Enter Full Address');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#NameOfFirm").val()))
+	{
+		alertify.error('Please Enter Name Of Firm');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#CntctPrsn").val()))

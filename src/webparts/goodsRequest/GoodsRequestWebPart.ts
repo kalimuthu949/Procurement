@@ -491,6 +491,7 @@ function removeQuantityfile(filename)
     {
       ///filesQuantity[i].remove();
       filesQuantity.splice(i,1);
+      break;
     }
   }
 }
@@ -504,6 +505,7 @@ function removeOthersfile(filename)
     {
       //filesotherAttachment[i].remove();
       filesotherAttachment.splice(i,1);
+      break;
     }
   }
 }
