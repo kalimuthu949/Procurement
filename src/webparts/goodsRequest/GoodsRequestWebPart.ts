@@ -13,6 +13,7 @@ import { SPComponentLoader } from "@microsoft/sp-loader";
 import 'jquery';
 import * as moment from 'moment'
 import { sp } from "@pnp/sp";
+import "@pnp/polyfill-ie11";  
 import '../../ExternalRef/css/style.css';
 import '../../ExternalRef/css/alertify.min.css';
 import '../../ExternalRef/css/bootstrap-datepicker.min.css';
@@ -41,6 +42,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
   public onInit(): Promise<void> {
     return super.onInit().then(_ => {
       sp.setup({
+
         spfxContext: this.context
       });
     });
@@ -395,7 +397,13 @@ private readonly newcostHtml=`
     $(document).on('change','.custom-file-input',function()
     {
     if ($(this).val()) {
-      $(this).parent('.custom-file').find('.custom-file-label').text($(this).val().replace(/C:\\fakepath\\/i, ''));
+      var fileValue=$(this).val()
+        // returns string containing everything from the end of the string 
+        //   that is not a back/forward slash or an empty string on error
+        //   so one can check if return_value===''
+      typeof fileValue==='string' && (fileValue=fileValue.match(/[^\\\/]+$/)) && fileValue[0] || '';
+      
+     $(this).parent('.custom-file').find('.custom-file-label').text(fileValue[0]);
     }
     else {
       //alertify.set('notifier', 'position', 'top-right');

@@ -15,6 +15,7 @@ import 'jquery';
 import * as moment from 'moment';
 import 'datatables';
 import { sp } from "@pnp/sp";
+import "@pnp/polyfill-ie11"; 
 import '../../ExternalRef/css/style.css';
 import '../../ExternalRef/css/alertify.min.css';
 import '../../ExternalRef/css/bootstrap-datepicker.min.css';
@@ -836,5 +837,5 @@ async function LoadGoodsRequest()
 function ErrorCallBack(error,methodname)
 {	
   $('.loading-modal').removeClass('active');
-  alert(error);
+  alert(error+":"+methodname);
 }
