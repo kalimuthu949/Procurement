@@ -33,6 +33,7 @@ var siteURL='';
 var CrntUserID='';
 var flgRepUser=false;
 var filesotherAttachment=[];
+var ProjectDetails=[];
 export interface IProcurementOfGoodsWebPartProps {
   description: string;
 }
@@ -81,7 +82,7 @@ export default class ProcurementOfGoodsWebPart extends BaseClientSideWebPart <IP
     </div>
     <div class="col-sm-6">
     <div class="form-group">
-      <label>Name Of AV:<span class="star">*</span></label>
+      <label>Name of AV:<span class="star">*</span></label>
       <input class="form-control" type="text" id="NameofAV" value="" disabled>
     </div>
     </div>
@@ -1449,10 +1450,19 @@ async function LoadProjects()
       for (var index = 0; index < allItems.length; index++) 
       {
         var element = allItems[index];
-        if(CrntUserID==element.Representative.ID)
+        for(var indexForRep = 0; indexForRep < allItems[index].Representative.length; indexForRep++)
         {
-          flgRepUser=true;
-          $('#projectName').append('<option Proj-Rp-id="' + element.Representative.ID + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
+          if(CrntUserID==allItems[index].Representative[indexForRep].ID)
+          {
+            flgRepUser=true;
+            $('#projectName').append('<option Proj-Num="' + element.ProjectNumber + '" Proj-Rp-id="' + element.Representative.ID + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
+            var arrRepUsers=[];
+            for(var i=0;i<allItems[index].Representative.length;i++)
+            {
+              arrRepUsers.push(allItems[index].Representative[i].ID);
+            }
+            ProjectDetails.push({'PrjtcNum':element.Title,'RepId':arrRepUsers});
+          }
         }
       }
 
@@ -1948,7 +1958,7 @@ async function UploadFile(FolderUrl,files)
       {
         $('.loading-modal').removeClass('active');
         $('body').removeClass('body-hidden');
-        AlertMessage("Service Created");
+        AlertMessage("Service Request is created in the System");
       }
   }).catch(function(error){ErrorCallBack(error,'uploadFiles')});
 }
@@ -2088,22 +2098,22 @@ function mandatoryfordirectaward()
 	}
   else if($('#Estimation')[0].files.length<=0)
 	{
-		alertify.error('Please Select Estimated Cost');
+		alertify.error('Please upload a file for Estimated Cost');
 		isAllValueFilled=false;
   }
   else if($('#justification')[0].files.length<=0)
 	{
-		alertify.error('Please Select Justification for direct award');
+		alertify.error('Please upload a file for Justification for direct award');
 		isAllValueFilled=false;
   }
   else if($('#terms')[0].files.length<=0)
 	{
-		alertify.error('Please Select Terms of Reference');
+		alertify.error('Please upload a file for Terms of Reference');
 		isAllValueFilled=false;
   }
   else if(filesotherAttachment.length<=0)
 	{
-		alertify.error('Please Select Other Attachment');
+		alertify.error('Please upload a file for Other Attachment');
 		isAllValueFilled=false;
   }
   return isAllValueFilled;
@@ -2126,7 +2136,7 @@ function mandatoryforshortlisttender()
   }
   else if($('#Estimation')[0].files.length<=0)
 	{
-		alertify.error('Please Select Estimated Cost');
+		alertify.error('Please upload a file for Estimated Cost');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#JOD").val()))
@@ -2141,12 +2151,12 @@ function mandatoryforshortlisttender()
   }
   else if($("#EUR").val()>=50000&&$('#justification')[0].files.length<=0)
 	{
-		alertify.error('Please Select Justification for shortlisted tender');
+		alertify.error('Please upload a file for Justification for shortlisted tender');
 		isAllValueFilled=false;
   }
   else if($('#terms')[0].files.length<=0)
 	{
-		alertify.error('Please Select Terms of Reference');
+		alertify.error('Please upload a file for Terms of Reference');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#Fromdate").val()))
@@ -2166,12 +2176,12 @@ function mandatoryforshortlisttender()
 	}
   else if($('#Assessment')[0].files.length<=0)
 	{
-		alertify.error('Please Select Technical Assessment Grid');
+		alertify.error('Please upload a file for Technical Assessment Grid');
 		isAllValueFilled=false;
   }  
   else if(filesotherAttachment.length<=0)
 	{
-		alertify.error('Please Select Other Attachment');
+		alertify.error('Please upload a file for Other Attachment');
 		isAllValueFilled=false;
   }
 
@@ -2190,7 +2200,7 @@ function mandatoryforpublictender()
   }
   else if($('#Estimation')[0].files.length<=0)
 	{
-		alertify.error('Please Select Estimated Cost');
+		alertify.error('Please upload a file for Estimated Cost');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#JOD").val()))
@@ -2205,12 +2215,12 @@ function mandatoryforpublictender()
   }
   else if($('#terms')[0].files.length<=0)
 	{
-		alertify.error('Please Select terms Attachment');
+		alertify.error('Please upload a file for terms Attachment');
 		isAllValueFilled=false;
   }
   else if($('#Assessment')[0].files.length<=0)
 	{
-		alertify.error('Please Select Technical Assessment Grid');
+		alertify.error('Please upload a file for Technical Assessment Grid');
 		isAllValueFilled=false;
   }   
   else if(!$.trim($("#Fromdate").val()))
@@ -2230,12 +2240,12 @@ function mandatoryforpublictender()
   }
   else if($('#newspaperFile')[0].files.length<=0)
 	{
-		alertify.error('Please Select Text for newspaper advertisement');
+		alertify.error('Please upload a file for Text for newspaper advertisement');
 		isAllValueFilled=false;
   }
   else if(filesotherAttachment.length<=0)
 	{
-		alertify.error('Please Select Other Attachment');
+		alertify.error('Please upload a file for Other Attachment');
 		isAllValueFilled=false;
   }
   return isAllValueFilled;
@@ -2301,27 +2311,27 @@ function mandatoryforsubsidy()
 	}
   else if($('#Proposal')[0].files.length<=0)
 	{
-		alertify.error('Please Select Project Proposal');
+		alertify.error('Please upload a file for Project Proposal');
 		isAllValueFilled=false;
   }
   else if($('#Suitability')[0].files.length<=0)
 	{
-		alertify.error('Please Select Commercial Suitability');
+		alertify.error('Please upload a file for Commercial Suitability');
 		isAllValueFilled=false;
   }
   else if($('#Budget')[0].files.length<=0)
 	{
-		alertify.error('Please Select Budget Break-down');
+		alertify.error('Please upload a file for Budget Break-down');
 		isAllValueFilled=false;
   }
   else if($('#Certificate')[0].files.length<=0)
 	{
-		alertify.error('Please Select Registration Certificate');
+		alertify.error('Please upload a file for Registration Certificate');
 		isAllValueFilled=false;
   }
   else if($('#Profile')[0].files.length<=0)
 	{
-		alertify.error('Please Select Profile');
+		alertify.error('Please upload a file for Profile');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#JOD").val()))
@@ -2336,12 +2346,12 @@ function mandatoryforsubsidy()
   }
   else if($("#EUR").val()>=50000&&$('#BankDetails')[0].files.length<=0)
 	{
-		alertify.error('Please Select Bank Details');
+		alertify.error('Please upload a file for Bank Details');
 		isAllValueFilled=false;
   }
   else if(filesotherAttachment.length<=0)
 	{
-		alertify.error('Please Select Other Attachment');
+		alertify.error('Please upload a file for Other Attachment');
 		isAllValueFilled=false;
   }
 
@@ -2358,17 +2368,17 @@ function mandatoryforLease()
   }
   else if($('#LandScheme')[0].files.length<=0)
 	{
-		alertify.error('Please Select Land Scheme');
+		alertify.error('Please upload a file for Land Scheme');
 		isAllValueFilled=false;
   }
   else if($('#RMOApproval')[0].files.length<=0)
 	{
-		alertify.error('Please Select RMO Approval');
+		alertify.error('Please upload a file for RMO Approval');
 		isAllValueFilled=false;
   }
   else if($('#DirectorApproval')[0].files.length<=0)
 	{
-		alertify.error('Please Select Country Director Approval');
+		alertify.error('Please upload a file for Country Director Approval');
 		isAllValueFilled=false;
   }
     else if(!$.trim($("#Fromdate").val()))
@@ -2409,7 +2419,7 @@ function mandatoryforindivual()
   }
   else if($('#LessorID')[0].files.length<=0)
 	{
-		alertify.error('Please Select Lessor ID');
+		alertify.error('Please upload a file for Lessor ID');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#FullAddress").val()))
@@ -2439,17 +2449,17 @@ function mandatoryforindivual()
   }
   else if($('#OwnershipDocs')[0].files.length<=0)
 	{
-		alertify.error('Please Select Estate Ownership Documents');
+		alertify.error('Please upload a file for Estate Ownership Documents');
 		isAllValueFilled=false;
   }
   else if($('#BankDetails')[0].files.length<=0)
 	{
-		alertify.error('Please Select Bank Details');
+		alertify.error('Please upload a file for Bank Details');
 		isAllValueFilled=false;
   }
   else if(filesotherAttachment.length<=0)
 	{
-		alertify.error('Please Select Other Attachment');
+		alertify.error('Please upload a file for Other Attachment');
 		isAllValueFilled=false;
   }
   return isAllValueFilled;
@@ -2466,7 +2476,7 @@ function mandatoryforcompany()
   }
   else if($('#RegCert')[0].files.length<=0)
 	{
-		alertify.error('Please Select Registration Certificate');
+		alertify.error('Please upload a file for Registration Certificate');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#FullAddress").val()))
@@ -2502,17 +2512,17 @@ function mandatoryforcompany()
 
   else if($('#Profile')[0].files.length<=0)
 	{
-		alertify.error('Please Select Company Profile');
+		alertify.error('Please upload a file for Company Profile');
 		isAllValueFilled=false;
   }
   else if($('#BankDetails')[0].files.length<=0)
 	{
-		alertify.error('Please Select Bank Details');
+		alertify.error('Please upload a file for Bank Details');
 		isAllValueFilled=false;
   }
   else if(filesotherAttachment.length<=0)
 	{
-		alertify.error('Please Select Other Attachment');
+		alertify.error('Please upload a file for Other Attachment');
 		isAllValueFilled=false;
   }
   return isAllValueFilled;
@@ -2529,52 +2539,52 @@ function mandatoryforiDPP()
   }
   else if($('#RegCert')[0].files.length<=0)
 	{
-		alertify.error('Please Select Company’s Registration Certificate');
+		alertify.error('Please upload a file for Company’s Registration Certificate');
 		isAllValueFilled=false;
   }
   else if($('#Profile')[0].files.length<=0)
 	{
-		alertify.error('Please Select Company Profile');
+		alertify.error('Please upload a file for Company Profile');
 		isAllValueFilled=false;
   }
   else if($('#Experts')[0].files.length<=0)
 	{
-		alertify.error('Please Select CVs of Experts');
+		alertify.error('Please upload a file for CVs of Experts');
 		isAllValueFilled=false;
   }
   else if($('#BankDetails')[0].files.length<=0)
 	{
-		alertify.error('Please Select Bank Details');
+		alertify.error('Please upload a file for Bank Details');
 		isAllValueFilled=false;
   }
   else if($('#FinReport')[0].files.length<=0)
 	{
-		alertify.error('Please Select Financial Reports');
+		alertify.error('Please upload a file for Financial Reports');
 		isAllValueFilled=false;
   }
   else if($('#Actionplan')[0].files.length<=0)
 	{
-		alertify.error('Please Select Summary Action Plan');
+		alertify.error('Please upload a file for Summary Action Plan');
 		isAllValueFilled=false;
   }
   else if($('#Agreement')[0].files.length<=0)
 	{
-		alertify.error('Please Select Brief concept for agreement');
+		alertify.error('Please upload a file for Brief concept for agreement');
 		isAllValueFilled=false;
   }
   else if($('#Budget')[0].files.length<=0)
 	{
-		alertify.error('Please Select Budget Plan');
+		alertify.error('Please upload a file for Budget Plan');
 		isAllValueFilled=false;
   }
   else if($('#Vergabedok')[0].files.length<=0)
 	{
-		alertify.error('Please Select Vergabedok');
+		alertify.error('Please upload a file for Vergabedok');
 		isAllValueFilled=false;
   }
   else if($('#CompetitionReport')[0].files.length<=0)
 	{
-		alertify.error('Please Select Competition Report');
+		alertify.error('Please upload a file for Competition Report');
 		isAllValueFilled=false;
   }
   else if(!$.trim($("#Fromdate").val()))
@@ -2658,12 +2668,12 @@ function mandatoryforcontract()
 
   else if($('#terms')[0].files.length<=0)
 	{
-		alertify.error('Please Select Modified Terms of Reference');
+		alertify.error('Please upload a file for Modified Terms of Reference');
 		isAllValueFilled=false;
   }
   else if($("input[name='CstExtension']:checked").val()=='Cost Extension'&&$('#Estimation')[0].files.length<=0)
 	{
-		alertify.error('Please Select Estimated Cost for the Extension');
+		alertify.error('Please upload a file for Estimated Cost for the Extension');
 		isAllValueFilled=false;
   }
   return isAllValueFilled;

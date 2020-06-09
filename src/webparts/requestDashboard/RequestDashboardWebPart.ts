@@ -15,7 +15,6 @@ import 'jquery';
 import * as moment from 'moment';
 import 'datatables';
 import { sp } from "@pnp/sp";
-import "@pnp/polyfill-ie11"; 
 import '../../ExternalRef/css/style.css';
 import '../../ExternalRef/css/alertify.min.css';
 import '../../ExternalRef/css/bootstrap-datepicker.min.css';
@@ -68,36 +67,12 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
 
     <ul class="nav nav-tabs">
-    <li class="active"><a href="#home" data-toggle="tab">Service Request</a></li>
-    <li><a href="#menu1" data-toggle="tab"> Goods Request</a></li>
+    <li class="active"><a href="#home" data-toggle="tab">Goods Request</a></li>
+    <li><a href="#menu1" data-toggle="tab">Service Request</a></li>
     </ul>
 
-    <div class='tab-content'> <div id='home' class='tab-pane fade in active tab-panel'>
- 
-    <div class='btnDiv'>
-    <div>
-    <input class="btn btn-primary" type='button' id='btnService' value='Create Service Request'>
-    </div>
-    </div>
-   
-    <div id='ServiceTable'>
-    <table id="Service"  style="width:100%">
-    <thead>
-    <tr>
-    <th>Id</th>
-    <th>Project Name</th>
-    <th>Project Number</th>
-    <th>Name Of AV</th>
-    <th>Date of Request</th>
-    <th>Assigned To</th>
-    <th>Status</th>
-    <th>Details</th>
-    </tr>
-    </thead>
-    <tbody id='tblService'>
-    </tbody>
-    </table>
-    </div>  </div> <div id='menu1' class='tab-pane fade tab-panel'>    
+    <div class='tab-content'> 
+    <div id='home' class='tab-pane fade in active tab-panel'>
     
     <div class='btnDiv'> 
     <div>
@@ -122,7 +97,41 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <tbody id='tblGoods'>
     </tbody>
     </table>
-    </div> </div> </div>
+    </div> 
+
+    </div> 
+    
+    <div id='menu1' class='tab-pane fade tab-panel'>    
+    
+    <div class='btnDiv'>
+    <div>
+    <input class="btn btn-primary" type='button' id='btnService' value='Create Service Request'>
+    </div>
+    </div>
+   
+    <div id='ServiceTable'>
+    <table id="Service"  style="width:100%">
+    <thead>
+    <tr>
+    <th>Id</th>
+    <th>Project Name</th>
+    <th>Project Number</th>
+    <th>Name Of AV</th>
+    <th>Date of Request</th>
+    <th>Assigned To</th>
+    <th>Status</th>
+    <th>Details</th>
+    </tr>
+    </thead>
+    <tbody id='tblService'>
+    </tbody>
+    </table>
+    </div>
+    
+    </div> 
+    
+    
+    </div>
 
 
     
@@ -138,7 +147,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Goods and Service</h4>
+          <h4 class="modal-title" id='ProjectDetails'>Goods and Service</h4>
         </div>
         <div class="modal-body" id='modalbody'>
           <p>Some text in the modal.</p>
@@ -150,8 +159,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       
     </div>
   </div>
-  
-</div>
+
 
     `;
 
@@ -221,13 +229,13 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       });
 
       let arrFiles=[];
+      let otherFiles=[];
       
 
-      // arrFiles.push({'Name':'Quantities','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Quantities','Files':[]});
+      arrFiles.push({'Name':'Quantities','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Others','Files':[]});
+      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'CostFile','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'NeutralSpecfication','FileName':'N/A','FileURl':'N/A'});
 
@@ -243,20 +251,14 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
                 {
                   for(var k=0;k<ProcurementServiceFiles['Folders'][i].Folders[j].Files.length;k++)
                   {
-                    if(val.Name=="Quantities")
-                    {
-                      arrFiles[key].Files.push({"FileName":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,"FileURI":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
-                    }
-                    else if(val.Name=="Others")
-                    {
-                      arrFiles[key].Files.push({"FileName":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,"FileURI":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
-                    }
+                    
+                    if(ProcurementServiceFiles['Folders'][i].Name!='Others'){
+                    arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
+                    arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;}
                     else
                     {
-                      arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
-                      arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                      otherFiles.push({'Name':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,'Url':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl})
                     }
-
                   
                   }
                 }
@@ -281,24 +283,22 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ProjectNumber +'</p></div></div>';
 
-      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Quantities</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'
-        for(let i=0;i<arrFiles[0].Files.length;i++)
-        {
-          HTMLGoods+='<a href='+encodeURI(arrFiles[0].Files[i].FileURI)+' target="_blank">'+arrFiles[0].Files[i].FileName+'</a><br>'
-        }
-     HTMLGoods+='</p></div></div>';
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Quantities</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[0].FileURl)+' target="_blank">'+arrFiles[0].FileName+'</a></p></div></div>';
 
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">ShortList</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[1].FileURl)+' target="_blank">'+arrFiles[1].FileName+'</a></p></div></div>';
 
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">NewsAdvertisement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[2].FileURl)+' target="_blank">'+arrFiles[2].FileName+'</a></p></div></div>';
 
-      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Others</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'
-      for(let i=0;i<arrFiles[3].Files.length;i++)
-      {
-        HTMLGoods+='<a href='+encodeURI(arrFiles[3].Files[i].FileURI)+' target="_blank"> '+arrFiles[3].Files[i].FileName+'</a><br>'
-      }
-      HTMLGoods+='</p></div></div>';
+      //HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Others</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[3].FileURl)+' target="_blank"> '+arrFiles[3].FileName+'</a></p></div></div>';
 
+      for(var idxOther=0;idxOther<otherFiles.length;idxOther++)
+      {
+        HTMLGoods+='<div class="row goods-details">';
+        HTMLGoods+='<div class="col-sm-3"><h5 class="goods-label">Others</h5></div>';
+        HTMLGoods+='<div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div></div>';
+      }
+      
+      
       // HTMLGoods+='<table>';
       // HTMLGoods+='<tbody>  ';         
       // HTMLGoods+='<tr><td>Project Name : '+GoodsRequest[index].ProjectName +'</td></tr>';
@@ -328,7 +328,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
       // HTMLGoods+='</tbody></table>';
       
-
+      $('#ProjectDetails').html('');
+      $('#ProjectDetails').html("Goods Request Details for "+GoodsRequest[index].ProjectName);
       $('#modalbody').html('');
       $('#modalbody').append(HTMLGoods);
       
@@ -357,8 +358,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       arrFiles.push({'Name':'EstimatedCost','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'Terms','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Others','Files':[]});
-      // arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'TechAssGrid','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
@@ -393,16 +393,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
                 {
                   for(var k=0;k<ProcurementServiceFiles['Folders'][i].Folders[j].Files.length;k++)
                   {
-                    if(val.Name=="Others")
-                    {
-                      arrFiles[key].Files.push({"FileName":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,"FileURl":ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
-                    }
-                    else
-                    {
-                      arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
-                      arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
-                    }
-
+                    arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
+                    arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
                   
                   }
                 }
@@ -434,33 +426,14 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
         if(arrFiles[i].FileURl!='N/A')
         {
 
-          if(arrFiles[i].Name=='Others')
-          {
-            if(arrFiles[i].Files.length>0)
-            {
-              HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">';
-            
-              for(let j=0;j<arrFiles[i].Files.length;j++)
-              {
-                HTMLservice+='<a href='+encodeURI(arrFiles[i].Files[j].FileURl)+' target="_blank"> '+arrFiles[i].Files[j].FileName+'</a><br>'
-              }
-  
-              HTMLservice+='</p></div></div>';
-            }
-
-          }
-          else
-          {
-            HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
-          }
-
-
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
 
           // HTMLservice+='<tr><td>'+ arrFiles[i].Name +' : <a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></td></tr>';
         }
       }
       // HTMLservice+='</tbody></table>';
-
+      $('#ProjectDetails').html('');
+      $('#ProjectDetails').html("Service Request Details for "+ServiceRequest[index].ProjectName);
       $('#modalbody').html('');
       $('#modalbody').append(HTMLservice);
       
@@ -590,7 +563,7 @@ async function LoadGoodsRequest()
       GoodsRequest=allItems;
       for (var index = 0; index < allItems.length; index++) 
       {
-        if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+        if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
         {
           var assgnuser='select';
         
@@ -656,7 +629,7 @@ async function LoadGoodsRequest()
       for (var index = 0; index < allItems.length; index++) 
       {
         
-        if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+        if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
         {
         
         var assgnuser='select';
@@ -841,5 +814,5 @@ async function LoadGoodsRequest()
 function ErrorCallBack(error,methodname)
 {	
   $('.loading-modal').removeClass('active');
-  alert(error+":"+methodname);
+  alert(error);
 }
