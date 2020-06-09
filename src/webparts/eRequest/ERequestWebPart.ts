@@ -32,6 +32,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart <IERequestWeb
 
   public render(): void {
     this.domElement.innerHTML = `
+    
     <div class="loading-modal"> 
     <div class="spinner-border" role="status"> 
     <span class="sr-only">Loading...</span>
