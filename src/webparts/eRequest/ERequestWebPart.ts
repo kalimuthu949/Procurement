@@ -29,9 +29,11 @@ var fileslength=0;
 var siteURL = '';
 var CrntUserID='';
 var flgRepUser=false;
+var formSubmitting=false;
 var filesotherAttachment=[];
 var ProjectDetails=[];
 var filesQuantity=[];
+
 
 var ChoicesServices = [
   'Direct Award','Shortlisted tender','Public tender','Local Subsidy','Lease Agreement','iDPP','Contract Amendment'
@@ -627,17 +629,6 @@ private readonly Shortlistedtender=`
 
 
 <div class='row'>
-<div class="col-sm-6">
-<div class="form-group" id='divforJustification' style='display:none'>
- <label>Justification For Shortlisted Tender<span class="star">*</span></label>
- <div class="input-group">
- <div class="custom-file">
- <input type="file" id="justification" value="" class="custom-file-input">
- <label class="custom-file-label" for="justification">Choose File</label>
- </div>
- </div>
-</div>
-</div>
 
 <div class="col-sm-6">
  <div class="form-group">
@@ -650,6 +641,19 @@ private readonly Shortlistedtender=`
   </div>
 </div>
 </div>
+
+<div class="col-sm-6">
+<div class="form-group" id='divforJustification' style='display:none'>
+ <label>Justification For Shortlisted Tender<span class="star">*</span></label>
+ <div class="input-group">
+ <div class="custom-file">
+ <input type="file" id="justification" value="" class="custom-file-input">
+ <label class="custom-file-label" for="justification">Choose File</label>
+ </div>
+ </div>
+</div>
+</div>
+
 </div>
 
 <div class='row'>
@@ -1656,11 +1660,29 @@ private readonly EstimationHMTL=`
     var that=this;
     this.domElement.innerHTML = this.requestoptions;
     siteURL = this.context.pageContext.site.absoluteUrl;
+
     
+    
+
+
+    window.addEventListener("beforeunload", function (e) {
+        if (!formSubmitting)
+        {
+            return undefined;
+        }
+
+        var confirmationMessage = 'It looks like you have been editing something. '
+                                + 'If you leave before saving, your changes will be lost.';
+
+        (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+        return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+    });
 
     var requestHtml='';
     $('#DrpProjectName').change(function()
     {
+      formSubmitting=true;
+      
       var projectname=$('#DrpProjectName option:selected').val();
       if(projectname=='Goods')
       requestHtml=that.newGoods;
@@ -1908,6 +1930,7 @@ $(document).on('change','.lessor',function()
       $(document).on('click', '#btnSubmit', function ()
       {
         
+        formSubmitting=false;
         if($('#DrpProjectName option:selected').val()=='Goods')
         CreateGoodsRequest();
         else if($('#DrpProjectName option:selected').val()=='Service')
@@ -2134,6 +2157,10 @@ function CreateGoodsRequest()
     }
 
     InsertGoodsRequest(Servicedata,arrFiles);
+  }
+  else
+  {
+     formSubmitting=true;
   }
 }
 
@@ -2437,6 +2464,10 @@ function LoadServices()
 
           InsertService(Servicedata,arrFiles);
         }
+        else
+        {
+          formSubmitting=true;
+        }
         
       }
       else if($('#choicesservices option:selected').val()=='Shortlisted tender')
@@ -2492,6 +2523,10 @@ function LoadServices()
 
           InsertService(Servicedata,arrFiles);
         }
+        else
+        {
+          formSubmitting=true;
+        }
         
       }
       else if($('#choicesservices option:selected').val()=='Public tender')
@@ -2542,6 +2577,10 @@ function LoadServices()
           arrFiles.push({'FolderName':'TechAssGrid','files':$('#Assessment')[0].files});
 
           InsertService(Servicedata,arrFiles);
+        }
+        else
+        {
+          formSubmitting=true;
         }
         
       }
@@ -2603,6 +2642,10 @@ function LoadServices()
           }
 
           InsertService(Servicedata,arrFiles);
+        }
+        else
+        {
+          formSubmitting=true;
         }
         
       }
@@ -2667,6 +2710,10 @@ function LoadServices()
 
                 InsertService(Servicedata,arrFiles);
               }
+              else
+              {
+                formSubmitting=true;
+              }
           }
           else
           {
@@ -2720,7 +2767,15 @@ function LoadServices()
                 }
                 InsertService(Servicedata,arrFiles);
               }
+              else
+              {
+                formSubmitting=true;
+              }
           }
+        }
+        else
+        {
+          formSubmitting=true;
         }
         
       }
@@ -2765,6 +2820,10 @@ function LoadServices()
 
           InsertService(Servicedata,arrFiles);
         }
+        else
+        {
+          formSubmitting=true;
+        }
         
       }
       else if($('#choicesservices option:selected').val()=='Contract Amendment')
@@ -2805,10 +2864,18 @@ function LoadServices()
                 InsertService(Servicedata,arrFiles);
                 
         }
+        else
+        {
+          formSubmitting=true;
+        }
         
       }
 
     }
+    else
+        {
+          formSubmitting=true;
+        }
   }
 
 async function InsertService(Servicedata,arrFiles)
@@ -3611,6 +3678,10 @@ function CreateLeaseAgreement()
 
                 InsertLease(Servicedata,arrFiles);
               }
+              else
+              {
+                formSubmitting=true;
+              }
           }
           else
           {
@@ -3664,8 +3735,20 @@ function CreateLeaseAgreement()
                 }
                 InsertLease(Servicedata,arrFiles);
               }
+              else
+              {
+                formSubmitting=true;
+              }
           }
         }
+        else
+        {
+          formSubmitting=true;
+        }
+      }
+      else
+      {
+        formSubmitting=true;
       }
 }
 
@@ -3774,6 +3857,14 @@ function CreateSubsidy()
 
           InsertSubsidy(Servicedata,arrFiles);
         }
+        else
+        {
+          formSubmitting=true;
+        }
+      }
+      else
+      {
+        formSubmitting=true;
       }
 }
 
