@@ -31,6 +31,7 @@ var filesQuantity=[];
 var filesotherAttachment=[];
 var flgRepUser=false;
 var CrntUserID='';
+var ProjectDetails=[];
 export interface IGoodsRequestWebPartProps {
   description: string;
 }
@@ -68,7 +69,12 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
       <div class="col-sm-6">
       <div class="form-group">
       <label>Project Number:<span class="star">*</span></label>
-      <input class="form-control" type="text" id="projectNumber" value="">
+      <!--<input class="form-control" type="text" id="projectNumber" value="">-->
+      <input id='txtProjectNum1' class="form-control prjctNum" type="text" maxlength="2" />.
+      <input id='txtProjectNum2' class="form-control prjctNum" type="text" maxlength="4" />.
+      <input id='txtProjectNum3' class="form-control prjctNum" type="text" maxlength="1" />-
+      <input id='txtProjectNum4' class="form-control prjctNum" type="text" maxlength="3" />.
+      <input id='txtProjectNum5' class="form-control prjctNum" type="text" maxlength="2" />
     </div>
     </div>
 
@@ -84,7 +90,7 @@ export default class GoodsRequestWebPart extends BaseClientSideWebPart <IGoodsRe
     <div class="col-sm-6">
 
     <div class="form-group">
-      <label>Name Of AV:<span class="star">*</span></label>
+      <label>Name of AV:<span class="star">*</span></label>
       <input class="form-control" type="text" id="NameofAV" value="" disabled>
     </div>
     </div>
@@ -331,6 +337,15 @@ private readonly newcostHtml=`
       }
       
       $("#NameofAV").val($('#projectName option:selected').attr('proj-av'));
+      var PrjctNum=$('#projectName option:selected').attr('Proj-Num');
+      var PrjctNum1=PrjctNum.split('-');
+      var PrjctNum2=PrjctNum1[0].split('.');
+      var PrjctNum3=PrjctNum1[1].split('.');
+      $('#txtProjectNum1').val(PrjctNum2[0]);
+      $('#txtProjectNum2').val(PrjctNum2[1]);
+      $('#txtProjectNum3').val(PrjctNum2[2]);
+      $('#txtProjectNum4').val(PrjctNum3[0]);
+      $('#txtProjectNum5').val(PrjctNum3[1]);
 
     });
 
@@ -449,6 +464,16 @@ private readonly newcostHtml=`
     }
   });
 
+  $(".prjctNum").keyup(function () {
+    if (this.value.length == this.maxLength) {
+      var $next = $(this).next('.prjctNum');
+      if ($next.length)
+          $(this).next('.prjctNum').focus();
+      else
+          $(this).blur();
+    }
+});
+
   $('#btnSubmit').click(function()
   {
     CreateGoodsRequest();
@@ -534,15 +559,25 @@ async function getLoggedInUserDetails()
 
 async function LoadProjects()
   {
-    await sp.web.lists.getByTitle('Projects').items.select('Title,Id,ProjectAV/Title,ProjectAV/ID,Representative/ID').expand('ProjectAV,Representative').getAll().then((allItems: any[]) => {
+    await sp.web.lists.getByTitle('Projects').items.select('Title,Id,ProjectNumber,ProjectAV/Title,ProjectAV/ID,Representative/ID').expand('ProjectAV,Representative').getAll().then((allItems: any[]) => 
+    {
       for (var index = 0; index < allItems.length; index++) 
       {
         var element = allItems[index];
-
-        if(CrntUserID==element.Representative.ID)
+        
+        for(var indexForRep = 0; indexForRep < allItems[index].Representative.length; indexForRep++)
         {
-          flgRepUser=true;
-          $('#projectName').append('<option Proj-Rp-id="' + element.Representative.ID + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
+          if(CrntUserID==allItems[index].Representative[indexForRep].ID)
+          {
+            flgRepUser=true;
+            $('#projectName').append('<option Proj-Num="' + element.ProjectNumber + '" Proj-Rp-id="' + element.Representative.ID + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
+            var arrRepUsers=[];
+            for(var i=0;i<allItems[index].Representative.length;i++)
+            {
+              arrRepUsers.push(allItems[index].Representative[i].ID);
+            }
+            ProjectDetails.push({'PrjtcNum':element.Title,'RepId':arrRepUsers});
+          }
         }
       }
 
@@ -595,15 +630,30 @@ async function LoadProjects()
       if($('#chkMoreItem').prop('checked'))
       {
         moreitem='Yes';
-      } 
+      }
+      
+      let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+      var ProjectIndex;
+      for(var prNum=0;prNum<ProjectDetails.length;prNum++)
+      {
+        if(ProjectDetails[prNum].PrjtcNum==$("#projectName option:selected").val())
+        {
+          ProjectIndex=prNum;
+          break;
+        }
+      }
       let Servicedata=
       {
+        
         ProjectName:$("#projectName option:selected").val(),
-        ProjectNumber:$("#projectNumber").val(),
+        ProjectNumber:projectNumber,
         PNForZAS:$("#pnForZAS").val(),
         NameOfAV:$("#NameofAV").val(),
         AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
-        RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
+        //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
+        RepresentativeId: {
+					"results": ProjectDetails[ProjectIndex].RepId
+				},
         Specifications:$("input[name='Specifications']:checked").val(),
         KOMPOuput:$("#KompOptPT").val(),
         ShortDesc:$("#shortDescription").val(),
@@ -708,7 +758,7 @@ async function UploadFile(FolderUrl,files)
       {
         $('.loading-modal').removeClass('active');
         $('body').removeClass('body-hidden');
-        AlertMessage("Goods Created")
+        AlertMessage("Goods Request is created in the System")
       }
   }).catch(function(error){ErrorCallBack(error,'uploadFiles')});
 }
@@ -783,11 +833,11 @@ function ErrorCallBack(error,methodname)
 		alertify.error('Please Choose Project Name');
 		isAllValueFilled=false;
   }
-  else if(!$.trim($("#projectNumber").val()))
+  /*else if(!$.trim($("#projectNumber").val()))
 	{
 		alertify.error('Please Enter Project Number');
 		isAllValueFilled=false;
-  }
+  }*/
   else if(!$.trim($("#pnForZAS").val()))
 	{
 		alertify.error('Please Enter PN For ZAS');
@@ -805,7 +855,7 @@ function ErrorCallBack(error,methodname)
   }
   else if(filesQuantity.length<=0)
 	{
-		alertify.error('Please Select Specifications and Quantities');
+		alertify.error('Please upload a file for Specifications and Quantities');
 		isAllValueFilled=false;
   } 
   else if(!$("input[id='nonneutralspec']").prop('checked')&&!$("input[id='neutralspec']").prop('checked'))
@@ -815,7 +865,7 @@ function ErrorCallBack(error,methodname)
   } 
   else if($("input[name='Specifications']:checked").val()=='Nonneutral Specifications'&&$('#nonneutralFile')[0].files.length<=0)
 	{
-		alertify.error('Please Select justification');
+		alertify.error('Please Select Justification');
 		isAllValueFilled=false;
   }
   else if($("#chkMoreItem").prop('checked')&&$('#costFile')[0].files.length<=0)
@@ -835,12 +885,12 @@ function ErrorCallBack(error,methodname)
   }
   else if($("#EUR").val()<=20000&&$('#fileShortlist')[0].files.length<=0)
 	{
-		alertify.error('Please Select Short list');
+		alertify.error('Please upload a file for Shortlist');
 		isAllValueFilled=false;
   } 
   else if($("#EUR").val()>=20000&&$('#newspaperFile')[0].files.length<=0)
 	{
-		alertify.error('Please Select Text for newspaper advertisement');
+		alertify.error('Please upload a file for Text for Newspaper Advertisement');
 		isAllValueFilled=false;
   } 
   else if(!$.trim($("#requestedDeliveryTime").val()))
@@ -850,7 +900,7 @@ function ErrorCallBack(error,methodname)
   }
   else if(!$.trim($("#deliveryAddress").val()))
 	{
-		alertify.error('Please Enter deliveryAddress');
+		alertify.error('Please Enter Delivery Address');
 		isAllValueFilled=false;
   }
   /*else if(filesotherAttachment.length<=0)
@@ -870,7 +920,7 @@ function ErrorCallBack(error,methodname)
       if (!$('.contactName')[index].value) {
         // alert('Contact name is required');
         //alertify.set('notifier', 'position', 'top-right');
-        alertify.error('Please enter Contact name');
+        alertify.error('Please enter Contact Name');
         $('.contactName:eq(' + index + ')').focus();
         isAllValueFilled=false;
         return isAllValueFilled;
@@ -878,7 +928,7 @@ function ErrorCallBack(error,methodname)
       if (!$('.contactEmail')[index].value) {
         // alert('Contact email is required');
         //alertify.set('notifier', 'position', 'top-right');
-        alertify.error('Please enter Contact email');
+        alertify.error('Please enter Contact Email');
         $('.contactEmail:eq(' + index + ')').focus();
         isAllValueFilled=false;
         return isAllValueFilled;
@@ -886,7 +936,7 @@ function ErrorCallBack(error,methodname)
       if (!isEmail($('.contactEmail')[index].value)) {
         // alert('Contact email is required');
         //alertify.set('notifier', 'position', 'top-right');
-        alertify.error('Please enter valid Contact email');
+        alertify.error('Please enter valid Contact Email');
         $('.contactEmail:eq(' + index + ')').focus();
         isAllValueFilled=false;
         return isAllValueFilled;
@@ -894,7 +944,7 @@ function ErrorCallBack(error,methodname)
       if (!$('.contactPhoneNumber')[index].value) {
         // alert('Phone number is required');
         //alertify.set('notifier', 'position', 'top-right');
-        alertify.error('Please enter Phone number');
+        alertify.error('Please enter Phone Number');
         $('.contactPhoneNumber:eq(' + index + ')').focus();
         isAllValueFilled=false;
         return isAllValueFilled;
@@ -903,7 +953,7 @@ function ErrorCallBack(error,methodname)
 
     if(filesotherAttachment.length<=0)
     {
-      alertify.error('Please Select other Attachments');
+      alertify.error('Please upload a file for Other Attachments');
       isAllValueFilled=false;
       return isAllValueFilled;
     }
