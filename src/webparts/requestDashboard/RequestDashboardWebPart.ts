@@ -746,10 +746,13 @@ async function LoadGoodsRequest()
       for (var index = 0; index < allItems.length; index++) 
       {
         var element = allItems[index];
-        if(CrntUserID==element.Representative.ID)
+        for(var indexForRep = 0; indexForRep < allItems[index].Representative.length; indexForRep++)
         {
+          if(CrntUserID==element.Representative[indexForRep].ID)
+          {
           flgRepUser=true;
           $('#projectName').append('<option Proj-Rp-id="' + element.Representative.ID + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
+          }
         }
       }
 

@@ -4,7 +4,7 @@ import {
   PropertyPaneTextField
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
-import { escape } from '@microsoft/sp-lodash-subset';
+import { escape, trimEnd } from '@microsoft/sp-lodash-subset';
 import { SPComponentLoader } from "@microsoft/sp-loader";
 
 import styles from './ERequestWebPart.module.scss';
@@ -77,16 +77,55 @@ export default class ERequestWebPart extends BaseClientSideWebPart <IERequestWeb
       </div>
     </div>
 
+    <div id="divforsubcategory"></div>
+  `;
+
+  private readonly requestcategoriesforgoods=`
+    
+  <div class="loading-modal"> 
+  <div class="spinner-border" role="status"> 
+  <span class="sr-only">Loading...</span>
+</div></div>
+  <div class="row">
+  <div class="col-sm-12">
+    <div class="form-group">
+      <label>E-Request Categories:<span class="star">*</span></label>
+      <select class="form-control" id="Drpreqcategories">
+        <option value="Select">Select</option>
+        <option value="goods">New Procurement of Goods</option>
+        <option value="goodsamendment">Procurement of Goods Amendment</option>
+        <option value="framework">Request from a Framework Agreement</option>
+        </select>
+        </div>
+      </div>
+    </div>
+
     <div id='divRequest'></div>
   `;
 
-  /* 
-  //summary
-  Goods Request Html Start 
-  //summary
-  */
 
-  private readonly newGoods = `
+  private readonly requestcategoriesforservice=`
+    
+  <div class="loading-modal"> 
+  <div class="spinner-border" role="status"> 
+  <span class="sr-only">Loading...</span>
+</div></div>
+  <div class="row">
+  <div class="col-sm-12">
+    <div class="form-group">
+      <label>E-Request Categories:<span class="star">*</span></label>
+      <select class="form-control" id="Drpreqcategories">
+        <option value="Select">Select</option>
+        <option value="service">Procurement of Services</option>
+        </select>
+        </div>
+      </div>
+    </div>
+
+    <div id='divRequest'></div>
+  `;
+
+  private readonly commonHtml=`
   <div class="loading-modal"> 
   <div class="spinner-border" role="status"> 
   <span class="sr-only">Loading...</span>
@@ -127,12 +166,45 @@ export default class ERequestWebPart extends BaseClientSideWebPart <IERequestWeb
     <div class="col-sm-6">
 
     <div class="form-group">
-      <label>Name of AV:<span class="star">*</span></label>
+      <label>Name of Budget Responsible Person (AV):<span class="star">*</span></label>
       <input class="form-control" type="text" id="NameofAV" value="" disabled>
     </div>
     </div>
     </div>
+    <div class="row">
+    <div class="col-sm-6">
+    <div class="form-group">
+      <input class="radio-stylish" type="checkbox" id="chkKomp" value="KOMP Output">
+      <span class="checkbox-element"></span>
+      <label class="stylish-label" for="chkKomp">KOMP Output</label>
+    </div>
+    </div>
+    <div id="divkompoutput"></div>
+  </div>
+  `;
 
+  private readonly newgoodskompcheckbox=`
+
+  <div class="col-sm-2">
+  <div class="form-group">
+  <input type="text" id="percent" class="form-control" value="">
+  </div>
+  </div>
+  
+  <div class="col-sm-2">
+  <div class="form-group">
+  <input type="text" id="outputnumber" class="form-control" value="">
+  </div>
+  </div>
+  
+  `;
+
+  /* 
+  //summary
+  Goods Request Html Start 
+  //summary
+  */
+  private readonly newGoods = `
     <div class="row">
     <div class="col-sm-6">
     <div class="form-group">
@@ -227,7 +299,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart <IERequestWeb
  
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Text For Newspaper Advertisement : </label>
+  <label>Technical Part of the Newspaper Advertisement: </label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="newspaperFile" value="" class="custom-file-input">
@@ -261,7 +333,8 @@ export default class ERequestWebPart extends BaseClientSideWebPart <IERequestWeb
 <div class="form-group">
   <label>Delivery Address :<span class="star">*</span></label>
   <textarea class="form-control" id="deliveryAddress"></textarea>
-</div></div></div>
+</div></div>
+</div>
 
 
 <h4>Contact Person for Delivery :</h4>
@@ -330,7 +403,66 @@ private readonly newdocHtml=`
   </div>
   </div>
   </div>
-  </div>   
+  <div class="col-sm-6">
+<div class="form-group">
+<div class="input-group">
+<div class="custom-file">
+  <input type="file" id="VSRC" class="form-control custom-file-input">
+  <label class="custom-file-label" for="VSRC">Valid Supplier’s Registration</label>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+
+  
+  <div class="row">
+<div class="col-sm-6">
+<div class="form-group">
+<div class="input-group">
+<div class="custom-file">
+  <input type="file" id="VSCP" class="form-control custom-file-input">
+  <label class="custom-file-label" for="VSCP">Valid Supplier’s Company Profile</label>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div class="col-sm-6">
+<div class="form-group">
+<div class="input-group">
+<div class="custom-file">
+  <input type="file" id="VSSPAC" class="form-control custom-file-input">
+  <label class="custom-file-label" for="VSSPAC">Sole Provider Certificate</label>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+
+  <div class='row'>
+
+  <div class="col-sm-4">
+    <div class="form-group">
+    <label>Name Of Contact Person<span class="star">*</span></label>
+    <input class="form-control" type="text" id="CntctPrsn" value="">
+  </div>
+    </div>
+
+  <div class="col-sm-3">
+  <div class="form-group">
+  <label>Email :<span class="star">*</span></label> <input type="email" id='Email' class="contactEmail form-control" value="">
+  </div>
+  </div>
+  
+  <div class="col-sm-3">
+  <div class="form-group">
+  <label>Mobile Number :<span class="star">*</span></label> <input type="Number" id='MobileNumber' class="contactPhoneNumber form-control" value="">
+  </div>
+  </div>
+  
+</div>
+
+
 `;
 
 private readonly newcostHtml=`
@@ -342,6 +474,145 @@ private readonly newcostHtml=`
 </div>
 `;
 
+private readonly ProcurementofGoodsAmendment=`
+<div class="row">
+    <div class="col-sm-6">
+    <div class="form-group">
+      <label>ProSoft Number:<span class="star">*</span></label>
+      <input class="form-control" type="number" id="prosoftnum" max="8" value="">
+    </div>
+    </div>
+    <div class="col-sm-6">
+    <div class="form-group">
+     <label>Justification for Amendment</label>
+     <div class="input-group">
+     <div class="custom-file">
+     <input type="file" id="justification" value="" class="custom-file-input">
+     <label class="custom-file-label" for="justification">Choose File</label>
+     </div>
+     </div>
+   </div>
+   </div>
+    </div>
+    <div class="row">
+    <div class="col-sm-6">
+    <div class="form-group">
+     <label>Specifications and Quantities<span class="star">*</span></label>
+     <div class="input-group">
+     <div class="custom-file">
+     <input type="file" id="fileQuantitiesNochange" value="" class="custom-file-input">
+     <label class="custom-file-label" for="fileQuantitiesNochange">Choose File</label>
+     </div>
+     </div>
+   </div>
+   </div>
+   <div class="col-sm-6">
+<div class="form-group">
+<label>Requested Delivery Time :<span class="star">*</span></label>
+ <input class="form-control form-control-datepicker" type="text" id="requestedDeliveryTime">
+</div>
+</div>
+    </div>
+
+    <div class="row">
+    <div class="col-sm-6">
+    <div class="form-group">
+      <input class="radio-stylish" type="checkbox" id="chkNoChanges" value="No Changes">
+      <span class="checkbox-element"></span>
+      <label class="stylish-label" for="chkNoChanges">No Changes</label>
+    </div>
+    </div>
+</div>
+
+<div class="row">
+<div class="col-sm-6">
+ <div class="form-group">
+  <label>Other Attachments</label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="others" value="" class="custom-file-input" multiple>
+  <label class="custom-file-label" for="others">Choose File</label>
+  </div>
+  </div>
+  <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
+</div>
+</div>
+</div>
+<div class="form-group" id='btnfinal'>
+    <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+</div>
+`;
+
+
+private readonly RequestfromaFrameworkAgreement=`
+<div class="row">
+    <div class="col-sm-6">
+    <div class="form-group">
+      <input class="radio-stylish" type="checkbox" name="Agreement" id="ITFramework" value="IT Framework Agreement">
+      <span class="checkbox-element"></span>
+      <label class="stylish-label" for="ITFramework">IT Framework Agreement</label>
+    </div>
+    </div><div class="col-sm-3">
+    <div class="form-group">
+      <input class="radio-stylish" type="checkbox" name="Agreement" id="FurnitureFramework" value="IT Framework Agreement">
+      <span class="checkbox-element"></span>
+      <label class="stylish-label" for="FurnitureFramework">IT Framework Agreement</label>
+    </div>
+    </div>
+    <div class="col-sm-3">
+    <div class="form-group">
+      <input class="radio-stylish" type="checkbox" name="Agreement" id="StationaryFramework" value="Stationary Framework Agreement">
+      <span class="checkbox-element"></span>
+      <label class="stylish-label" for="StationaryFramework">Stationary Framework Agreement</label>
+    </div>
+    </div>
+  </div>
+
+  <div class='row'> 
+<div class="col-sm-3">
+<div class="form-group">
+<label>Estimated Cost<span class="star">*</span></label> <input type="Number"  placeholder="JOD" id='JOD' class="contactEmail form-control" value=""> 
+</div>
+</div>
+
+<div class="col-sm-3">
+<div class="form-group">
+<label>&nbsp;<span class="star"></span></label> <input type="Number" placeholder="EUR" id='EUR' class="contactPhoneNumber form-control" value="">
+</div>
+</div>
+
+<div class="col-sm-6">
+ <div class="form-group">
+  <label>Filled Catalogue</label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="FilledCatalogue" value="" class="custom-file-input">
+  <label class="custom-file-label" for="FilledCatalogue">Choose File</label>
+  </div>
+  </div>
+</div>
+</div>
+</div>
+
+<div class='row'>
+<div class="col-sm-6">
+ <div class="form-group">
+  <label>Additional Information<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="AdditionalInformation" value="" class="custom-file-input">
+  <label class="custom-file-label" for="AdditionalInformation">Choose File</label>
+  </div>
+  </div>
+</div>
+</div>
+</div>
+
+
+<div class="form-group" id='btnfinal'>
+    <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+</div>
+`;
  /* 
   //summary
   Goods Request Html End 
@@ -354,7 +625,7 @@ private readonly newcostHtml=`
   //summary
   */
 
- private readonly HtmlGoods = `
+ private readonly HtmlGoods = `<!--
   <div class="loading-modal"> 
   <div class="spinner-border" role="status"> 
   <span class="sr-only">Loading...</span>
@@ -373,7 +644,6 @@ private readonly newcostHtml=`
       <div class="col-sm-6">
       <div class="form-group">
       <label>Project Number:<span class="star">*</span></label>
-      <!--<input class="form-control" type="text" id="projectNumber" value="">-->
       <input id='txtProjectNum1' class="form-control prjctNum" type="text" maxlength="2" />.
       <input id='txtProjectNum2' class="form-control prjctNum" type="text" maxlength="4" />.
       <input id='txtProjectNum3' class="form-control prjctNum" type="text" maxlength="1" />-
@@ -397,18 +667,18 @@ private readonly newcostHtml=`
       <input class="form-control" type="text" id="NameofAV" value="" disabled>
     </div>
     </div>
-    </div>
+    </div>-->
 
     <div class="row">
-    <div class="col-sm-6">
+    <!--<div class="col-sm-6">
     <div class="form-group">
       <label>KOMP Output<span class="star">*</span></label>
       <input class="form-control" type="text" id="KompOptPT" value="">
     </div>
-    </div>
+    </div>-->
     <div class="col-sm-6">
     <div class="form-group">
-      <label>Choices Of Services<span class="star">*</span></label>
+      <label>Contracting Procedure<span class="star">*</span></label>
       <select class="form-control" id="choicesservices">
         <option value="Select">Select</option>
         </select>
@@ -478,7 +748,7 @@ private readonly DirectAward=`
 <div class='row'>
 <div class="col-sm-6">
     <div class="form-group">
-    <label>Contact Person<span class="star">*</span></label>
+    <label>Contract Person from the Firm<span class="star">*</span></label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
     </div>
@@ -522,7 +792,7 @@ private readonly DirectAward=`
     </div>
 
 <div class='row'>
-<div class="col-sm-6">
+<!--<div class="col-sm-6">
  <div class="form-group">
   <label>Estimated Cost<span class="star">*</span></label>
   <div class="input-group">
@@ -532,7 +802,21 @@ private readonly DirectAward=`
   </div>
   </div>
 </div>
+</div>-->
+
+<div class="col-sm-3">
+<div class="form-group">
+  <label>Estimated Cost :<span class="star">*</span></label> 
+  <input placeholder='JOD' class="form-control" type="Number" id="JOD" value="">
 </div>
+</div>
+<div class="col-sm-3">
+<div class="form-group">
+  <label>&nbsp;<span class="star"></span></label>
+  <input placeholder='EUR' class="form-control" type="Number" id="EUR" value="">
+  </div>
+</div>
+
 
 <div class="col-sm-6">
  <div class="form-group">
@@ -581,7 +865,7 @@ private readonly Shortlistedtender=`
 <div class='row'>    
   <div class="col-sm-6">
     <div class="form-group">
-      <label>Short Description:<span class="star">*</span></label>
+      <label>Short Description of the Requested Service:<span class="star">*</span></label>
       <textarea class="form-control" id="shortDescription"></textarea>
   </div>
   </div>
@@ -661,6 +945,7 @@ private readonly Shortlistedtender=`
 <div class="form-group">
 <label>Duration of the assignment (From Date)<span class="star">*</span></label>
  <input class="form-control form-control-datepicker" type="text" id="Fromdate">
+ <span class="star">Note:please refer to the corresponding SLA</span>
 </div>
 </div>
 <div class="col-sm-6">
@@ -702,9 +987,27 @@ private readonly Shortlistedtender=`
 
 private readonly tender=`
 <div class='row'>
+<div class="col-sm-3">
+    <div class="form-group">
+    <input class="radio-stylish" id="ConsultingFirm" type="radio" name="ConsultingFirm" value="ConsultingFirm" />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="ConsultingFirm">ConsultingFirm</label>
+    </div>
+    </div>
+
+    <div class="col-sm-3">
+    <div class="form-group">
+    <input class="radio-stylish" id="Appariser" type="radio" name="ConsultingFirm" value="Appariser"  />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="Appariser">Appariser</label>
+    </div>
+    </div>
+</div>
+
+<div class='row'>
 <div class="col-sm-6">
     <div class="form-group">
-      <label>Short Description:<span class="star">*</span></label>
+      <label>Short Description of the Requested Service:<span class="star">*</span></label>
       <textarea class="form-control" id="shortDescription"></textarea>
   </div>
   </div>
@@ -782,7 +1085,7 @@ private readonly tender=`
 <div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Text For Newspaper Advertisement<span class="star">*</span></label>
+  <label>Technical Part of the Newspaper Advertisement<span class="star">*</span></label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="newspaperFile" value="" class="custom-file-input">
@@ -842,20 +1145,20 @@ private readonly LocalSubsidy=`
 
 <div class='row'>
 
-<div class="col-sm-6">
+<div class="col-sm-4">
 <div class="form-group">
     <label>Name Of Contact Person<span class="star">*</span></label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
 </div>
 
-  <div class="col-sm-3">
+  <div class="col-sm-4">
   <div class="form-group">
   <label>Email :<span class="star">*</span></label> <input type="email" id='Email' class="contactEmail form-control" value="">
   </div>
   </div>
   
-  <div class="col-sm-3">
+  <div class="col-sm-4">
   <div class="form-group">
   <label>Mobile Number :<span class="star">*</span></label> <input type="Number" id='MobileNumber' class="contactPhoneNumber form-control" value="">
   </div>
@@ -1471,12 +1774,13 @@ private readonly ContractAmendment=`
 <div class="col-sm-6">
     <div class="form-group">
       <label>Contract Number<span class="star">*</span></label>
-      <textarea class="form-control" id="CntrctNum"></textarea>
+      <!--<textarea class="form-control" id="CntrctNum"></textarea>-->
+      <input class="form-control" type="number" id="CntrctNum" maxlength="10" />
   </div>
   </div>
   <div class="col-sm-6">
   <div class="form-group">
-    <label>Short Description:<span class="star">*</span></label>
+    <label>Short Description of the Requested Service:<span class="star">*</span></label>
     <textarea class="form-control" id="shortDescription"></textarea>
 </div>
 </div> 
@@ -1523,14 +1827,30 @@ private readonly ContractAmendment=`
   </div>
   </div>
   </div>
-
+  <div class="row">
+  <div class="col-sm-12">
+  <div class="form-group">
+  <span class="star">Note:In case of Firm please indicate name of contact person</span></div></div>
+  </div>
   <div class='row'>
-  <div class="col-sm-6">
+  <!--<div class="col-sm-6">
       <div class="form-group">
         <label>Justification For Extension<span class="star">*</span></label>
         <textarea class="form-control" id="justification"></textarea>
     </div>
-    </div>
+    </div>-->
+
+    <div class="col-sm-6">
+    <div class="form-group">
+     <label>Justification for Extension</label>
+     <div class="input-group">
+     <div class="custom-file">
+     <input type="file" id="justification" value="" class="custom-file-input">
+     <label class="custom-file-label" for="justification">Choose File</label>
+     </div>
+     </div>
+   </div>
+   </div>
 
     <div class="col-sm-6">
     <div class="form-group">
@@ -1546,20 +1866,37 @@ private readonly ContractAmendment=`
 
   </div>
 
+  <div class="row">
+  <div class="col-sm-6">
+  <div class="form-group">
+   <label>Financial status of the done payments<span class="star">*</span></label>
+   <div class="input-group">
+   <div class="custom-file">
+   <input type="file" id="Financialstatus" value="" class="custom-file-input">
+   <label class="custom-file-label" for="Financialstatus">Choose File</label>
+   </div>
+   </div>
+ </div>
+  </div>
   <div id='divForEstimation'>
   </div>
+  </div>
+  <div class="row">
+  <div class="col-sm-6">
+    <div class="form-group">
+      <input class="radio-stylish" type="checkbox" id="chkfinstatus" value="no payments were done">
+      <span class="checkbox-element"></span>
+      <label class="stylish-label" for="chkfinstatus">no payments were done</label>
+    </div>
+    </div>
 
-
-  
+  </div>
 </div>
-
-
-
 `;
 
 private readonly EstimationHMTL=`
 
-<div class='row'>
+
 <div class="col-sm-6">
  <div class="form-group">
   <label>Estimated Cost for the Extension<span class="star">*</span></label>
@@ -1570,7 +1907,7 @@ private readonly EstimationHMTL=`
   </div>
   </div>
 </div>
-</div>
+
 
 `;
     /* 
@@ -1666,7 +2003,7 @@ private readonly EstimationHMTL=`
 
 
     window.addEventListener("beforeunload", function (e) {
-        if (!formSubmitting)
+        /*if (!formSubmitting)
         {
             return undefined;
         }
@@ -1675,28 +2012,57 @@ private readonly EstimationHMTL=`
                                 + 'If you leave before saving, your changes will be lost.';
 
         (e || window.event).returnValue = confirmationMessage; //Gecko + IE
-        return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+        return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.*/
     });
 
-    var requestHtml='';
     $('#DrpProjectName').change(function()
     {
       formSubmitting=true;
-      
+      var requestHtml='';
       var projectname=$('#DrpProjectName option:selected').val();
+      
       if(projectname=='Goods')
-      requestHtml=that.newGoods;
+      requestHtml=that.requestcategoriesforgoods;
       else if(projectname=='Service')
-      requestHtml=that.HtmlGoods;
+      requestHtml=that.requestcategoriesforservice;
       else if(projectname=='Lease')
       requestHtml=that.HtmlForLeaseandsubsidy;
       else if(projectname=='Subsidy')
-      requestHtml=that.HtmlForLeaseandsubsidy;
-      
-      
+      requestHtml=that.HtmlForLeaseandsubsidy;  
+
+      $('#divforsubcategory').html('');
+      $('#divforsubcategory').html(requestHtml);
+
+    });
+    
+    
+    $(document).on('change', '#Drpreqcategories',function()
+    {
+      formSubmitting=true;
+      var requestHtml='';
+      var projectname=$('#Drpreqcategories option:selected').val();
+      if(projectname=='goods')
+      requestHtml=that.commonHtml+that.newGoods;
+      else if(projectname=='goodsamendment')
+      requestHtml=that.commonHtml+that.ProcurementofGoodsAmendment;
+      else if(projectname=='framework')
+      requestHtml=that.commonHtml+that.RequestfromaFrameworkAgreement;
+      else if(projectname=='service')
+      requestHtml=that.commonHtml+that.HtmlGoods;
+      else
+      requestHtml='';    
 
       $('#divRequest').html('');
       $('#divRequest').html(requestHtml);
+
+      if(projectname=='goods')
+      $(".page-heading").text("New Procurement of Goods");
+      else if(projectname=='goodsamendment')
+      $(".page-heading").text("Procurement of Goods Amendment");
+      else if(projectname=='framework')
+      $(".page-heading").text("Request from a Framework Agreement");
+      else if(projectname=='service')
+      $(".page-heading").text("Procurement of Services");
 
       if(projectname=='Lease')
       {
@@ -1717,11 +2083,10 @@ private readonly EstimationHMTL=`
       LoadProjects();
       LoadServices();
 
-      $( "#requestedDeliveryTime" ).datepicker({autoclose:true});
+      $( "#requestedDeliveryTime" ).datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});
       for (let index = 0; index <= 20; index++) {
         $('#requestedWarrantyTime').append('<option value="' + index + '">' + index + '</option>');
       }
-
     });
 
     /* 
@@ -1731,7 +2096,7 @@ private readonly EstimationHMTL=`
     */
     $(document).on('change', '#projectName', function ()
     {
-      if ($("#projectName").val() == 'MWR II' || $("#projectName").val() == 'RWU II') 
+      /*if ($("#projectName").val() == 'MWR II' || $("#projectName").val() == 'RWU II') 
       {
         $('#spanKOMP').show();
       } 
@@ -1739,7 +2104,7 @@ private readonly EstimationHMTL=`
       {
         $('#komp').val('');
         $('#spanKOMP').hide();
-      }
+      }*/
       
       $("#NameofAV").val($('#projectName option:selected').attr('proj-av'));
       var PrjctNum=$('#projectName option:selected').attr('Proj-Num');
@@ -1855,8 +2220,8 @@ private readonly EstimationHMTL=`
          else if(selectedservice=='Contract Amendment')
          $('#ChoicesField').html(that.ContractAmendment);
  
-         $( "#Fromdate" ).datepicker({autoclose:true});
-         $( "#Todate" ).datepicker({autoclose:true});
+         $( "#Fromdate" ).datepicker({autoclose:true,daysOfWeekDisabled: [5,6]});
+         $( "#Todate" ).datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});
  
          
  
@@ -1931,14 +2296,15 @@ $(document).on('change','.lessor',function()
       {
         
         formSubmitting=false;
-        if($('#DrpProjectName option:selected').val()=='Goods')
+        if($('#Drpreqcategories option:selected').val()=='goods')
         CreateGoodsRequest();
-        else if($('#DrpProjectName option:selected').val()=='Service')
+        else if($('#Drpreqcategories option:selected').val()=='goodsamendment')
+        creategoodsamendment();
+        else if($('#Drpreqcategories option:selected').val()=='framework')
+        createrequestframework();
+        else if($('#Drpreqcategories option:selected').val()=='service')
         CreateService();
-        else if($('#DrpProjectName option:selected').val()=='Lease')
-        CreateLeaseAgreement();
-        else if($('#DrpProjectName option:selected').val()=='Subsidy')
-        CreateSubsidy();
+
       });
 
     $(document).on('blur','#EUR',function () 
@@ -1980,6 +2346,18 @@ $(document).on('change','.lessor',function()
         else
             $(this).blur();
       }
+  });
+
+  $(document).on('change', "#chkKomp", function (){
+    if ($(this).prop('checked')) 
+    {
+     
+      $('#divkompoutput').html('');
+      $('#divkompoutput').html(that.newgoodskompcheckbox);
+    } else 
+    {
+      $('#divkompoutput').html('');
+    }
   });
 
      /* 
@@ -2108,7 +2486,13 @@ function CreateGoodsRequest()
       EUR:$("#EUR").val(),
       DeliveryTime:DelivertimeTime,
       WarrantyTime:$('#requestedWarrantyTime').val(),
-      FullAddress:$('#deliveryAddress').val()
+      FullAddress:$('#deliveryAddress').val(),
+      ContactPersonName:$('#CntctPrsn').val(),
+      PersonEmail:$('#Email').val(),
+      PersonMobile:$('#MobileNumber').val(),
+      KompOutputNumber:$('#percent').val(),
+      kompPercent:$('#outputnumber').val()
+
     }
     
     if($("#chkMoreItem").prop('checked'))
@@ -2121,6 +2505,13 @@ function CreateGoodsRequest()
     {
       if($('#nonneutralFile')[0].files.length>0)
       arrFiles.push({'FolderName':'NeutralSpecfication','files':$('#nonneutralFile')[0].files});
+
+      if($('#VSRC')[0].files.length>0)
+      arrFiles.push({'FolderName':'NeutralSpecfication','files':$('#VSRC')[0].files});
+      if($('#VSCP')[0].files.length>0)
+      arrFiles.push({'FolderName':'NeutralSpecfication','files':$('#VSCP')[0].files});
+      if($('#VSSPAC')[0].files.length>0)
+      arrFiles.push({'FolderName':'NeutralSpecfication','files':$('#VSSPAC')[0].files});
     }
 
     if($('#newspaperFile')[0].files.length>0)
@@ -2163,7 +2554,106 @@ function CreateGoodsRequest()
      formSubmitting=true;
   }
 }
+function creategoodsamendment()
+{
+  let arrFiles=[];
+  if(mandatoryvalidationforgoodsamendment())
+  {
+    $('.loading-modal').addClass('active');
+    $('body').addClass('body-hidden');
+    let DelivertimeTime=(new Date(Date.parse(moment($("#requestedDeliveryTime").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
+    let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+      var ProjectIndex;
+      for(var prNum=0;prNum<ProjectDetails.length;prNum++)
+      {
+        if(ProjectDetails[prNum].PrjtcNum==$("#projectName option:selected").val())
+        {
+          ProjectIndex=prNum;
+          break;
+        }
+      }
 
+    let kompoutput='No';
+    if($("#chkKomp").prop('checked'))
+    {
+      kompoutput='Yes';
+    }
+
+    let Servicedata=
+    {
+      
+      ProjectName:$("#projectName option:selected").val(),
+      ProjectNumber:projectNumber,
+      PNForZAS:$("#pnForZAS").val(),
+      NameOfAV:$("#NameofAV").val(),
+      AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
+      RepresentativeId: {
+        "results": ProjectDetails[ProjectIndex].RepId
+      },
+      isKompOutput:$("#chkKomp").prop('checked'),
+      KompOutputNumber:$('#percent').val(),
+      kompPercent:$('#outputnumber').val(),
+      ProsoftNumber:$("#prosoftnum").val(),
+      DeliveryTime:DelivertimeTime,
+    }
+
+    if($('#justification')[0].files.length>0)
+    arrFiles.push({'FolderName':'Justification','files':$('#justification')[0].files});
+
+    if($('#fileQuantitiesNochange')[0].files.length>0)
+    arrFiles.push({'FolderName':'AmendmentSpecfications','files':$('#fileQuantitiesNochange')[0].files});
+
+    InsertGoodsRequest(Servicedata,arrFiles);
+
+  }
+}
+function createrequestframework()
+{
+  let arrFiles=[];  
+  if(mandatoryvalidationforrequestframeworkagreement())
+  {
+    $('.loading-modal').addClass('active');
+    $('body').addClass('body-hidden');
+    let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+    var ProjectIndex;
+    for(var prNum=0;prNum<ProjectDetails.length;prNum++)
+    {
+      if(ProjectDetails[prNum].PrjtcNum==$("#projectName option:selected").val())
+      {
+        ProjectIndex=prNum;
+        break;
+      }
+    }
+    let Servicedata=
+    {
+      
+      ProjectName:$("#projectName option:selected").val(),
+      ProjectNumber:projectNumber,
+      PNForZAS:$("#pnForZAS").val(),
+      NameOfAV:$("#NameofAV").val(),
+      AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
+      RepresentativeId: {
+        "results": ProjectDetails[ProjectIndex].RepId
+      },
+      isKompOutput:$("#chkKomp").prop('checked'),
+      KompOutputNumber:$('#percent').val(),
+      kompPercent:$('#outputnumber').val(),
+      JOD:$("#JOD").val(),
+      EUR:$("#EUR").val(),
+      Agreement:$("input[name='Agreement']:checked").val()
+
+    }
+
+    if($('#FilledCatalogue')[0].files.length>0)
+    arrFiles.push({'FolderName':'FilledCatalogue','files':$('#FilledCatalogue')[0].files});
+
+    if($('#AdditionalInformation')[0].files.length>0)
+    arrFiles.push({'FolderName':'AdditionalInformation','files':$('#AdditionalInformation')[0].files});
+
+    InsertGoodsRequest(Servicedata,arrFiles);
+    
+  }
+}
 async function InsertGoodsRequest(Servicedata,arrFiles)
 {
 
@@ -2172,6 +2662,7 @@ async function InsertGoodsRequest(Servicedata,arrFiles)
    {
      
      //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
+     if($('#Drpreqcategories option:selected').val()=='goods')
      createContact("GD-"+data.data.ID);
 
     for(var i=0;i<arrFiles.length;i++)
@@ -2181,7 +2672,7 @@ async function InsertGoodsRequest(Servicedata,arrFiles)
 
      
        
-   }).catch(function(error){ErrorCallBack(error,'InsertService')});
+   }).catch(function(error){ErrorCallBack(error,'Insertgoodsrequest')});
 }
 
 async function createContact(ListID)
@@ -2263,6 +2754,21 @@ function MandatoryValidation()
   else if($("input[name='Specifications']:checked").val()=='Nonneutral Specifications'&&$('#nonneutralFile')[0].files.length<=0)
 	{
 		alertify.error('Please Select Justification');
+		isAllValueFilled=false;
+  }
+  else if($("input[name='Specifications']:checked").val()=='Nonneutral Specifications'&&$('#VSRC')[0].files.length<=0)
+	{
+		alertify.error('Please Select Valid Supplier’s Registration Certificate');
+		isAllValueFilled=false;
+  }
+  else if($("input[name='Specifications']:checked").val()=='Nonneutral Specifications'&&$('#VSCP')[0].files.length<=0)
+	{
+		alertify.error('Please Select “Valid Supplier’s Company Profile');
+		isAllValueFilled=false;
+  }
+  else if($("input[name='Specifications']:checked").val()=='Nonneutral Specifications'&&$('#VSSPAC')[0].files.length<=0)
+	{
+		alertify.error('Please Select Valid Supplier’s Sole Provider Authorization Certificate');
 		isAllValueFilled=false;
   }
   else if($("#chkMoreItem").prop('checked')&&$('#costFile')[0].files.length<=0)
@@ -2355,18 +2861,97 @@ function MandatoryValidation()
       return isAllValueFilled;
     }
   
-    if($.trim($("#KompOptPT").val())==''&&($("#projectName").val() == 'MWR II' || $("#projectName").val() == 'RWU II'))
+    /*if($.trim($("#KompOptPT").val())==''&&($("#projectName").val() == 'MWR II' || $("#projectName").val() == 'RWU II'))
     {
       alertify.error('Please Enter KOMP Output');
       isAllValueFilled=false;
       return isAllValueFilled;
-    }
+    }*/
 
   }
 
   return isAllValueFilled;
   }
+ 
+  function mandatoryvalidationforgoodsamendment()
+  {
+    var isAllValueFilled=true;
+
+  if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
   
+    if($('#projectName option:selected').val()=='Select')
+	{
+		alertify.error('Please Choose Project Name');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#pnForZAS").val()))
+	{
+		alertify.error('Please Enter PN For ZAS');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#NameofAV").val()))
+	{
+		alertify.error('Please Enter Name of AV');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#prosoftnum").val()))
+	{
+		alertify.error('Please Enter ProSoft Number');
+		isAllValueFilled=false;
+  }
+  else if($('#fileQuantitiesNochange')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Specifications and Quantities');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#requestedDeliveryTime").val()))
+	{
+		alertify.error('Please Enter requested Delivery Time');
+		isAllValueFilled=false;
+  }
+  return isAllValueFilled;
+  }
+
+  function mandatoryvalidationforrequestframeworkagreement()
+  {
+    var isAllValueFilled=true;
+
+  if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
+  
+    if($('#projectName option:selected').val()=='Select')
+	{
+		alertify.error('Please Choose Project Name');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#pnForZAS").val()))
+	{
+		alertify.error('Please Enter PN For ZAS');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#NameofAV").val()))
+	{
+		alertify.error('Please Enter Name of AV');
+		isAllValueFilled=false;
+  }
+  else if($("input[name='Agreement']:checked").length==0){
+    alertify.error('Please choose any one of the Agreement');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#JOD").val())){
+    alertify.error('Please Enter JOD');
+    isAllValueFilled=false;
+  }
+  else if(!$.trim($("#EUR").val())){
+    alertify.error('Please Enter EUR');
+    isAllValueFilled=false;
+  }
+  else if($("input[name='Agreement']:checked").val()=="Furniture Framework Agreement"&&$('#AdditionalInformation')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Additional Information');
+		isAllValueFilled=false;
+  }
+  return isAllValueFilled;
+}
 /* 
 //summary
 goods request fucntionalities End
@@ -2442,9 +3027,12 @@ function LoadServices()
             FullAddress:$("#FullAddress").val(),
             ShortDesc:$("#shortDescription").val(),
             DurationFrom:FromDate,
-            DurationTo:Todate
+            DurationTo:Todate,
+            JOD:$("#JOD").val(),
+            EUR:$("#EUR").val()
           }
-          arrFiles.push({'FolderName':'EstimatedCost','files':$('#Estimation')[0].files});
+          
+          //arrFiles.push({'FolderName':'EstimatedCost','files':$('#Estimation')[0].files});
           arrFiles.push({'FolderName':'Justification','files':$('#justification')[0].files});
           arrFiles.push({'FolderName':'Terms','files':$('#terms')[0].files});
 
@@ -2492,7 +3080,10 @@ function LoadServices()
             RepresentativeId: {
               "results": ProjectDetails[ProjectIndex].RepId
             },
-            KOMPOuput:$("#KompOptPT").val(),
+            //KOMPOuput:$("#KompOptPT").val(),
+            isKompOutput:$("#chkKomp").prop('checked'),
+            KompOutputNumber:$('#percent').val(),
+            kompPercent:$('#outputnumber').val(),
             ChoicesOfServices:$("#choicesservices option:selected").val(),
             JOD:$("#JOD").val(),
             EUR:$("#EUR").val(),
@@ -2549,8 +3140,12 @@ function LoadServices()
             RepresentativeId: {
               "results": ProjectDetails[ProjectIndex].RepId
             },
-            KOMPOuput:$("#KompOptPT").val(),
+            //KOMPOuput:$("#KompOptPT").val(),
+            isKompOutput:$("#chkKomp").prop('checked'),
+            KompOutputNumber:$('#percent').val(),
+            kompPercent:$('#outputnumber').val(),
             ChoicesOfServices:$("#choicesservices option:selected").val(),
+            ConsultingFirm:$("input[name='ConsultingFirm']:checked").val(),
             JOD:$("#JOD").val(),
             EUR:$("#EUR").val(),
             ShortDesc:$("#shortDescription").val(),
@@ -2843,7 +3438,10 @@ function LoadServices()
                   RepresentativeId: {
                     "results": ProjectDetails[ProjectIndex].RepId
                   },
-                  KOMPOuput:$("#KompOptPT").val(),
+                  //KOMPOuput:$("#KompOptPT").val(),
+                  isKompOutput:$("#chkKomp").prop('checked'),
+                  KompOutputNumber:$('#percent').val(),
+                  kompPercent:$('#outputnumber').val(),
                   ChoicesOfServices:$("#choicesservices option:selected").val(),
                   ShortDesc:$("#shortDescription").val(),
                   CostExtension :$("input[name='CstExtension']:checked").val(),
@@ -2854,8 +3452,15 @@ function LoadServices()
                   MobileNumber:$("#MobileNumber").val(),
                   FullAddress:$("#FullAddress").val(),
                   TelephoneNumber:$("#TeleNumber").val(),
-                  Justification:$("#justification").val()
+                  //Justification:$("#justification").val()
+                  PaymentStatus:$("#chkfinstatus").prop('checked')
                 }
+                if($('#justification')[0].files.length>0)
+                arrFiles.push({'FolderName':'Justification','files':$('#justification')[0].files});
+
+                if($('#Financialstatus')[0].files.length>0)
+                arrFiles.push({'FolderName':'Financialstatus','files':$('#Financialstatus')[0].files});
+
                 if($("input[name='CstExtension']:checked").val()=='Cost Extension'){
                 arrFiles.push({'FolderName':'EstimatedCost','files':$('#Estimation')[0].files});}
 
@@ -2905,11 +3510,6 @@ function MandatoryValidationForService()
 		alertify.error('Please Choose Project Name');
 		isAllValueFilled=false;
   }
-  /*else if(!$.trim($("#projectNumber").val()))
-	{
-		alertify.error('Please Enter Project Number');
-		isAllValueFilled=false;
-  }*/
   else if(!$.trim($("#pnForZAS").val()))
 	{
 		alertify.error('Please Enter PN For ZAS');
@@ -2920,14 +3520,9 @@ function MandatoryValidationForService()
 		alertify.error('Please Enter Name of AV');
 		isAllValueFilled=false;
   }
-  else if(!$.trim($("#KompOptPT").val()))
-	{
-		alertify.error('Please Enter KOMP Output');
-		isAllValueFilled=false;
-  }
   else if($('#choicesservices option:selected').val()=='Select')
 	{
-		alertify.error('Please Choose choices of services');
+		alertify.error('Please Choose Contracting Procedure');
 		isAllValueFilled=false;
   }
   return isAllValueFilled;
@@ -3005,10 +3600,18 @@ function mandatoryfordirectaward()
 		alertify.error('From  Date Should be lesser than To date');
 		isAllValueFilled=false;
 	}
-  else if($('#Estimation')[0].files.length<=0)
+  /*else if($('#Estimation')[0].files.length<=0)
 	{
 		alertify.error('Please upload a file for Estimated Cost');
 		isAllValueFilled=false;
+  }*/
+  else if(!$.trim($("#JOD").val())){
+    alertify.error('Please Enter JOD');
+    isAllValueFilled=false;
+  }
+  else if(!$.trim($("#EUR").val())){
+    alertify.error('Please Enter EUR');
+    isAllValueFilled=false;
   }
   else if($('#justification')[0].files.length<=0)
 	{
@@ -3035,7 +3638,7 @@ function mandatoryforshortlisttender()
 	if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
   if(!$.trim($("#shortDescription").val()))
 	{
-		alertify.error('Please Enter Short Description');
+		alertify.error('Please Enter Short Description of the Requested Service');
 		isAllValueFilled=false;
   }
   else if($('#shortlist')[0].files.length<=0)
@@ -3101,8 +3704,13 @@ function mandatoryforpublictender()
 {
 
   var isAllValueFilled=true;
-	if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
-  if(!$.trim($("#shortDescription").val()))
+  if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
+  if(!$("input[id='ConsultingFirm']").prop('checked')&&!$("input[id='Appariser']").prop('checked'))
+  {
+    alertify.error('Please Select Firm or Appraiser');
+		isAllValueFilled=false;
+  } 
+  else if(!$.trim($("#shortDescription").val()))
 	{
 		alertify.error('Please Enter Short Description');
 		isAllValueFilled=false;
@@ -3569,11 +4177,11 @@ function mandatoryforcontract()
 		alertify.error('Please Enter Mobile Number');
 		isAllValueFilled=false;
   }
-  else if(!$.trim($("#justification").val()))
+  /*else if(!$.trim($("#justification").val()))
 	{
 		alertify.error('Please Enter Justification for Extension');
 		isAllValueFilled=false;
-  }
+  }*/
 
   else if($('#terms')[0].files.length<=0)
 	{
@@ -3583,6 +4191,11 @@ function mandatoryforcontract()
   else if($("input[name='CstExtension']:checked").val()=='Cost Extension'&&$('#Estimation')[0].files.length<=0)
 	{
 		alertify.error('Please upload a file for Estimated Cost for the Extension');
+		isAllValueFilled=false;
+  }
+  else if(!$("#chkfinstatus").prop('checked')&&$('#Financialstatus')[0].files.length<=0)
+  {
+    alertify.error('Please upload a file for Financial status of the done payments');
 		isAllValueFilled=false;
   }
   return isAllValueFilled;
