@@ -36,7 +36,7 @@ var filesQuantity=[];
 
 
 var ChoicesServices = [
-  'Direct Award','Shortlisted tender','Public tender','Local Subsidy','Lease Agreement','iDPP','Contract Amendment'
+  'Direct Award','Shortlisted tender','Public tender','Local Subsidy','Lease Agreement','iDPP','Contract Amendment','Request from a Framework Agreement'
 ];
 
 
@@ -72,6 +72,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart <IERequestWeb
         <option value="Service">Service Request</option>
         <option value="Subsidy">Local Subsidy</option>
         <option value="Lease">Lease Agreement</option>
+        <option value="idpp">IDPP</option>
         </select>
         </div>
       </div>
@@ -117,6 +118,50 @@ export default class ERequestWebPart extends BaseClientSideWebPart <IERequestWeb
       <select class="form-control" id="Drpreqcategories">
         <option value="Select">Select</option>
         <option value="service">Procurement of Services</option>
+        </select>
+        </div>
+      </div>
+    </div>
+
+    <div id='divRequest'></div>
+  `;
+
+  private readonly requestcategoriesforsubsidy=`
+    
+  <div class="loading-modal"> 
+  <div class="spinner-border" role="status"> 
+  <span class="sr-only">Loading...</span>
+</div></div>
+  <div class="row">
+  <div class="col-sm-12">
+    <div class="form-group">
+      <label>E-Request Categories:<span class="star">*</span></label>
+      <select class="form-control" id="Drpreqcategories">
+        <option value="Select">Select</option>
+        <option value="Subsidy">New Local Subsidy</option>
+        <option value="Subsidyamendment">Local Subsidy Amendment</option>
+        </select>
+        </div>
+      </div>
+    </div>
+
+    <div id='divRequest'></div>
+  `;
+
+  private readonly requestcategoriesforlease=`
+    
+  <div class="loading-modal"> 
+  <div class="spinner-border" role="status"> 
+  <span class="sr-only">Loading...</span>
+</div></div>
+  <div class="row">
+  <div class="col-sm-12">
+    <div class="form-group">
+      <label>E-Request Categories:<span class="star">*</span></label>
+      <select class="form-control" id="Drpreqcategories">
+        <option value="Select">Select</option>
+        <option value="Lease">New Lease Agreement</option>
+        <option value="Leaseamendment">Lease Agreement Amendment</option>
         </select>
         </div>
       </div>
@@ -479,7 +524,7 @@ private readonly ProcurementofGoodsAmendment=`
     <div class="col-sm-6">
     <div class="form-group">
       <label>ProSoft Number:<span class="star">*</span></label>
-      <input class="form-control" type="number" id="prosoftnum" max="8" value="">
+      <input class="form-control" type="number" id="prosoftnum" maxlength="8" value="">
     </div>
     </div>
     <div class="col-sm-6">
@@ -1109,22 +1154,42 @@ private readonly tender=`
 </div>
 `;
 
-private readonly LocalSubsidy=`
+private readonly ContractAmendment=` 
+
+<div class='row'>
+   
+<div class="col-sm-3">
+    <div class="form-group">
+    <input class="radio-stylish CstExtension" id="NoCstExtn" type="radio" name="CstExtension" value="No Cost Extension" />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="NoCstExtn">No Cost Extension</label>
+    </div>
+    </div>
+
+    <div class="col-sm-3">
+    <div class="form-group">
+    <input class="radio-stylish CstExtension" id="CstExtn" type="radio" name="CstExtension" value="Cost Extension" />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="CstExtn">Cost Extension</label>
+    </div>
+    </div>
+
+</div>
 
 <div class='row'>
 <div class="col-sm-6">
     <div class="form-group">
-      <label>Short Description of the Requested Local Subsidy:<span class="star">*</span></label>
-      <textarea class="form-control" id="shortDescription"></textarea>
+      <label>Contract Number<span class="star">*</span></label>
+      <!--<textarea class="form-control" id="CntrctNum"></textarea>-->
+      <input class="form-control" type="number" id="CntrctNum" maxlength="10" />
   </div>
   </div>
   <div class="col-sm-6">
-    <div class="form-group">
-    <label>Name Of Beneficiary<span class="star">*</span></label>
-    <input class="form-control" type="text" id="NameOfBenficiary" value="">
-  </div>
-  </div>
-
+  <div class="form-group">
+    <label>Short Description of the Requested Service:<span class="star">*</span></label>
+    <textarea class="form-control" id="shortDescription"></textarea>
+</div>
+</div> 
 </div>
 
 <div class='row'>
@@ -1136,144 +1201,159 @@ private readonly LocalSubsidy=`
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-    <label>Telephone Number<span class="star">*</span></label>
-    <input class="form-control" type="Number" id="TeleNumber" value="">
+    <label>Name Of Consulting Firm / Appraiser<span class="star">*</span></label>
+    <input class="form-control" type="text" id="NameOfFirm" value="">
   </div>
-  </div>
-  
+  </div> 
 </div>
 
 <div class='row'>
 
-<div class="col-sm-4">
+<div class="col-sm-3">
 <div class="form-group">
-    <label>Name Of Contact Person<span class="star">*</span></label>
+    <label>Contact Person<span class="star">*</span></label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
 </div>
-
-  <div class="col-sm-4">
+<div class="col-sm-3">
+    <div class="form-group">
+    <label>Telephone Number<span class="star">*</span></label>
+    <input class="form-control" type="Number" id="TeleNumber" value="">
+  </div>
+  </div> 
+  <div class="col-sm-3">
   <div class="form-group">
   <label>Email :<span class="star">*</span></label> <input type="email" id='Email' class="contactEmail form-control" value="">
   </div>
   </div>
   
-  <div class="col-sm-4">
+  <div class="col-sm-3">
   <div class="form-group">
   <label>Mobile Number :<span class="star">*</span></label> <input type="Number" id='MobileNumber' class="contactPhoneNumber form-control" value="">
   </div>
   </div>
-  
+  </div>
+  <div class="row">
+  <div class="col-sm-12">
+  <div class="form-group">
+  <span class="star">Note:In case of Firm please indicate name of contact person</span></div></div>
+  </div>
+  <div class='row'>
+  <!--<div class="col-sm-6">
+      <div class="form-group">
+        <label>Justification For Extension<span class="star">*</span></label>
+        <textarea class="form-control" id="justification"></textarea>
+    </div>
+    </div>-->
+
+    <div class="col-sm-6">
+    <div class="form-group">
+     <label>Justification for Extension</label>
+     <div class="input-group">
+     <div class="custom-file">
+     <input type="file" id="justification" value="" class="custom-file-input">
+     <label class="custom-file-label" for="justification">Choose File</label>
+     </div>
+     </div>
+   </div>
+   </div>
+
+    <div class="col-sm-6">
+    <div class="form-group">
+     <label>Modified Terms of Reference<span class="star">*</span></label>
+     <div class="input-group">
+     <div class="custom-file">
+     <input type="file" id="terms" value="" class="custom-file-input">
+     <label class="custom-file-label" for="terms">Choose File</label>
+     </div>
+     </div>
+    </div>
+    </div> 
+
+  </div>
+
+  <div class="row">
+  <div class="col-sm-6">
+  <div class="form-group">
+   <label>Financial status of the done payments<span class="star">*</span></label>
+   <div class="input-group">
+   <div class="custom-file">
+   <input type="file" id="Financialstatus" value="" class="custom-file-input">
+   <label class="custom-file-label" for="Financialstatus">Choose File</label>
+   </div>
+   </div>
+ </div>
+  </div>
+  <div id='divForEstimation'>
+  </div>
+  </div>
+  <div class="row">
+  <div class="col-sm-6">
+    <div class="form-group">
+      <input class="radio-stylish" type="checkbox" id="chkfinstatus" value="no payments were done">
+      <span class="checkbox-element"></span>
+      <label class="stylish-label" for="chkfinstatus">no payments were done</label>
+    </div>
+    </div>
+
+  </div>
+</div>
+`;
+
+private readonly EstimationHMTL=`
+
+
+<div class="col-sm-6">
+ <div class="form-group">
+  <label>Estimated Cost for the Extension<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="Estimation" value="" class="custom-file-input">
+  <label class="custom-file-label" for="Estimation">Choose File</label>
+  </div>
+  </div>
 </div>
 
-<div class='row'>
-<div class="col-sm-6">
+
+`;
+
+private readonly serviceRequestfromaFrameworkAgreement=`
+<div class="row">
+    <div class="col-sm-6">
+    <div class="form-group">
+    <input class="radio-stylish clsAgreement" id="EventFramework" type="radio" name="Agreement" value="Events Management Framework Agreement" />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="EventFramework">Events Management Framework Agreement</label>
+    </div>
+    </div>
+    <div class="col-sm-6">
+    <div class="form-group">
+    <input class="radio-stylish clsAgreement" id="LegalFramework" type="radio" name="Agreement" value="Legal Services Framework Agreement" />
+    <span class="radio-element"></span>
+    <label class="stylish-label" for="LegalFramework">Legal Services Framework Agreement</label>
+    </div>
+    </div>
+</div>
+
+<div class="row"> 
+<div class="col-sm-3">
 <div class="form-group">
-<label>Duration of the assignment (From Date)<span class="star">*</span></label>
- <input class="form-control form-control-datepicker" type="text" id="Fromdate">
-</div>
-</div>
-<div class="col-sm-6">
-<div class="form-group">
-<label>Duration of the assignment (To Date)<span class="star">*</span></label>
- <input class="form-control form-control-datepicker" type="text" id="Todate">
-</div>
-</div>
-</div>
-
-<div class='row'>
-
-<div class="col-sm-6">
- <div class="form-group">
-  <label>Project Proposal<span class="star">*</span></label>
-  <div class="input-group">
-  <div class="custom-file">
-  <input type="file" id="Proposal" value="" class="custom-file-input">
-  <label class="custom-file-label" for="Proposal">Choose File</label>
-  </div>
-  </div>
-  </div>
-  </div>
-
-<div class="col-sm-6">
- <div class="form-group">
-  <label>Commercial Suitability<span class="star">*</span></label>
-  <div class="input-group">
-  <div class="custom-file">
-  <input type="file" id="Suitability" value="" class="custom-file-input">
-  <label class="custom-file-label" for="Suitability">Choose File</label>
-  </div>
-  </div>
-  </div>
-  </div>
-
-</div>
-
-<div class='row'>
-
-<div class="col-sm-6">
- <div class="form-group">
-  <label>Budget Break-down<span class="star">*</span></label>
-  <div class="input-group">
-  <div class="custom-file">
-  <input type="file" id="Budget" value="" class="custom-file-input">
-  <label class="custom-file-label" for="Budget">Choose File</label>
-  </div>
-  </div></div></div>
-<div class="col-sm-6">
- <div class="form-group">
-  <label>Registration Certificate<span class="star">*</span></label>
-  <div class="input-group">
-  <div class="custom-file">
-  <input type="file" id="Certificate" value="" class="custom-file-input">
-  <label class="custom-file-label" for="Certificate">Choose File</label>
-  </div>
-  </div></div></div>
-  
-</div>
-
-<div class='row'> 
-<div class="col-sm-6">
-<div class="form-group">
-<label>Profile<span class="star">*</span></label>
-<div class="input-group">
-<div class="custom-file">
-<input type="file" id="Profile" value="" class="custom-file-input">
-<label class="custom-file-label" for="Profile">Choose File</label>
-</div>
-</div>
+<label>Estimated Cost<span class="star">*</span></label> <input type="Number" placeholder="JOD" id="JOD" class="contactEmail form-control" value=""> 
 </div>
 </div>
 
 <div class="col-sm-3">
 <div class="form-group">
-<label>Value of Local Subsidy:<span class="star">*</span></label> <input type="Number" id='JOD' placeholder='JOD' class="contactEmail form-control" value="">
+<label>&nbsp;<span class="star"></span></label> <input type="Number" placeholder="EUR" id="EUR" class="contactPhoneNumber form-control" value="">
 </div>
 </div>
-
-<div class="col-sm-3">
-<div class="form-group">
-<label>Value of Local Subsidy:<span class="star">*</span></label> <input type="Number" placeholder='EUR'  id='EUR' class="contactPhoneNumber form-control" value="">
+<div class='row' id='divforAgreement'>
 </div>
 </div>
-</div>
-
 <div class='row'>
 <div class="col-sm-6">
-<div class="form-group">
- <label>Bank Details<span class="star">*</span></label>
- <div class="input-group">
- <div class="custom-file">
- <input type="file" id="BankDetails" value="" class="custom-file-input">
- <label class="custom-file-label" for="BankDetails">Choose File</label>
- </div>
- </div>
-</div>
-</div>
-
-<div class="col-sm-6">
  <div class="form-group">
-  <label>Other Attachments<span class="star">*</span></label>
+  <label>Other Attachments</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="others" value="" class="custom-file-input" multiple>
@@ -1284,6 +1364,411 @@ private readonly LocalSubsidy=`
 </div>
 </div>
 </div>
+`;
+
+private readonly Htmlforfilledrequest=`
+<div class="col-sm-6">
+ <div class="form-group">
+  <label>Terms Of Reference<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="terms" value="" class="custom-file-input">
+  <label class="custom-file-label" for="terms">Choose File</label>
+  </div>
+  </div>
+</div>
+</div>`;
+private readonly Htmlforterms=`
+<div class="col-sm-6">
+<div class="form-group">
+ <label>Filled Request Form for Legal Services<span class="star">*</span></label>
+ <div class="input-group">
+ <div class="custom-file">
+ <input type="file" id="FilledRequest" value="" class="custom-file-input">
+ <label class="custom-file-label" for="FilledRequest">Choose File</label>
+ </div>
+ </div>
+</div>
+</div>
+`;
+/* 
+  //summary
+  Service Request Html End 
+  //summary
+  */
+
+  /* 
+  //summary
+  subsidy Request Html start 
+  //summary
+  */  
+ private readonly LocalSubsidy=`
+
+ <div class='row'>
+ <div class="col-sm-6">
+     <div class="form-group">
+       <label>Short Description of the Requested Local Subsidy:<span class="star">*</span></label>
+       <textarea class="form-control" id="shortDescription"></textarea>
+   </div>
+   </div>
+   <div class="col-sm-6">
+     <div class="form-group">
+     <label>Name Of Beneficiary<span class="star">*</span></label>
+     <input class="form-control" type="text" id="NameOfBenficiary" value="">
+   </div>
+   </div>
+ 
+ </div>
+ 
+ <div class='row'>
+ <div class="col-sm-6">
+     <div class="form-group">
+       <label>Full Address<span class="star">*</span></label>
+       <textarea class="form-control" id="FullAddress"></textarea>
+   </div>
+   </div>
+   <div class="col-sm-6">
+     <div class="form-group">
+     <label>Telephone Number<span class="star">*</span></label>
+     <input class="form-control" type="Number" id="TeleNumber" value="">
+   </div>
+   </div>
+   
+ </div>
+ 
+ <div class='row'>
+ 
+ <div class="col-sm-4">
+ <div class="form-group">
+     <label>Name Of Contact Person<span class="star">*</span></label>
+     <input class="form-control" type="text" id="CntctPrsn" value="">
+   </div>
+ </div>
+ 
+   <div class="col-sm-4">
+   <div class="form-group">
+   <label>Email :<span class="star">*</span></label> <input type="email" id='Email' class="contactEmail form-control" value="">
+   </div>
+   </div>
+   
+   <div class="col-sm-4">
+   <div class="form-group">
+   <label>Mobile Number :<span class="star">*</span></label> <input type="Number" id='MobileNumber' class="contactPhoneNumber form-control" value="">
+   </div>
+   </div>
+   
+ </div>
+ 
+ <div class='row'>
+ <div class="col-sm-6">
+ <div class="form-group">
+ <label>Duration of the assignment (From Date)<span class="star">*</span></label>
+  <input class="form-control form-control-datepicker" type="text" id="Fromdate">
+ </div>
+ </div>
+ <div class="col-sm-6">
+ <div class="form-group">
+ <label>Duration of the assignment (To Date)<span class="star">*</span></label>
+  <input class="form-control form-control-datepicker" type="text" id="Todate">
+ </div>
+ </div>
+ </div>
+ 
+ <div class='row'>
+ 
+ <div class="col-sm-6">
+  <div class="form-group">
+   <label>Project Proposal<span class="star">*</span></label>
+   <div class="input-group">
+   <div class="custom-file">
+   <input type="file" id="Proposal" value="" class="custom-file-input">
+   <label class="custom-file-label" for="Proposal">Choose File</label>
+   </div>
+   </div>
+   </div>
+   </div>
+ 
+ <div class="col-sm-6">
+  <div class="form-group">
+   <label>Commercial & Legal Suitability Check<span class="star">*</span></label>
+   <div class="input-group">
+   <div class="custom-file">
+   <input type="file" id="Suitability" value="" class="custom-file-input">
+   <label class="custom-file-label" for="Suitability">Choose File</label>
+   </div>
+   </div>
+   </div>
+   </div>
+ 
+ </div>
+ 
+ <div class='row'>
+ 
+ <div class="col-sm-6">
+  <div class="form-group">
+   <label>Budget Break-down<span class="star">*</span></label>
+   <div class="input-group">
+   <div class="custom-file">
+   <input type="file" id="Budget" value="" class="custom-file-input">
+   <label class="custom-file-label" for="Budget">Choose File</label>
+   </div>
+   </div></div></div>
+ <div class="col-sm-6">
+  <div class="form-group">
+   <label>Registration Certificate<span class="star">*</span></label>
+   <div class="input-group">
+   <div class="custom-file">
+   <input type="file" id="Certificate" value="" class="custom-file-input">
+   <label class="custom-file-label" for="Certificate">Choose File</label>
+   </div>
+   </div></div></div>
+   
+ </div>
+ 
+ <div class='row'> 
+ <div class="col-sm-6">
+ <div class="form-group">
+ <label>Profile<span class="star">*</span></label>
+ <div class="input-group">
+ <div class="custom-file">
+ <input type="file" id="Profile" value="" class="custom-file-input">
+ <label class="custom-file-label" for="Profile">Choose File</label>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="col-sm-3">
+ <div class="form-group">
+ <label>Value of Local Subsidy:<span class="star">*</span></label> <input type="Number" id='JOD' placeholder='JOD' class="contactEmail form-control" value="">
+ </div>
+ </div>
+ 
+ <div class="col-sm-3">
+ <div class="form-group">
+ <label>Value of Local Subsidy:<span class="star">*</span></label> <input type="Number" placeholder='EUR'  id='EUR' class="contactPhoneNumber form-control" value="">
+ </div>
+ </div>
+ </div>
+ 
+ <div class='row'>
+ <div class="col-sm-6">
+ <div class="form-group">
+  <label>Bank Details<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="BankDetails" value="" class="custom-file-input">
+  <label class="custom-file-label" for="BankDetails">Choose File</label>
+  </div>
+  </div>
+ </div>
+ </div>
+ <div class="col-sm-6">
+  <div class="form-group">
+   <label>Checklist for HQ Approval<span class="star">*</span></label>
+   <div class="input-group">
+   <div class="custom-file">
+   <input type="file" id="HQApproval" value="" class="custom-file-input">
+   <label class="custom-file-label" for="HQApproval">Choose File</label>
+   </div>
+   </div></div></div>
+   </div>
+   <div class='row'>
+
+   <div class="col-sm-6">
+  <div class="form-group">
+   <label>Approval from the Prime Minister/ Authorized Ministry<span class="star">*</span></label>
+   <div class="input-group">
+   <div class="custom-file">
+   <input type="file" id="MinisterApproval" value="" class="custom-file-input">
+   <label class="custom-file-label" for="MinisterApproval">Choose File</label>
+   </div>
+   </div></div></div>
+
+ <div class="col-sm-6">
+  <div class="form-group">
+   <label></br>Other Attachments<span class="star">*</span></label>
+   <div class="input-group">
+   <div class="custom-file">
+   <input type="file" id="others" value="" class="custom-file-input" multiple>
+   <label class="custom-file-label" for="others">Choose File</label>
+   </div>
+   </div>
+   <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
+ </div>
+ </div>
+ </div>
+
+ <div class="form-group" id='btnfinal'>
+    <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+</div>
+
+ `;
+ 
+ private readonly Localsubsidyamendment=`
+ <div class="row">
+
+    <div class="col-sm-6">
+    <div class="form-group">
+      <label>Local Subsidy CoSoft Number:<span class="star">*</span></label>
+      <input class="form-control" type="number" id="cosoftnum" maxlength="8" value="">
+    </div>
+    </div>
+
+    <div class="col-sm-6">
+    <div class="form-group">
+     <label>Prime Minister approval for the additional budget:<span class="star">*</span></label>
+     <div class="input-group">
+     <div class="custom-file">
+     <input type="file" id="MinisterApproval" value="" class="custom-file-input">
+     <label class="custom-file-label" for="MinisterApproval">Choose File</label>
+     </div>
+     </div>
+   </div>
+   </div>
+
+    </div>
+    <div class="row">
+    <div class="col-sm-6">
+    <div class="form-group">
+     <label>Justification for Amendment:<span class="star">*</span></label>
+     <div class="input-group">
+     <div class="custom-file">
+     <input type="file" id="justification" value="" class="custom-file-input">
+     <label class="custom-file-label" for="justification">Choose File</label>
+     </div>
+     </div>
+   </div>
+   </div>
+
+    <div class="col-sm-6">
+  <div class="form-group">
+   <label>Modified Project Proposal (signed and stamped):<span class="star">*</span></label>
+   <div class="input-group">
+   <div class="custom-file">
+   <input type="file" id="Proposal" value="" class="custom-file-input">
+   <label class="custom-file-label" for="Proposal">Choose File</label>
+   </div>
+   </div>
+   </div>
+   </div>
+
+    </div>
+
+    <div class="row">
+    <div class="col-sm-6">
+    <div class="form-group">
+     <label>Modified Budget Breakdown (signed and stamped):<span class="star">*</span></label>
+     <div class="input-group">
+     <div class="custom-file">
+     <input type="file" id="Budget" value="" class="custom-file-input">
+     <label class="custom-file-label" for="Budget">Choose File</label>
+     </div>
+     </div></div></div>
+    </div>
+
+    <div class="row">
+    <div class="col-sm-6">
+    <div class="form-group">
+     <label>Financial status of the done payments:<span class="star">*</span></label>
+     <div class="input-group">
+     <div class="custom-file">
+     <input type="file" id="Financialstatus" value="" class="custom-file-input">
+     <label class="custom-file-label" for="Financialstatus">Choose File</label>
+     </div>
+     </div>
+   </div>
+    </div>
+    </div>
+    <div class="row">
+    <div class="col-sm-6">
+      <div class="form-group">
+        <input class="radio-stylish" type="checkbox" id="chkfinstatus" value="no payments were done">
+        <span class="checkbox-element"></span>
+        <label class="stylish-label" for="chkfinstatus">no payments were done</label>
+      </div>
+      </div>
+  
+    </div>
+
+    <div class="form-group" id='btnfinal'>
+    <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+</div>
+ `;
+ /* 
+  //summary
+  subsidy Request Html End 
+  //summary
+  */
+
+
+ /* 
+  //summary
+  Lease Request Html Start 
+  //summary
+  */
+ private readonly HtmlForLeaseandsubsidy = `
+ <div class="loading-modal"> 
+ <div class="spinner-border" role="status"> 
+ <span class="sr-only">Loading...</span>
+</div></div>
+ <h4 class='page-heading'>New Service Request</h4>
+ <div class="row">
+ <div class="col-sm-6">
+   <div class="form-group">
+     <label>Project Name:<span class="star">*</span></label>
+     <select class="form-control" id="projectName">
+       <option value="Select">Select</option>
+       </select>
+       </div>
+     </div>
+
+     <div class="col-sm-6">
+     <div class="form-group">
+     <label>Project Number:<span class="star">*</span></label>
+     <!--<input class="form-control" type="text" id="projectNumber" value="">-->
+     <input id='txtProjectNum1' class="form-control prjctNum" type="text" maxlength="2" />.
+     <input id='txtProjectNum2' class="form-control prjctNum" type="text" maxlength="4" />.
+     <input id='txtProjectNum3' class="form-control prjctNum" type="text" maxlength="1" />-
+     <input id='txtProjectNum4' class="form-control prjctNum" type="text" maxlength="3" />.
+     <input id='txtProjectNum5' class="form-control prjctNum" type="text" maxlength="2" />
+   </div>
+   </div>
+
+   </div>
+
+   <div class="row">
+   <div class="col-sm-6">
+   <div class="form-group">
+     <label>PN for ZAS:<span class="star">*</span></label>
+     <input class="form-control" type="text" id="pnForZAS" value="">
+   </div>
+   </div>
+   <div class="col-sm-6">
+   <div class="form-group">
+     <label>Name of AV:<span class="star">*</span></label>
+     <input class="form-control" type="text" id="NameofAV" value="" disabled>
+   </div>
+   </div>
+   </div>
+
+   <div class="row">
+   <div class="col-sm-12">
+   <div class="form-group">
+     <label>KOMP Output<span class="star">*</span></label>
+     <input class="form-control" type="text" id="KompOptPT" value="">
+   </div>
+   </div>
+   </div>
+
+   <div id='ChoicesField'>
+   
+   </div>
+   
+<div class="form-group" id='btnfinal'>
+   <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+</div>
+
 `;
 
 private readonly LeaseAgreement=`
@@ -1372,9 +1857,11 @@ private readonly LeaseAgreement=`
 
 <div id='divlessor'>
 </div>
+<div class="form-group" id='btnfinal'>
+   <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+</div>
 
-
-</div>`;
+`;
 
 private readonly CompanyLessorHTML=`
 <div id='DivCmpnyLessor'>
@@ -1582,267 +2069,19 @@ private readonly InduvLessorHTML=`
 </div>
 `;
 
-private readonly iDPP=`
-<div class='row'>
-<div class="col-sm-6">
-    <div class="form-group">
-      <label>Short Description:<span class="star">*</span></label>
-      <textarea class="form-control" id="shortDescription"></textarea>
-  </div>
-  </div>
-</div>
-
-<div class='row'>
-
-<div class="col-sm-6">
-<div class="form-group">
- <label>Company’s Registration Certificate<span class="star">*</span></label>
- <div class="input-group">
- <div class="custom-file">
- <input type="file" id="RegCert" value="" class="custom-file-input">
- <label class="custom-file-label" for="RegCert">Choose File</label>
- </div>
- </div>
-</div>
-</div>
-
-<div class="col-sm-6">
- <div class="form-group">
-  <label>Company Profile<span class="star">*</span></label>
-  <div class="input-group">
-  <div class="custom-file">
-  <input type="file" id="Profile" value="" class="custom-file-input">
-  <label class="custom-file-label" for="Profile">Choose File</label>
-  </div>
-  </div>
-</div>
-</div>
-
-</div>
-
-<div class='row'>
-
-<div class="col-sm-6">
-<div class="form-group">
- <label>CVs Of Experts<span class="star">*</span></label>
- <div class="input-group">
- <div class="custom-file">
- <input type="file" id="Experts" value="" class="custom-file-input">
- <label class="custom-file-label" for="Experts">Choose File</label>
- </div>
- </div>
-</div>
-</div>
-
-<div class="col-sm-6">
-<div class="form-group">
- <label>Bank Details<span class="star">*</span></label>
- <div class="input-group">
- <div class="custom-file">
- <input type="file" id="BankDetails" value="" class="custom-file-input">
- <label class="custom-file-label" for="BankDetails">Choose File</label>
- </div>
- </div>
-</div>
-</div>
-
-</div>
-
-<div class='row'>
-
-<div class="col-sm-6">
-<div class="form-group">
- <label>Financial Reports<span class="star">*</span></label>
- <div class="input-group">
- <div class="custom-file">
- <input type="file" id="FinReport" value="" class="custom-file-input">
- <label class="custom-file-label" for="FinReport">Choose File</label>
- </div>
- </div>
-</div>
-</div>
-
-<div class="col-sm-6">
-<div class="form-group">
- <label>Summary Action Plan<span class="star">*</span></label>
- <div class="input-group">
- <div class="custom-file">
- <input type="file" id="Actionplan" value="" class="custom-file-input">
- <label class="custom-file-label" for="Actionplan">Choose File</label>
- </div>
- </div>
-</div>
-</div>
-
-</div>
-
-<div class='row'>
-
-<div class="col-sm-6">
-<div class="form-group">
- <label>Brief concept For Agreement<span class="star">*</span></label>
- <div class="input-group">
- <div class="custom-file">
- <input type="file" id="Agreement" value="" class="custom-file-input">
- <label class="custom-file-label" for="Agreement">Choose File</label>
- </div>
- </div>
-</div>
-</div>
-
-<div class="col-sm-6">
-<div class="form-group">
- <label>Budget Plan<span class="star">*</span></label>
- <div class="input-group">
- <div class="custom-file">
- <input type="file" id="Budget" value="" class="custom-file-input">
- <label class="custom-file-label" for="Budget">Choose File</label>
- </div>
- </div>
-</div>
-</div>
-
-</div>
-
-<div class='row'>
-
-<div class="col-sm-6">
-<div class="form-group">
- <label>Vergabedok<span class="star">*</span></label>
- <div class="input-group">
- <div class="custom-file">
- <input type="file" id="Vergabedok" value="" class="custom-file-input">
- <label class="custom-file-label" for="Vergabedok">Choose File</label>
- </div>
- </div>
-</div>
-</div>
-
-<div class="col-sm-6">
-<div class="form-group">
- <label>Competition Report <span class="star">*</span></label>
- <div class="input-group">
- <div class="custom-file">
- <input type="file" id="CompetitionReport" value="" class="custom-file-input">
- <label class="custom-file-label" for="CompetitionReport">Choose File</label>
- </div>
- </div>
-</div>
-</div>
-
-</div>
-
-<div class='row'>
-<div class="col-sm-6">
-<div class="form-group">
-<label>Duration of the assignment (From Date)<span class="star">*</span></label>
- <input class="form-control form-control-datepicker" type="text" id="Fromdate">
-</div>
-</div>
-<div class="col-sm-6">
-<div class="form-group">
-<label>Duration of the assignment (To Date)<span class="star">*</span></label>
- <input class="form-control form-control-datepicker" type="text" id="Todate">
-</div>
-</div>
-</div>
-`;
-
-private readonly ContractAmendment=` 
-
-<div class='row'>
-   
-<div class="col-sm-3">
-    <div class="form-group">
-    <input class="radio-stylish CstExtension" id="NoCstExtn" type="radio" name="CstExtension" value="No Cost Extension" />
-    <span class="radio-element"></span>
-    <label class="stylish-label" for="NoCstExtn">No Cost Extension</label>
-    </div>
-    </div>
-
-    <div class="col-sm-3">
-    <div class="form-group">
-    <input class="radio-stylish CstExtension" id="CstExtn" type="radio" name="CstExtension" value="Cost Extension" />
-    <span class="radio-element"></span>
-    <label class="stylish-label" for="CstExtn">Cost Extension</label>
-    </div>
-    </div>
-
-</div>
-
-<div class='row'>
-<div class="col-sm-6">
-    <div class="form-group">
-      <label>Contract Number<span class="star">*</span></label>
-      <!--<textarea class="form-control" id="CntrctNum"></textarea>-->
-      <input class="form-control" type="number" id="CntrctNum" maxlength="10" />
-  </div>
-  </div>
-  <div class="col-sm-6">
-  <div class="form-group">
-    <label>Short Description of the Requested Service:<span class="star">*</span></label>
-    <textarea class="form-control" id="shortDescription"></textarea>
-</div>
-</div> 
-</div>
-
-<div class='row'>
-<div class="col-sm-6">
-    <div class="form-group">
-      <label>Full Address<span class="star">*</span></label>
-      <textarea class="form-control" id="FullAddress"></textarea>
-  </div>
-  </div>
-  <div class="col-sm-6">
-    <div class="form-group">
-    <label>Name Of Consulting Firm / Appraiser<span class="star">*</span></label>
-    <input class="form-control" type="text" id="NameOfFirm" value="">
-  </div>
-  </div> 
-</div>
-
-<div class='row'>
-
-<div class="col-sm-3">
-<div class="form-group">
-    <label>Contact Person<span class="star">*</span></label>
-    <input class="form-control" type="text" id="CntctPrsn" value="">
-  </div>
-</div>
-<div class="col-sm-3">
-    <div class="form-group">
-    <label>Telephone Number<span class="star">*</span></label>
-    <input class="form-control" type="Number" id="TeleNumber" value="">
-  </div>
-  </div> 
-  <div class="col-sm-3">
-  <div class="form-group">
-  <label>Email :<span class="star">*</span></label> <input type="email" id='Email' class="contactEmail form-control" value="">
-  </div>
-  </div>
-  
-  <div class="col-sm-3">
-  <div class="form-group">
-  <label>Mobile Number :<span class="star">*</span></label> <input type="Number" id='MobileNumber' class="contactPhoneNumber form-control" value="">
-  </div>
-  </div>
-  </div>
-  <div class="row">
-  <div class="col-sm-12">
-  <div class="form-group">
-  <span class="star">Note:In case of Firm please indicate name of contact person</span></div></div>
-  </div>
-  <div class='row'>
-  <!--<div class="col-sm-6">
-      <div class="form-group">
-        <label>Justification For Extension<span class="star">*</span></label>
-        <textarea class="form-control" id="justification"></textarea>
-    </div>
-    </div>-->
+private readonly Leaseamendment=`
+<div class="row">
 
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Justification for Extension</label>
+      <label></br>Lease Agreement CoSoft Number:<span class="star">*</span></label>
+      <input class="form-control" type="number" id="cosoftnum" maxlength="8" value="">
+    </div>
+    </div>
+
+    <div class="col-sm-6">
+    <div class="form-group">
+     <label>Justification for contract supplement signed by the project AV</label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="justification" value="" class="custom-file-input">
@@ -1852,142 +2091,230 @@ private readonly ContractAmendment=`
    </div>
    </div>
 
+    </div>
+
+    <div class="row">
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Modified Terms of Reference<span class="star">*</span></label>
+     <label>Financial status of the done payments:<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
-     <input type="file" id="terms" value="" class="custom-file-input">
-     <label class="custom-file-label" for="terms">Choose File</label>
+     <input type="file" id="Financialstatus" value="" class="custom-file-input">
+     <label class="custom-file-label" for="Financialstatus">Choose File</label>
      </div>
      </div>
+   </div>
     </div>
-    </div> 
-
-  </div>
-
-  <div class="row">
-  <div class="col-sm-6">
-  <div class="form-group">
-   <label>Financial status of the done payments<span class="star">*</span></label>
-   <div class="input-group">
-   <div class="custom-file">
-   <input type="file" id="Financialstatus" value="" class="custom-file-input">
-   <label class="custom-file-label" for="Financialstatus">Choose File</label>
-   </div>
-   </div>
- </div>
-  </div>
-  <div id='divForEstimation'>
-  </div>
-  </div>
-  <div class="row">
-  <div class="col-sm-6">
+    <div class="col-sm-6">
     <div class="form-group">
-      <input class="radio-stylish" type="checkbox" id="chkfinstatus" value="no payments were done">
-      <span class="checkbox-element"></span>
-      <label class="stylish-label" for="chkfinstatus">no payments were done</label>
-    </div>
-    </div>
-
-  </div>
-</div>
-`;
-
-private readonly EstimationHMTL=`
-
-
-<div class="col-sm-6">
- <div class="form-group">
-  <label>Estimated Cost for the Extension<span class="star">*</span></label>
-  <div class="input-group">
-  <div class="custom-file">
-  <input type="file" id="Estimation" value="" class="custom-file-input">
-  <label class="custom-file-label" for="Estimation">Choose File</label>
-  </div>
-  </div>
-</div>
-
-
-`;
-    /* 
-  //summary
-  Service Request Html End 
-  //summary
-  */
-
-    /* 
-  //summary
-  Lease Request Html Start 
-  //summary
-  */
- private readonly HtmlForLeaseandsubsidy = `
- <div class="loading-modal"> 
- <div class="spinner-border" role="status"> 
- <span class="sr-only">Loading...</span>
-</div></div>
- <h4 class='page-heading'>New Service Request</h4>
- <div class="row">
- <div class="col-sm-6">
-   <div class="form-group">
-     <label>Project Name:<span class="star">*</span></label>
-     <select class="form-control" id="projectName">
-       <option value="Select">Select</option>
-       </select>
-       </div>
+     <label>Modified offer by the lessor:<span class="star">*</span></label>
+     <div class="input-group">
+     <div class="custom-file">
+     <input type="file" id="offer" value="" class="custom-file-input">
+     <label class="custom-file-label" for="offer">Choose File</label>
      </div>
+     </div></div></div>
+    </div>
+    <div class="row">
+    <div class="col-sm-6">
+      <div class="form-group">
+        <input class="radio-stylish" type="checkbox" id="chkfinstatus" value="no payments were done">
+        <span class="checkbox-element"></span>
+        <label class="stylish-label" for="chkfinstatus">no payments were done</label>
+      </div>
+      </div>
+  
+    </div>
 
-     <div class="col-sm-6">
-     <div class="form-group">
-     <label>Project Number:<span class="star">*</span></label>
-     <!--<input class="form-control" type="text" id="projectNumber" value="">-->
-     <input id='txtProjectNum1' class="form-control prjctNum" type="text" maxlength="2" />.
-     <input id='txtProjectNum2' class="form-control prjctNum" type="text" maxlength="4" />.
-     <input id='txtProjectNum3' class="form-control prjctNum" type="text" maxlength="1" />-
-     <input id='txtProjectNum4' class="form-control prjctNum" type="text" maxlength="3" />.
-     <input id='txtProjectNum5' class="form-control prjctNum" type="text" maxlength="2" />
-   </div>
-   </div>
-
-   </div>
-
-   <div class="row">
-   <div class="col-sm-6">
-   <div class="form-group">
-     <label>PN for ZAS:<span class="star">*</span></label>
-     <input class="form-control" type="text" id="pnForZAS" value="">
-   </div>
-   </div>
-   <div class="col-sm-6">
-   <div class="form-group">
-     <label>Name of AV:<span class="star">*</span></label>
-     <input class="form-control" type="text" id="NameofAV" value="" disabled>
-   </div>
-   </div>
-   </div>
-
-   <div class="row">
-   <div class="col-sm-12">
-   <div class="form-group">
-     <label>KOMP Output<span class="star">*</span></label>
-     <input class="form-control" type="text" id="KompOptPT" value="">
-   </div>
-   </div>
-   </div>
-
-   <div id='ChoicesField'>
-   
-   </div>
-   
-<div class="form-group" id='btnfinal'>
+    <div class="form-group" id='btnfinal'>
    <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
 </div>
+
 
 `;
 
   /* 
   //summary
   Lease Request Html End 
+  //summary
+  */
+
+/* 
+  //summary
+  IDPP Request Html start 
+  //summary
+*/ 
+ private readonly iDPP=`
+ <div class='row'>
+ <div class="col-sm-6">
+     <div class="form-group">
+       <label>Short Description:<span class="star">*</span></label>
+       <textarea class="form-control" id="shortDescription"></textarea>
+   </div>
+   </div>
+ </div>
+ 
+ <div class='row'>
+ 
+ <div class="col-sm-6">
+ <div class="form-group">
+  <label>Company’s Registration Certificate<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="RegCert" value="" class="custom-file-input">
+  <label class="custom-file-label" for="RegCert">Choose File</label>
+  </div>
+  </div>
+ </div>
+ </div>
+ 
+ <div class="col-sm-6">
+  <div class="form-group">
+   <label>Company Profile<span class="star">*</span></label>
+   <div class="input-group">
+   <div class="custom-file">
+   <input type="file" id="Profile" value="" class="custom-file-input">
+   <label class="custom-file-label" for="Profile">Choose File</label>
+   </div>
+   </div>
+ </div>
+ </div>
+ 
+ </div>
+ 
+ <div class='row'>
+ 
+ <div class="col-sm-6">
+ <div class="form-group">
+  <label>CVs Of Experts<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="Experts" value="" class="custom-file-input">
+  <label class="custom-file-label" for="Experts">Choose File</label>
+  </div>
+  </div>
+ </div>
+ </div>
+ 
+ <div class="col-sm-6">
+ <div class="form-group">
+  <label>Bank Details<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="BankDetails" value="" class="custom-file-input">
+  <label class="custom-file-label" for="BankDetails">Choose File</label>
+  </div>
+  </div>
+ </div>
+ </div>
+ 
+ </div>
+ 
+ <div class='row'>
+ 
+ <div class="col-sm-6">
+ <div class="form-group">
+  <label>Financial Reports<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="FinReport" value="" class="custom-file-input">
+  <label class="custom-file-label" for="FinReport">Choose File</label>
+  </div>
+  </div>
+ </div>
+ </div>
+ 
+ <div class="col-sm-6">
+ <div class="form-group">
+  <label>Summary Action Plan<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="Actionplan" value="" class="custom-file-input">
+  <label class="custom-file-label" for="Actionplan">Choose File</label>
+  </div>
+  </div>
+ </div>
+ </div>
+ 
+ </div>
+ 
+ <div class='row'>
+ 
+ <div class="col-sm-6">
+ <div class="form-group">
+  <label>Brief concept For Agreement<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="Agreement" value="" class="custom-file-input">
+  <label class="custom-file-label" for="Agreement">Choose File</label>
+  </div>
+  </div>
+ </div>
+ </div>
+ 
+ <div class="col-sm-6">
+ <div class="form-group">
+  <label>Budget Plan<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="Budget" value="" class="custom-file-input">
+  <label class="custom-file-label" for="Budget">Choose File</label>
+  </div>
+  </div>
+ </div>
+ </div>
+ 
+ </div>
+ 
+ <div class='row'>
+ 
+ <div class="col-sm-6">
+ <div class="form-group">
+  <label>Vergabedok<span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="Vergabedok" value="" class="custom-file-input">
+  <label class="custom-file-label" for="Vergabedok">Choose File</label>
+  </div>
+  </div>
+ </div>
+ </div>
+ 
+ <div class="col-sm-6">
+ <div class="form-group">
+  <label>Competition Report <span class="star">*</span></label>
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="CompetitionReport" value="" class="custom-file-input">
+  <label class="custom-file-label" for="CompetitionReport">Choose File</label>
+  </div>
+  </div>
+ </div>
+ </div>
+ 
+ </div>
+ 
+ <div class='row'>
+ <div class="col-sm-6">
+ <div class="form-group">
+ <label>Duration of the assignment (From Date)<span class="star">*</span></label>
+  <input class="form-control form-control-datepicker" type="text" id="Fromdate">
+ </div>
+ </div>
+ <div class="col-sm-6">
+ <div class="form-group">
+ <label>Duration of the assignment (To Date)<span class="star">*</span></label>
+  <input class="form-control form-control-datepicker" type="text" id="Todate">
+ </div>
+ </div>
+ </div>
+ <div class="form-group" id='btnfinal'>
+ <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+</div>
+ `;
+    /* 
+  //summary
+  IDPP Request Html End 
   //summary
   */
 
@@ -2025,13 +2352,22 @@ private readonly EstimationHMTL=`
       requestHtml=that.requestcategoriesforgoods;
       else if(projectname=='Service')
       requestHtml=that.requestcategoriesforservice;
-      else if(projectname=='Lease')
-      requestHtml=that.HtmlForLeaseandsubsidy;
       else if(projectname=='Subsidy')
-      requestHtml=that.HtmlForLeaseandsubsidy;  
-
+      requestHtml=that.requestcategoriesforsubsidy;
+      else if(projectname=='Lease')
+      requestHtml=that.requestcategoriesforlease;
+      else if(projectname=='idpp')
+      {
+      requestHtml=that.commonHtml+that.iDPP; 
+      getLoggedInUserDetails();
+      LoadProjects();
+      }
       $('#divforsubcategory').html('');
       $('#divforsubcategory').html(requestHtml);
+      
+      if(projectname=='idpp'){//for the purpose of idpp option
+      $( "#Fromdate" ).datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});
+      $( "#Todate" ).datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});}
 
     });
     
@@ -2049,6 +2385,14 @@ private readonly EstimationHMTL=`
       requestHtml=that.commonHtml+that.RequestfromaFrameworkAgreement;
       else if(projectname=='service')
       requestHtml=that.commonHtml+that.HtmlGoods;
+      else if(projectname=='Subsidy')
+      requestHtml=that.commonHtml+that.LocalSubsidy;
+      else if(projectname=='Subsidyamendment')
+      requestHtml=that.commonHtml+that.Localsubsidyamendment;
+      else if(projectname=='Lease')
+      requestHtml=that.commonHtml+that.LeaseAgreement;
+      else if(projectname=='Leaseamendment')
+      requestHtml=that.commonHtml+that.Leaseamendment
       else
       requestHtml='';    
 
@@ -2063,6 +2407,27 @@ private readonly EstimationHMTL=`
       $(".page-heading").text("Request from a Framework Agreement");
       else if(projectname=='service')
       $(".page-heading").text("Procurement of Services");
+      else if(projectname=='Subsidy')
+      {
+      $(".page-heading").text("New Local Subsidy");
+      $( "#Fromdate" ).datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});
+      $( "#Todate" ).datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});
+      }
+      else if(projectname=='Subsidyamendment')
+      {
+      $(".page-heading").text("Local Subsidy Amendment");
+      }
+      else if(projectname=='Lease')
+      {
+        $(".page-heading").text("New Lease Agreement");
+        $( "#Fromdate" ).datepicker({autoclose:true});
+        $( "#Todate" ).datepicker({autoclose:true});
+      }
+      else if(projectname=='Leaseamendment')
+      {
+        $(".page-heading").text("Lease Agreement Amendment");
+      }
+
 
       if(projectname=='Lease')
       {
@@ -2219,6 +2584,8 @@ private readonly EstimationHMTL=`
          $('#ChoicesField').html(that.iDPP);
          else if(selectedservice=='Contract Amendment')
          $('#ChoicesField').html(that.ContractAmendment);
+         else if(selectedservice=='Request from a Framework Agreement')
+         $('#ChoicesField').html(that.serviceRequestfromaFrameworkAgreement);
  
          $( "#Fromdate" ).datepicker({autoclose:true,daysOfWeekDisabled: [5,6]});
          $( "#Todate" ).datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});
@@ -2255,6 +2622,21 @@ $(document).on('change','.lessor',function()
          $('#divlessor').append(that.CompanyLessorHTML);
     }
     
+    
+});
+
+$(document).on('change','.clsAgreement',function()
+{
+    if($("input[name='Agreement']:checked").val()=='Events Management Framework Agreement')
+    {
+        $("#divforAgreement").html('');
+        $("#divforAgreement").html(that.Htmlforfilledrequest);
+    }
+    else
+    {
+      $("#divforAgreement").html('');
+      $("#divforAgreement").html(that.Htmlforterms);
+    }
     
 });
 
@@ -2304,6 +2686,16 @@ $(document).on('change','.lessor',function()
         createrequestframework();
         else if($('#Drpreqcategories option:selected').val()=='service')
         CreateService();
+        else if($('#Drpreqcategories option:selected').val()=='Subsidy')
+        CreateSubsidy();
+        else if($('#Drpreqcategories option:selected').val()=='Subsidyamendment')
+        CreateSubsidyAmendemnt();
+        else if($('#Drpreqcategories option:selected').val()=='Lease')
+        CreateLeaseAgreement();
+        else if($('#Drpreqcategories option:selected').val()=='Leaseamendment')
+        CreateLeaseamendment();
+        else if($('#DrpProjectName option:selected').val()=='idpp')
+        createIdpp();
 
       });
 
@@ -3200,7 +3592,10 @@ function LoadServices()
             RepresentativeId: {
               "results": ProjectDetails[ProjectIndex].RepId
             },
-            KOMPOuput:$("#KompOptPT").val(),
+            //KOMPOuput:$("#KompOptPT").val(),
+            isKompOutput:$("#chkKomp").prop('checked'),
+            KompOutputNumber:$('#percent').val(),
+            kompPercent:$('#outputnumber').val(),
             ChoicesOfServices:$("#choicesservices option:selected").val(),
             JOD:$("#JOD").val(),
             EUR:$("#EUR").val(),
@@ -3474,6 +3869,59 @@ function LoadServices()
           formSubmitting=true;
         }
         
+      }
+      else if($('#choicesservices option:selected').val()=='Request from a Framework Agreement')
+      {
+        if(mandatoryvalidationforservicerequestframeworkagreement())
+        {
+          $('.loading-modal').addClass('active');
+          $('body').addClass('body-hidden');
+          let Servicedata=
+                {
+                  ProjectName:$("#projectName option:selected").val(),
+                  ProjectNumber:projectNumber,
+                  PNForZAS:$("#pnForZAS").val(),
+                  NameOfAV:$("#NameofAV").val(),
+                  AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
+                  RepresentativeId: {
+                    "results": ProjectDetails[ProjectIndex].RepId
+                  },
+                  ChoicesOfServices:$("#choicesservices option:selected").val(),
+                  isKompOutput:$("#chkKomp").prop('checked'),
+                  KompOutputNumber:$('#percent').val(),
+                  kompPercent:$('#outputnumber').val(),
+                  JOD:$("#JOD").val(),
+                  EUR:$("#EUR").val(),
+                  Agreement:$("input[name='Agreement']:checked").val()
+                  
+                }
+                
+
+                if($("input[name='Agreement']:checked").val()=='Legal Services Framework Agreement')
+                {
+                  arrFiles.push({'FolderName':'FilledRequest','files':$('#FilledRequest')[0].files});
+                }
+
+                if($("input[name='Agreement']:checked").val()=='Events Management Framework Agreement')
+                {
+                  arrFiles.push({'FolderName':'Terms','files':$('#terms')[0].files});
+                }
+
+                if(filesotherAttachment.length>0)
+                {
+                  
+                  for(var i=0;i<filesotherAttachment.length;i++)
+                  {
+                    
+                    var files=[];
+                    files.push(filesotherAttachment[i]);
+                    arrFiles.push({'FolderName':'Others','files':files});
+                  }
+                  
+                }
+
+                InsertService(Servicedata,arrFiles);
+        }
       }
 
     }
@@ -3765,113 +4213,6 @@ function mandatoryforpublictender()
 		alertify.error('Please upload a file for Other Attachment');
 		isAllValueFilled=false;
   }
-  return isAllValueFilled;
-}
-function mandatoryforsubsidy()
-{
-  var isAllValueFilled=true;
-	if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
-  if(!$.trim($("#shortDescription").val()))
-	{
-		alertify.error('Please Enter Short Description');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#NameOfBenficiary").val()))
-	{
-		alertify.error('Please Enter Name Of Benficiary');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#FullAddress").val()))
-	{
-		alertify.error('Please Enter Full Address');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#TeleNumber").val()))
-	{
-		alertify.error('Please Enter Telephone Number');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#CntctPrsn").val()))
-	{
-		alertify.error('Please Enter Contact Person');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#Email").val()))
-	{
-		alertify.error('Please Enter Valid Email');
-		isAllValueFilled=false;
-  }
-  else if(!isEmail($.trim($("#Email").val())))
-	{
-		alertify.error('Please Enter Valid Email');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#MobileNumber").val()))
-	{
-		alertify.error('Please Enter Mobile Number');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#Fromdate").val()))
-	{
-		alertify.error('Please Enter assignment (From Date)');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#Todate").val()))
-	{
-		alertify.error('Please Enter assignment (To Date)');
-		isAllValueFilled=false;
-  }
-  else if((moment($("#Fromdate").val(), "MM-DD-YYYY").toISOString())>(moment($("#Todate").val(), "MM-DD-YYYY").toISOString()))
-	{
-		alertify.error('From  Date Should be lesser than To date');
-		isAllValueFilled=false;
-	}
-  else if($('#Proposal')[0].files.length<=0)
-	{
-		alertify.error('Please upload a file for Project Proposal');
-		isAllValueFilled=false;
-  }
-  else if($('#Suitability')[0].files.length<=0)
-	{
-		alertify.error('Please upload a file for Commercial Suitability');
-		isAllValueFilled=false;
-  }
-  else if($('#Budget')[0].files.length<=0)
-	{
-		alertify.error('Please upload a file for Budget Break-down');
-		isAllValueFilled=false;
-  }
-  else if($('#Certificate')[0].files.length<=0)
-	{
-		alertify.error('Please upload a file for Registration Certificate');
-		isAllValueFilled=false;
-  }
-  else if($('#Profile')[0].files.length<=0)
-	{
-		alertify.error('Please upload a file for Profile');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#JOD").val()))
-	{
-		alertify.error('Please Enter JOD');
-		isAllValueFilled=false;
-  }
-  else if(!$.trim($("#EUR").val()))
-	{
-		alertify.error('Please Enter EUR');
-		isAllValueFilled=false;
-  }
-  else if($("#EUR").val()>=50000&&$('#BankDetails')[0].files.length<=0)
-	{
-		alertify.error('Please upload a file for Bank Details');
-		isAllValueFilled=false;
-  }
-  else if(filesotherAttachment.length<=0)
-	{
-		alertify.error('Please upload a file for Other Attachment');
-		isAllValueFilled=false;
-  }
-
   return isAllValueFilled;
 }
 function mandatoryforLease()
@@ -4201,6 +4542,41 @@ function mandatoryforcontract()
   return isAllValueFilled;
 }
 
+function mandatoryvalidationforservicerequestframeworkagreement()
+{
+  var isAllValueFilled=true;
+
+  if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
+  
+  if($("input[name='Agreement']:checked").length==0){
+    alertify.error('Please choose any one of the Agreement');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#JOD").val())&&$("#EventFramework:checked").val()=="Events Management Framework Agreement"){
+    alertify.error('Please Enter JOD');
+    isAllValueFilled=false;
+  }
+  else if(!$.trim($("#EUR").val())&&$("#EventFramework:checked").val()=="Events Management Framework Agreement"){
+    alertify.error('Please Enter EUR');
+    isAllValueFilled=false;
+  }
+  else if($("input[name='Agreement']:checked").val()=="Events Management Framework Agreement")
+	{
+    if($('#terms')[0].files.length<=0)
+    {
+    alertify.error('Please upload a file for Terms Of Reference');
+    isAllValueFilled=false;
+    }
+  }
+  else if($("input[name='Agreement']:checked").val()=="Legal Services Framework Agreement")
+	{
+    if($('#FilledRequest')[0].files.length<=0){
+    alertify.error('Please upload a file for Filled Request Form for Legal Services');
+    isAllValueFilled=false;
+    }
+  }
+  return isAllValueFilled;
+}
    /* 
 //summary
 service request fucntionalities End
@@ -4365,6 +4741,101 @@ function CreateLeaseAgreement()
       }
 }
 
+function CreateLeaseamendment()
+{
+  let arrFiles=[];
+
+  if(MandatoryValidationForService())
+  {
+
+    let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+    var ProjectIndex;
+    for(var prNum=0;prNum<ProjectDetails.length;prNum++)
+    {
+      if(ProjectDetails[prNum].PrjtcNum==$("#projectName option:selected").val())
+      {
+        ProjectIndex=prNum;
+        break;
+      }
+    }
+
+        if(mandatoryforleaseamendment())
+        {
+          
+          $('.loading-modal').addClass('active');
+          $('body').addClass('body-hidden');
+          
+          let Servicedata=
+          {
+            ProjectName:$("#projectName option:selected").val(),
+            ProjectNumber:projectNumber,
+            PNForZAS:$("#pnForZAS").val(),
+            NameOfAV:$("#NameofAV").val(),
+            AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
+            //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
+            RepresentativeId: {
+              "results": ProjectDetails[ProjectIndex].RepId
+            },
+            //KOMPOuput:$("#KompOptPT").val(),
+            //ChoicesOfServices:$("#choicesservices option:selected").val(),
+            isKompOutput:$("#chkKomp").prop('checked'),
+            KompOutputNumber:$('#percent').val(),
+            kompPercent:$('#outputnumber').val(),
+            CoSoftNumber:$("#cosoftnum").val(),
+            PaymentStatus:$("#chkfinstatus").prop('checked')
+
+          }
+
+          if($('#offer')[0].files.length>0)
+          arrFiles.push({'FolderName':'ModifiedOffer','files':$('#offer')[0].files});
+
+          if($('#justification')[0].files.length>0)
+          arrFiles.push({'FolderName':'Justification','files':$('#justification')[0].files});
+
+          if($('#Financialstatus')[0].files.length>0)
+          arrFiles.push({'FolderName':'Financialstatus','files':$('#Financialstatus')[0].files});
+
+
+          InsertLease(Servicedata,arrFiles);
+        }
+        else
+        {
+          formSubmitting=true;
+        }
+      }
+      else
+      {
+        formSubmitting=true;
+      }
+}
+
+function mandatoryforleaseamendment()
+{
+  var isAllValueFilled=true;
+	if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
+  if(!$.trim($("#cosoftnum").val()))
+  {
+    alertify.error('Please Enter Lease Agreement CoSoft Number');
+		isAllValueFilled=false;
+  }
+  else if($('#justification')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Justification for contract supplement signed by the project AV');
+		isAllValueFilled=false;
+  }
+  else if($('#offer')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Modified offer by the lessor');
+		isAllValueFilled=false;
+  }
+  else if(!$("#chkfinstatus").prop('checked')&&$('#Financialstatus')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Financial status of the done payments');
+		isAllValueFilled=false;
+  } 
+  return isAllValueFilled;
+}
+
 async function InsertLease(Servicedata,arrFiles)
 {
 
@@ -4413,7 +4884,7 @@ function CreateSubsidy()
       }
     }
 
-  if(mandatoryforsubsidy())
+        if(mandatoryforsubsidy())
         {
           
           $('.loading-modal').addClass('active');
@@ -4432,8 +4903,11 @@ function CreateSubsidy()
             RepresentativeId: {
               "results": ProjectDetails[ProjectIndex].RepId
             },
-            KOMPOuput:$("#KompOptPT").val(),
+            //KOMPOuput:$("#KompOptPT").val(),
             //ChoicesOfServices:$("#choicesservices option:selected").val(),
+            isKompOutput:$("#chkKomp").prop('checked'),
+            KompOutputNumber:$('#percent').val(),
+            kompPercent:$('#outputnumber').val(),
             JOD:$("#JOD").val(),
             EUR:$("#EUR").val(),
             ShortDesc:$("#shortDescription").val(),
@@ -4455,6 +4929,8 @@ function CreateSubsidy()
           arrFiles.push({'FolderName':'BankDetails','files':$('#BankDetails')[0].files});}
           arrFiles.push({'FolderName':'CommercialSuitability','files':$('#Suitability')[0].files});
           arrFiles.push({'FolderName':'RegCert','files':$('#Certificate')[0].files});
+          arrFiles.push({'FolderName':'HQApproval','files':$('#HQApproval')[0].files});
+          arrFiles.push({'FolderName':'MinisterApproval','files':$('#MinisterApproval')[0].files});
           if(filesotherAttachment.length>0)
           {
             
@@ -4481,6 +4957,77 @@ function CreateSubsidy()
       }
 }
 
+function CreateSubsidyAmendemnt()
+{
+  let arrFiles=[];
+
+  if(MandatoryValidationForService())
+  {
+
+    let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+    var ProjectIndex;
+    for(var prNum=0;prNum<ProjectDetails.length;prNum++)
+    {
+      if(ProjectDetails[prNum].PrjtcNum==$("#projectName option:selected").val())
+      {
+        ProjectIndex=prNum;
+        break;
+      }
+    }
+
+        if(mandatoryforsubsidyamendment())
+        {
+          
+          $('.loading-modal').addClass('active');
+          $('body').addClass('body-hidden');
+          let Servicedata=
+          {
+            ProjectName:$("#projectName option:selected").val(),
+            ProjectNumber:projectNumber,
+            PNForZAS:$("#pnForZAS").val(),
+            NameOfAV:$("#NameofAV").val(),
+            AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
+            //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
+            RepresentativeId: {
+              "results": ProjectDetails[ProjectIndex].RepId
+            },
+            //KOMPOuput:$("#KompOptPT").val(),
+            //ChoicesOfServices:$("#choicesservices option:selected").val(),
+            isKompOutput:$("#chkKomp").prop('checked'),
+            KompOutputNumber:$('#percent').val(),
+            kompPercent:$('#outputnumber').val(),
+            CoSoftNumber:$("#cosoftnum").val(),
+            PaymentStatus:$("#chkfinstatus").prop('checked')
+          }
+
+          if($('#justification')[0].files.length>0)
+          arrFiles.push({'FolderName':'Justification','files':$('#justification')[0].files});
+
+          if($('#Proposal')[0].files.length>0)
+          arrFiles.push({'FolderName':'ProjectProposal','files':$('#Proposal')[0].files});
+          
+          if($('#Budget')[0].files.length>0)
+          arrFiles.push({'FolderName':'Budget','files':$('#Budget')[0].files});
+          
+          if($('#Financialstatus')[0].files.length>0)
+          arrFiles.push({'FolderName':'Financialstatus','files':$('#Financialstatus')[0].files});
+
+          
+          
+          InsertSubsidy(Servicedata,arrFiles);
+        }
+        else
+        {
+          formSubmitting=true;
+        }
+      }
+      else
+      {
+        formSubmitting=true;
+      }
+
+}
+
 async function InsertSubsidy(Servicedata,arrFiles)
 {
 
@@ -4499,11 +5046,251 @@ async function InsertSubsidy(Servicedata,arrFiles)
      }).catch(function(error){ErrorCallBack(error,'InsertSubsidy')});
 }
 
+function mandatoryforsubsidy()
+{
+  var isAllValueFilled=true;
+	if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
+  if(!$.trim($("#shortDescription").val()))
+	{
+		alertify.error('Please Enter Short Description');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#NameOfBenficiary").val()))
+	{
+		alertify.error('Please Enter Name Of Benficiary');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#FullAddress").val()))
+	{
+		alertify.error('Please Enter Full Address');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#TeleNumber").val()))
+	{
+		alertify.error('Please Enter Telephone Number');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#CntctPrsn").val()))
+	{
+		alertify.error('Please Enter Contact Person');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#Email").val()))
+	{
+		alertify.error('Please Enter Valid Email');
+		isAllValueFilled=false;
+  }
+  else if(!isEmail($.trim($("#Email").val())))
+	{
+		alertify.error('Please Enter Valid Email');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#MobileNumber").val()))
+	{
+		alertify.error('Please Enter Mobile Number');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#Fromdate").val()))
+	{
+		alertify.error('Please Enter assignment (From Date)');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#Todate").val()))
+	{
+		alertify.error('Please Enter assignment (To Date)');
+		isAllValueFilled=false;
+  }
+  else if((moment($("#Fromdate").val(), "MM-DD-YYYY").toISOString())>(moment($("#Todate").val(), "MM-DD-YYYY").toISOString()))
+	{
+		alertify.error('From  Date Should be lesser than To date');
+		isAllValueFilled=false;
+	}
+  else if($('#Proposal')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Project Proposal');
+		isAllValueFilled=false;
+  }
+  else if($('#Suitability')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Commercial Suitability');
+		isAllValueFilled=false;
+  }
+  else if($('#Budget')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Budget Break-down');
+		isAllValueFilled=false;
+  }
+  else if($('#Certificate')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Registration Certificate');
+		isAllValueFilled=false;
+  }
+  else if($('#Profile')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Profile');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#JOD").val()))
+	{
+		alertify.error('Please Enter JOD');
+		isAllValueFilled=false;
+  }
+  else if(!$.trim($("#EUR").val()))
+	{
+		alertify.error('Please Enter EUR');
+		isAllValueFilled=false;
+  }
+  else if($("#EUR").val()>=50000&&$('#BankDetails')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Bank Details');
+		isAllValueFilled=false;
+  }
+  else if($("#HQApproval").val()>=50000&&$('#BankDetails')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Checklist for HQ Approval');
+		isAllValueFilled=false;
+  }
+  else if($('#MinisterApproval')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Approval from the Prime Minister/ Authorized Ministry');
+		isAllValueFilled=false;
+  }
+  else if(filesotherAttachment.length<=0)
+	{
+		alertify.error('Please upload a file for Other Attachment');
+		isAllValueFilled=false;
+  }
+
+  return isAllValueFilled;
+}
+
+function mandatoryforsubsidyamendment()
+{
+  var isAllValueFilled=true;
+	if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
+  if(!$.trim($("#cosoftnum").val()))
+	{
+		alertify.error('Please Enter Local Subsidy CoSoft Number');
+		isAllValueFilled=false;
+  }
+  else if($('#MinisterApproval')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Prime Minister approval for the additional budget');
+		isAllValueFilled=false;
+  }
+  else if($('#justification')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Justification for Amendment');
+		isAllValueFilled=false;
+  }
+  else if($('#Budget')[0].files.length<=0)
+	{
+		alertify.error('Please upload a file for Modified Budget Breakdown (signed and stamped)');
+		isAllValueFilled=false;
+  }
+  else if(!$("#chkfinstatus").prop('checked')&&$('#Financialstatus')[0].files.length<=0)
+  {
+    alertify.error('Please upload a file for Financial status of the done payments');
+		isAllValueFilled=false;
+  }
+  return isAllValueFilled;
+}
+
 /* 
 //summary
 subsidy request fucntionalities End
 //summary 
 */
+
+function createIdpp()
+{
+
+  let arrFiles=[];
+
+  if(MandatoryValidationForService())
+    {
+
+      let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+      var ProjectIndex;
+      for(var prNum=0;prNum<ProjectDetails.length;prNum++)
+      {
+        if(ProjectDetails[prNum].PrjtcNum==$("#projectName option:selected").val())
+        {
+          ProjectIndex=prNum;
+          break;
+        }
+      }
+    if(mandatoryforiDPP())
+    {
+      $('.loading-modal').addClass('active');
+      $('body').addClass('body-hidden');
+      let FromDate=(new Date(Date.parse(moment($("#Fromdate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
+      let Todate=(new Date(Date.parse(moment($("#Todate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
+
+      let Servicedata=
+      {
+        ProjectName:$("#projectName option:selected").val(),
+        ProjectNumber:projectNumber,
+        PNForZAS:$("#pnForZAS").val(),
+        NameOfAV:$("#NameofAV").val(),
+        AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
+        //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
+        RepresentativeId: {
+          "results": ProjectDetails[ProjectIndex].RepId
+        },
+        //KOMPOuput:$("#KompOptPT").val(),
+        //ChoicesOfServices:$("#choicesservices option:selected").val(),
+        isKompOutput:$("#chkKomp").prop('checked'),
+        KompOutputNumber:$('#percent').val(),
+        kompPercent:$('#outputnumber').val(),
+        ShortDesc:$("#shortDescription").val(), 
+        DurationFrom:FromDate,
+        DurationTo:Todate           
+      }
+      arrFiles.push({'FolderName':'RegCert','files':$('#RegCert')[0].files});
+      arrFiles.push({'FolderName':'Profile','files':$('#Profile')[0].files});
+      arrFiles.push({'FolderName':'BankDetails','files':$('#BankDetails')[0].files});
+      
+      
+      arrFiles.push({'FolderName':'CVExperts','files':$('#Experts')[0].files});
+      arrFiles.push({'FolderName':'FinancialReports','files':$('#FinReport')[0].files});
+      arrFiles.push({'FolderName':'AgreementConcept','files':$('#Agreement')[0].files});
+      arrFiles.push({'FolderName':'Vergabedok','files':$('#Vergabedok')[0].files});
+      arrFiles.push({'FolderName':'SummaryActionPlan','files':$('#Actionplan')[0].files});
+      arrFiles.push({'FolderName':'CompetitionReport','files':$('#CompetitionReport')[0].files});
+      arrFiles.push({'FolderName':'Budget','files':$('#Budget')[0].files});
+
+      InsertIdpp(Servicedata,arrFiles);
+    }
+    else
+    {
+      formSubmitting=true;
+    }
+    
+  }
+  else
+    {
+      formSubmitting=true;
+  }
+}
+
+async function InsertIdpp(Servicedata,arrFiles)
+{
+
+     fileslength=arrFiles.length;
+     await sp.web.lists.getByTitle("LocalSubsidy").items.add(Servicedata).then(function(data)
+     {
+       
+       //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
+      for(var i=0;i<arrFiles.length;i++)
+       {
+          createFolder(arrFiles[i].FolderName,"IDP-"+data.data.ID,arrFiles[i].files);
+       }
+
+       
+         
+     }).catch(function(error){ErrorCallBack(error,'InsertIdpp')});
+}
 
 /* 
 //summary
@@ -4545,6 +5332,8 @@ async function UploadFile(FolderUrl,files)
         AlertMessage("Lease Agreement Request is created in the System");
         else if(projectname=='Subsidy')
         AlertMessage("Local Subsidy Request is created in the System");
+        else if(projectname=='idpp')
+        AlertMessage("Idpp Request is created in the System");
 
       }
   }).catch(function(error){ErrorCallBack(error,'uploadFiles')});
