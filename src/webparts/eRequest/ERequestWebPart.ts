@@ -593,21 +593,21 @@ private readonly RequestfromaFrameworkAgreement=`
 <div class="row">
     <div class="col-sm-6">
     <div class="form-group">
-      <input class="radio-stylish" type="checkbox" name="Agreement" id="ITFramework" value="IT Framework Agreement">
-      <span class="checkbox-element"></span>
+      <input class="radio-stylish" type="radio" name="Agreement" id="ITFramework" value="IT Framework Agreement">
+      <span class="radio-element"></span>
       <label class="stylish-label" for="ITFramework">IT Framework Agreement</label>
     </div>
     </div><div class="col-sm-3">
     <div class="form-group">
-      <input class="radio-stylish" type="checkbox" name="Agreement" id="FurnitureFramework" value="IT Framework Agreement">
-      <span class="checkbox-element"></span>
-      <label class="stylish-label" for="FurnitureFramework">IT Framework Agreement</label>
+      <input class="radio-stylish" type="radio" name="Agreement" id="FurnitureFramework" value="Furniture Framework Agreement">
+      <span class="radio-element"></span>
+      <label class="stylish-label" for="FurnitureFramework">Furniture Framework Agreement</label>
     </div>
     </div>
     <div class="col-sm-3">
     <div class="form-group">
-      <input class="radio-stylish" type="checkbox" name="Agreement" id="StationaryFramework" value="Stationary Framework Agreement">
-      <span class="checkbox-element"></span>
+      <input class="radio-stylish" type="radio" name="Agreement" id="StationaryFramework" value="Stationary Framework Agreement">
+      <span class="radio-element"></span>
       <label class="stylish-label" for="StationaryFramework">Stationary Framework Agreement</label>
     </div>
     </div>
@@ -2872,6 +2872,7 @@ function CreateGoodsRequest()
       },
       Specifications:$("input[name='Specifications']:checked").val(),
       KOMPOuput:$("#KompOptPT").val(),
+      GoodsCategory:$('#Drpreqcategories option:selected').val(),
       ShortDesc:$("#shortDescription").val(),
       RequestItem:moreitem,
       JOD:$("#JOD").val(),
@@ -2882,6 +2883,7 @@ function CreateGoodsRequest()
       ContactPersonName:$('#CntctPrsn').val(),
       PersonEmail:$('#Email').val(),
       PersonMobile:$('#MobileNumber').val(),
+      isKompOutput:$("#chkKomp").prop('checked'),
       KompOutputNumber:$('#percent').val(),
       kompPercent:$('#outputnumber').val()
 
@@ -2983,6 +2985,7 @@ function creategoodsamendment()
         "results": ProjectDetails[ProjectIndex].RepId
       },
       isKompOutput:$("#chkKomp").prop('checked'),
+      GoodsCategory:$('#Drpreqcategories option:selected').val(),
       KompOutputNumber:$('#percent').val(),
       kompPercent:$('#outputnumber').val(),
       ProsoftNumber:$("#prosoftnum").val(),
@@ -3028,6 +3031,7 @@ function createrequestframework()
         "results": ProjectDetails[ProjectIndex].RepId
       },
       isKompOutput:$("#chkKomp").prop('checked'),
+      GoodsCategory:$('#Drpreqcategories option:selected').val(),
       KompOutputNumber:$('#percent').val(),
       kompPercent:$('#outputnumber').val(),
       JOD:$("#JOD").val(),
@@ -3421,7 +3425,10 @@ function LoadServices()
             DurationFrom:FromDate,
             DurationTo:Todate,
             JOD:$("#JOD").val(),
-            EUR:$("#EUR").val()
+            EUR:$("#EUR").val(),
+            isKompOutput:$("#chkKomp").prop('checked'),
+            KompOutputNumber:$('#percent').val(),
+            kompPercent:$('#outputnumber').val()
           }
           
           //arrFiles.push({'FolderName':'EstimatedCost','files':$('#Estimation')[0].files});
@@ -4692,6 +4699,7 @@ function CreateLeaseAgreement()
                   },
                   KOMPOuput:$("#KompOptPT").val(),
                   //ChoicesOfServices:$("#choicesservices option:selected").val(),
+                  LeaseAgreementCategory:$('#Drpreqcategories option:selected').val(),
                   ShortDesc:$("#shortDescription").val(),
                   LessorPapers:$("input[name='LessorPapers']:checked").val(),
 
@@ -4778,6 +4786,7 @@ function CreateLeaseamendment()
             },
             //KOMPOuput:$("#KompOptPT").val(),
             //ChoicesOfServices:$("#choicesservices option:selected").val(),
+            LeaseAgreementCategory:$('#Drpreqcategories option:selected').val(),
             isKompOutput:$("#chkKomp").prop('checked'),
             KompOutputNumber:$('#percent').val(),
             kompPercent:$('#outputnumber').val(),
@@ -4906,6 +4915,7 @@ function CreateSubsidy()
             //KOMPOuput:$("#KompOptPT").val(),
             //ChoicesOfServices:$("#choicesservices option:selected").val(),
             isKompOutput:$("#chkKomp").prop('checked'),
+            SubsidyCategory:$('#Drpreqcategories option:selected').val(),
             KompOutputNumber:$('#percent').val(),
             kompPercent:$('#outputnumber').val(),
             JOD:$("#JOD").val(),
@@ -4993,6 +5003,7 @@ function CreateSubsidyAmendemnt()
             },
             //KOMPOuput:$("#KompOptPT").val(),
             //ChoicesOfServices:$("#choicesservices option:selected").val(),
+            SubsidyCategory:$('#Drpreqcategories option:selected').val(),
             isKompOutput:$("#chkKomp").prop('checked'),
             KompOutputNumber:$('#percent').val(),
             kompPercent:$('#outputnumber').val(),
@@ -5278,7 +5289,7 @@ async function InsertIdpp(Servicedata,arrFiles)
 {
 
      fileslength=arrFiles.length;
-     await sp.web.lists.getByTitle("LocalSubsidy").items.add(Servicedata).then(function(data)
+     await sp.web.lists.getByTitle("IDPP").items.add(Servicedata).then(function(data)
      {
        
        //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);

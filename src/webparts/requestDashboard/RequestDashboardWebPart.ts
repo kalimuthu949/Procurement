@@ -32,6 +32,9 @@ var LoggedUserEmail='';
 var CrntUserID='';
 var GoodsRequest=[];
 var ServiceRequest=[];
+var LocalSubsidyItems=[];
+var LeaseAgreementItems=[];
+var IdppItems=[];
 var ProcurementServiceFiles=[];
 var filename='';
 var siteURL='';
@@ -69,6 +72,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <ul class="nav nav-tabs">
     <li class="active"><a href="#home" data-toggle="tab">Goods Request</a></li>
     <li><a href="#menu1" data-toggle="tab">Service Request</a></li>
+    <li><a href="#menu2" data-toggle="tab">Local Subsidy</a></li>
+    <li><a href="#menu3" data-toggle="tab">Lease Agreement</a></li>
+    <li><a href="#menu4" data-toggle="tab">IDPP</a></li>
     </ul>
 
     <div class='tab-content'> 
@@ -128,8 +134,95 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </table>
     </div>
     
+    </div>
+    
+    <div id='menu2' class='tab-pane fade tab-panel'>    
+    
+    <div class='btnDiv'>
+    <div>
+    <input class="btn btn-primary" type='button' id='btnSubsidy' value='Create Local Subsidy'>
+    </div>
+    </div>
+   
+    <div id='SubsidyTable'>
+    <table id="Subsidy"  style="width:100%">
+    <thead>
+    <tr>
+    <th>Id</th>
+    <th>Project Name</th>
+    <th>Project Number</th>
+    <th>Name Of AV</th>
+    <th>Date of Request</th>
+    <th>Assigned To</th>
+    <th>Status</th>
+    <th>Details</th>
+    </tr>
+    </thead>
+    <tbody id='tblSubsidy'>
+    </tbody>
+    </table>
+    </div>
+    
     </div> 
     
+
+    <div id='menu3' class='tab-pane fade tab-panel'>    
+    
+    <div class='btnDiv'>
+    <div>
+    <input class="btn btn-primary" type='button' id='btnLease' value='Create Lease Agreement'>
+    </div>
+    </div>
+   
+    <div id='LeaseTable'>
+    <table id="Lease"  style="width:100%">
+    <thead>
+    <tr>
+    <th>Id</th>
+    <th>Project Name</th>
+    <th>Project Number</th>
+    <th>Name Of AV</th>
+    <th>Date of Request</th>
+    <th>Assigned To</th>
+    <th>Status</th>
+    <th>Details</th>
+    </tr>
+    </thead>
+    <tbody id='tblLease'>
+    </tbody>
+    </table>
+    </div>
+    
+    </div>
+    
+    <div id='menu4' class='tab-pane fade tab-panel'>    
+    
+    <div class='btnDiv'>
+    <div>
+    <input class="btn btn-primary" type='button' id='btnIdpp' value='Create IDPP'>
+    </div>
+    </div>
+   
+    <div id='idppTable'>
+    <table id="idpp"  style="width:100%">
+    <thead>
+    <tr>
+    <th>Id</th>
+    <th>Project Name</th>
+    <th>Project Number</th>
+    <th>Name Of AV</th>
+    <th>Date of Request</th>
+    <th>Assigned To</th>
+    <th>Status</th>
+    <th>Details</th>
+    </tr>
+    </thead>
+    <tbody id='tblidpp'>
+    </tbody>
+    </table>
+    </div>
+    
+    </div> 
     
     </div>
 
@@ -174,6 +267,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     LoadProcurementTeam();
     LoadGoodsRequest();
     LoadServiceRequest();
+    LoadSubsidyRequest();
+    LoadLeaseAgreement();
+    Loadidpp();
     
 
     // $("input[name='Request']").change(function()
@@ -238,6 +334,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'CostFile','FileName':'N/A','FileURl':'N/A'});
       arrFiles.push({'Name':'NeutralSpecfication','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'AdditionalInformation','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'FilledCatalogue','FileName':'N/A','FileURl':'N/A'});
 
       $.each(arrFiles,function(key,val)
       {
@@ -274,59 +373,69 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       let HTMLGoods='';
 
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ProjectName +'</p></div></div>';
-
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ID +'</p></div></div>';
-
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].NameOfAV +'</p></div></div>';
-
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].PNForZAS +'</p></div></div>';
-
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ProjectNumber +'</p></div></div>';
-
+      if(GoodsRequest[index].isKompOutput=="Yes")
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].KompOutputNumber +' - '+GoodsRequest[index].kompPercent+'</p></div></div>';
+      
+      
+      if(GoodsRequest[index].GoodsCategory=="goods")
+      {
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ShortDesc+'</p></div></div>';
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Specification</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].Specifications+'</p></div></div>';
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].JOD+'</p></div></div>';
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].EUR+'</p></div></div>';
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Warranty Time</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].WarrantyTime+'</p></div></div>';
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Delivery Time</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+moment(GoodsRequest[index].DeliveryTime).format('MM/DD/YYYY')+'</p></div></div>';
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Delivery Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].FullAddress+'</p></div></div>';
+        if(GoodsRequest[index].Specifications=="Nonneutral Specifications")
+        {
+          HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Contact Person</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ContactPersonName+'</p></div></div>';
+          HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].PersonEmail+'</p></div></div>';
+          HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].PersonMobile+'</p></div></div>';
+        }
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Quantities</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[0].FileURl)+' target="_blank">'+arrFiles[0].FileName+'</a></p></div></div>';
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">ShortList</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[1].FileURl)+' target="_blank">'+arrFiles[1].FileName+'</a></p></div></div>';
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">NewsAdvertisement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[2].FileURl)+' target="_blank">'+arrFiles[2].FileName+'</a></p></div></div>';
+        for(var idxOther=0;idxOther<otherFiles.length;idxOther++)
+        {
+          HTMLGoods+='<div class="row goods-details">';
+          HTMLGoods+='<div class="col-sm-3"><h5 class="goods-label">Others</h5></div>';
+          HTMLGoods+='<div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div></div>';
+        }
+        if(GoodsRequest[index].RequestItem=='Yes')
+        {
+        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Cost Item</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[4].FileURl)+' target="_blank"> '+arrFiles[4].FileName+'</a></p></div></div>';
+        }
+        if(GoodsRequest[index].Specifications=='Nonneutral Specifications')
+        {
+          HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Specification</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[5].FileURl)+' target="_blank"> '+arrFiles[5].FileName+'</a></p></div></div>';
+        }
+      }//for goods request popup
+    else if(GoodsRequest[index].GoodsCategory=="goodsamendment")
+    {
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">ProSoft Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ProsoftNumber+'</p></div></div>';
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Delivery Time</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+moment(GoodsRequest[index].DeliveryTime).format('MM/DD/YYYY')+'</p></div></div>';
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Quantities</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[0].FileURl)+' target="_blank">'+arrFiles[0].FileName+'</a></p></div></div>';
-
-      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">ShortList</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[1].FileURl)+' target="_blank">'+arrFiles[1].FileName+'</a></p></div></div>';
-
-      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">NewsAdvertisement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[2].FileURl)+' target="_blank">'+arrFiles[2].FileName+'</a></p></div></div>';
-
-      //HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Others</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[3].FileURl)+' target="_blank"> '+arrFiles[3].FileName+'</a></p></div></div>';
-
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Justification for Amendment</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[6].FileURl)+' target="_blank">'+arrFiles[6].FileName+'</a></p></div></div>';
       for(var idxOther=0;idxOther<otherFiles.length;idxOther++)
-      {
-        HTMLGoods+='<div class="row goods-details">';
-        HTMLGoods+='<div class="col-sm-3"><h5 class="goods-label">Others</h5></div>';
-        HTMLGoods+='<div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div></div>';
-      }
-      
-      
-      // HTMLGoods+='<table>';
-      // HTMLGoods+='<tbody>  ';         
-      // HTMLGoods+='<tr><td>Project Name : '+GoodsRequest[index].ProjectName +'</td></tr>';
-      // HTMLGoods+='<tr><td>Project ID : '+GoodsRequest[index].ID +'</td></tr>';
-      // HTMLGoods+='<tr><td>Name Of AV : '+GoodsRequest[index].NameOfAV+'</td></tr>';
-      // HTMLGoods+='<tr><td>PN for ZAS : '+GoodsRequest[index].PNForZAS +'</td></tr>';
-      // HTMLGoods+='<tr><td>Project Number : '+GoodsRequest[index].ProjectNumber +'</td></tr>';
-      // HTMLGoods+='<tr><td>Quantities : <a href='+encodeURI(arrFiles[0].FileURl)+' target="_blank">'+arrFiles[0].FileName+'</a></td></tr>';
-      // HTMLGoods+='<tr><td>ShortList : <a href='+encodeURI(arrFiles[1].FileURl)+' target="_blank">'+arrFiles[1].FileName+'</a></td></tr>';
-      // HTMLGoods+='<tr><td>NewsAdvertisement : <a href='+encodeURI(arrFiles[2].FileURl)+' target="_blank">'+arrFiles[2].FileName+'</a></td></tr>';
-      // HTMLGoods+='<tr><td>Others : <a href='+encodeURI(arrFiles[3].FileURl)+' target="_blank"> '+arrFiles[3].FileName+'</a></td></tr>';
-      
-      if(GoodsRequest[index].RequestItem=='Yes')
-      {
+        {
+          HTMLGoods+='<div class="row goods-details">';
+          HTMLGoods+='<div class="col-sm-3"><h5 class="goods-label">Others</h5></div>';
+          HTMLGoods+='<div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div></div>';
+        }
+    }//for goods amendment popup
+    else if(GoodsRequest[index].GoodsCategory=="framework")
+    {
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Framework Agreement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].Agreement+'</p></div></div>';
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].JOD+'</p></div></div>';
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].EUR+'</p></div></div>';
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Additional Information</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[7].FileURl)+' target="_blank">'+arrFiles[7].FileName+'</a></p></div></div>';
+      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Filled Catalogue</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[8].FileURl)+' target="_blank">'+arrFiles[8].FileName+'</a></p></div></div>';
+    }//for goods framework popup
 
-        
-      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Cost Item</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[4].FileURl)+' target="_blank"> '+arrFiles[4].FileName+'</a></p></div></div>';
-
-        // HTMLGoods+='<tr><td>Cost Item : <a href='+encodeURI(arrFiles[4].FileURl)+' target="_blank"> '+arrFiles[4].FileName+'</a></td></tr>';
-      }
-      if(GoodsRequest[index].Specifications=='Nonneutral Specifications')
-      {
-        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Specification</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[5].FileURl)+' target="_blank"> '+arrFiles[5].FileName+'</a></p></div></div>';
-
-        // HTMLGoods+='<tr><td>Specification : <a href='+encodeURI(arrFiles[5].FileURl)+' target="_blank"> '+arrFiles[5].FileName+'</a></td></tr>';
-      }
-
-      // HTMLGoods+='</tbody></table>';
       
       $('#ProjectDetails').html('');
       $('#ProjectDetails').html("Goods Request Details for "+GoodsRequest[index].ProjectName);
@@ -404,34 +513,72 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       });
 
       let HTMLservice='';
-
       HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].ProjectName +'</p></div></div>';
-
       HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].ID +'</p></div></div>';
-
       HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].NameOfAV +'</p></div></div>';
-
       HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].PNForZAS +'</p></div></div>';
+      if(ServiceRequest[index].isKompOutput=="Yes")
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].KompOutputNumber +' - '+ServiceRequest[index].kompPercent+'</p></div></div>';
+
+      if(ServiceRequest[index].ChoicesOfServices=="Direct Award")
+      {
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">ConsultingFirm/Appariser</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].ConsultingFirm +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Consulting Firm/Appariser</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].NameOfConsultingFirm +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Area Of Activity</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].AreaOfActivity +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].ShortDesc +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].FullAddress +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Contract Person from the Firm</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].ContactPerson +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Telephone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].TelephoneNumber +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].EmailAddress +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].MobileNumber +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].DurationFrom +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].DurationTo +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].JOD +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].EUR +'</p></div></div>';
+      }
+      if(ServiceRequest[index].ChoicesOfServices=="Shortlisted tender")
+      {
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].ShortDesc +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+moment(ServiceRequest[index].DurationFrom).format('MM/DD/YYYY')+'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+moment(ServiceRequest[index].DurationTo).format('MM/DD/YYYY')+'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].JOD +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].EUR +'</p></div></div>';
+      }
+      if(ServiceRequest[index].ChoicesOfServices=="Public tender")
+      {
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].ShortDesc +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+moment(ServiceRequest[index].DurationFrom).format('MM/DD/YYYY')+'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+moment(ServiceRequest[index].DurationTo).format('MM/DD/YYYY')+'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].JOD +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].EUR +'</p></div></div>';
+      }
+      if(ServiceRequest[index].ChoicesOfServices=="Contract Amendment")
+      {
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].ShortDesc +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].FullAddress +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Consulting Firm/Appariser</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].NameOfConsultingFirm +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Contract Person from the Firm</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].ContactPerson +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Telephone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].TelephoneNumber +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].EmailAddress +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].MobileNumber +'</p></div></div>';
+      }
+      if(ServiceRequest[index].ChoicesOfServices=="Request from a Framework Agreement")
+      {
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Agreement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].Agreement +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].JOD +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+ServiceRequest[index].EUR +'</p></div></div>';
+      }
 
 
-      // HTMLservice+='<table>';
-      // HTMLservice+='<tbody>  ';         
-      // HTMLservice+='<tr><td>Project Name : '+ServiceRequest[index].ProjectName +'</td></tr>';
-      // HTMLservice+='<tr><td>Project ID : '+ServiceRequest[index].ID +'</td></tr>';
-      // HTMLservice+='<tr><td>Project Number : '+ServiceRequest[index].ProjectNumber +'</td></tr>';
-      // HTMLservice+='<tr><td>Name Of AV : '+ServiceRequest[index].NameOfAV+'</td></tr>';
-      // HTMLservice+='<tr><td>PN for ZAS : '+ServiceRequest[index].PNForZAS +'</td></tr>';
       for(var i=0;i<arrFiles.length;i++)
       {
         if(arrFiles[i].FileURl!='N/A')
         {
-
           HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
-
-          // HTMLservice+='<tr><td>'+ arrFiles[i].Name +' : <a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></td></tr>';
         }
       }
-      // HTMLservice+='</tbody></table>';
+
+
       $('#ProjectDetails').html('');
       $('#ProjectDetails').html("Service Request Details for "+ServiceRequest[index].ProjectName);
       $('#modalbody').html('');
@@ -439,6 +586,327 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       
 
     
+    });
+
+    $(document).on('click','.subdetailView',function(){
+      var that=$(this);
+      var index;
+      var serviceID=that.attr('req-id');
+      LocalSubsidyItems.forEach(function(val,key)
+      {
+          if(val.ID==that.attr('req-id'))
+          {
+            index=key;
+          }
+      });
+
+
+      let arrFiles=[];
+      
+
+      arrFiles.push({'Name':'EstimatedCost','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Terms','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'TechAssGrid','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'ProjectProposal','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Budget','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Profile','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'BankDetails','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'CommercialSuitability','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'RegCert','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'LessorID','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'OwnerDocs','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'DirectorApproval','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'LandScheme','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'}); 
+      arrFiles.push({'Name':'CVExperts','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'FinancialReports','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'AgreementConcept','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Vergabedok','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'SummaryActionPlan','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'CompetitionReport','FileName':'N/A','FileURl':'N/A'});
+
+      $.each(arrFiles,function(key,val)
+      {
+        for(var i=0;i<ProcurementServiceFiles['Folders'].length;i++)
+        {
+            if(ProcurementServiceFiles['Folders'][i].Name==val.Name)
+            {
+              for(var j=0;j<ProcurementServiceFiles['Folders'][i].Folders.length;j++)
+              {
+                if(ProcurementServiceFiles['Folders'][i].Folders[j].Name==serviceID)
+                {
+                  for(var k=0;k<ProcurementServiceFiles['Folders'][i].Folders[j].Files.length;k++)
+                  {
+                    arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
+                    arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                  
+                  }
+                }
+              }
+            }
+        } 
+      });
+
+      let HTMLservice='';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].ProjectName +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].ID +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].NameOfAV +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].PNForZAS +'</p></div></div>';
+      if(LocalSubsidyItems[index].isKompOutput=="Yes")
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].KompOutputNumber +' - '+LocalSubsidyItems[index].kompPercent+'</p></div></div>';
+
+      if(LocalSubsidyItems[index].SubsidyCategory=="Subsidy")
+      {
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description of the Requested Local Subsidy</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].ShortDesc +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Beneficiary</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].NameOfBeneficiary +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].FullAddress +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Telephone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].TelephoneNumber +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Contact Person</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].ContactPerson +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].EmailAddress +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].TelephoneNumber +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].DurationFrom +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].DurationTo +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].JOD +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].EUR +'</p></div></div>';
+      }
+      else if(LocalSubsidyItems[index].SubsidyCategory=="Subsidyamendment")
+      {
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Local Subsidy CoSoft Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LocalSubsidyItems[index].CoSoftNumber +'</p></div></div>';
+      }
+
+      for(var i=0;i<arrFiles.length;i++)
+      {
+        if(arrFiles[i].FileURl!='N/A')
+        {
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
+        }
+      }
+
+      
+      $('#ProjectDetails').html('');
+      $('#ProjectDetails').html("Service Request Details for "+LocalSubsidyItems[index].ProjectName);
+      $('#modalbody').html('');
+      $('#modalbody').append(HTMLservice);
+
+
+    });
+
+    $(document).on('click','.LeasedetailView',function(){
+      var that=$(this);
+      var index;
+      var serviceID=that.attr('req-id');
+      LeaseAgreementItems.forEach(function(val,key)
+      {
+          if(val.ID==that.attr('req-id'))
+          {
+            index=key;
+          }
+      });
+
+
+      let arrFiles=[];
+      
+
+      arrFiles.push({'Name':'EstimatedCost','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Terms','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'TechAssGrid','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'ProjectProposal','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Budget','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Profile','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'BankDetails','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'CommercialSuitability','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'RegCert','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'LessorID','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'OwnerDocs','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'DirectorApproval','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'LandScheme','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'}); 
+      arrFiles.push({'Name':'CVExperts','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'FinancialReports','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'AgreementConcept','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Vergabedok','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'SummaryActionPlan','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'CompetitionReport','FileName':'N/A','FileURl':'N/A'});
+
+      $.each(arrFiles,function(key,val)
+      {
+        for(var i=0;i<ProcurementServiceFiles['Folders'].length;i++)
+        {
+            if(ProcurementServiceFiles['Folders'][i].Name==val.Name)
+            {
+              for(var j=0;j<ProcurementServiceFiles['Folders'][i].Folders.length;j++)
+              {
+                if(ProcurementServiceFiles['Folders'][i].Folders[j].Name==serviceID)
+                {
+                  for(var k=0;k<ProcurementServiceFiles['Folders'][i].Folders[j].Files.length;k++)
+                  {
+                    arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
+                    arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                  
+                  }
+                }
+              }
+            }
+        } 
+      });
+
+      let HTMLservice='';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].ProjectName +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].ID +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].NameOfAV +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].PNForZAS +'</p></div></div>';
+      if(LeaseAgreementItems[index].isKompOutput=="Yes")
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].KompOutputNumber +' - '+LeaseAgreementItems[index].kompPercent+'</p></div></div>';
+
+      if(LeaseAgreementItems[index].LeaseAgreementCategory=="Lease")
+      {
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description of the Requested Local Subsidy</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].ShortDesc +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].DurationFrom +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].DurationTo +'</p></div></div>';
+
+        if(LeaseAgreementItems[index].LessorPapers=="Lessor is an Individual"){
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Lessor Name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].LessorName +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].FullAddress +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Phone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].TelephoneNumber +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].EmailAddress +'</p></div></div>';
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].MobileNumber +'</p></div></div>';
+        }
+        else
+        {
+        
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Firm</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].NameOfConsultingFirm +'</p></div></div>';
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].FullAddress +'</p></div></div>';
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Phone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].TelephoneNumber +'</p></div></div>';
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Contact Person</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].ContactPerson +'</p></div></div>';
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].EmailAddress +'</p></div></div>';
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].MobileNumber +'</p></div></div>';
+         
+        }
+        
+      }
+      else if(LeaseAgreementItems[index].LeaseAgreementCategory=="Leaseamendment")
+      {
+        HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Local Subsidy CoSoft Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+LeaseAgreementItems[index].CoSoftNumber +'</p></div></div>';
+      }
+
+      for(var i=0;i<arrFiles.length;i++)
+      {
+        if(arrFiles[i].FileURl!='N/A')
+        {
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
+        }
+      }
+
+      
+      $('#ProjectDetails').html('');
+      $('#ProjectDetails').html("Service Request Details for "+LeaseAgreementItems[index].ProjectName);
+      $('#modalbody').html('');
+      $('#modalbody').append(HTMLservice);
+
+
+    });
+
+    $(document).on('click','.idppdetailView',function(){
+      var that=$(this);
+      var index;
+      var serviceID=that.attr('req-id');
+      IdppItems.forEach(function(val,key)
+      {
+          if(val.ID==that.attr('req-id'))
+          {
+            index=key;
+          }
+      });
+
+
+      let arrFiles=[];
+      
+
+      arrFiles.push({'Name':'EstimatedCost','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Terms','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'TechAssGrid','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'ProjectProposal','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Budget','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Profile','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'BankDetails','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'CommercialSuitability','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'RegCert','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'LessorID','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'OwnerDocs','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'DirectorApproval','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'LandScheme','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'}); 
+      arrFiles.push({'Name':'CVExperts','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'FinancialReports','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'AgreementConcept','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Vergabedok','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'SummaryActionPlan','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'CompetitionReport','FileName':'N/A','FileURl':'N/A'});
+
+      $.each(arrFiles,function(key,val)
+      {
+        for(var i=0;i<ProcurementServiceFiles['Folders'].length;i++)
+        {
+            if(ProcurementServiceFiles['Folders'][i].Name==val.Name)
+            {
+              for(var j=0;j<ProcurementServiceFiles['Folders'][i].Folders.length;j++)
+              {
+                if(ProcurementServiceFiles['Folders'][i].Folders[j].Name==serviceID)
+                {
+                  for(var k=0;k<ProcurementServiceFiles['Folders'][i].Folders[j].Files.length;k++)
+                  {
+                    arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
+                    arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                  
+                  }
+                }
+              }
+            }
+        } 
+      });
+
+      let HTMLservice='';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].ProjectName +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].ID +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].NameOfAV +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].PNForZAS +'</p></div></div>';
+      if(LeaseAgreementItems[index].isKompOutput=="Yes")
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].KompOutputNumber +' - '+IdppItems[index].kompPercent+'</p></div></div>';
+
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].ShortDesc +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].DurationFrom +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].DurationTo +'</p></div></div>';
+
+      for(var i=0;i<arrFiles.length;i++)
+      {
+        if(arrFiles[i].FileURl!='N/A')
+        {
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
+        }
+      }
+
+      
+      $('#ProjectDetails').html('');
+      $('#ProjectDetails').html("Service Request Details for "+LeaseAgreementItems[index].ProjectName);
+      $('#modalbody').html('');
+      $('#modalbody').append(HTMLservice);
+
+
     });
 
     /*Edit Fcuntionality*/
@@ -554,7 +1022,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 async function LoadGoodsRequest()
   {
     await sp.web.lists.getByTitle('ProcurementGoods').items
-    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,RequestStatus/ID,RequestStatus/Title,Created,Modified')
+    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,RequestStatus/ID,RequestStatus/Title,Created,Modified,KompOutputNumber,kompPercent,isKompOutput,Specifications,ShortDesc,RequestItem,JOD,EUR,DeliveryTime,WarrantyTime,FullAddress,ContactPersonName,PersonEmail,PersonMobile,ProsoftNumber,Agreement,GoodsCategory')
     .orderBy("Modified",false)
     .expand('AssignedTo1,AVName,Representative,RequestStatus')
     .top(5000)
@@ -606,6 +1074,7 @@ async function LoadGoodsRequest()
     }).catch(function(error){ErrorCallBack(error,'InsertService')});
 
     $('#Goods').DataTable({
+      "scrollX": true,
       "order": [[ 0, "desc" ]],
       "columnDefs": [
         {
@@ -619,7 +1088,7 @@ async function LoadGoodsRequest()
   async function LoadServiceRequest()
   {
     await sp.web.lists.getByTitle('ProcurementService').items
-    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified')
+    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus')
     .orderBy("Modified", false)
     .expand('AssignedTo1,AVName,Representative,RequestStatus')
     .top(5000)
@@ -671,6 +1140,7 @@ async function LoadGoodsRequest()
     }).catch(function(error){ErrorCallBack(error,'LoadServiceRequest')});
 
     $('#Service').DataTable({
+      "scrollX": true,
       "order": [[ 0, "desc" ]],
       "columnDefs": [
         {
@@ -679,6 +1149,204 @@ async function LoadGoodsRequest()
         }]
   });
     $('.UserDropdown').attr('disabled',true);
+  }
+
+  async function LoadSubsidyRequest()
+  {
+    await sp.web.lists.getByTitle('LocalSubsidy').items
+    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,SubsidyCategory,isKompOutput,KompOutputNumber,kompPercent,JOD,EUR,ShortDesc,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,NameOfBeneficiary,DurationFrom,DurationTo,CoSoftNumber,PaymentStatus,CoSoftNumber')
+    .orderBy("Modified", false)
+    .expand('AssignedTo1,AVName,Representative,RequestStatus')
+    .top(5000)
+    .get().then((allItems: any[]) => {
+      var serviceHTML='';
+      LocalSubsidyItems=allItems;
+      for (var index = 0; index < allItems.length; index++) 
+      {
+        
+        if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+        {
+        
+        var assgnuser='select';
+        
+        if(allItems[index].AssignedTo1)
+        assgnuser=allItems[index].AssignedTo1.ID; 
+
+        serviceHTML+='<tr>';
+        serviceHTML+='<td>'+allItems[index].Modified+'</td>';
+        serviceHTML+='<td>'+allItems[index].ProjectName+'</td>';
+        serviceHTML+='<td>'+allItems[index].ProjectNumber+'</td>';
+        serviceHTML+='<td>'+allItems[index].NameOfAV+'</td>';
+        serviceHTML+='<td>'+moment(allItems[index].Created).format('DD MMMM YYYY')+'</td>';
+        serviceHTML+='<td><select class="UserDropdownSub'+index+'" disabled="disabled">'+Users+'</select></td>';
+        serviceHTML+='<td><select class="StatusDropdownSub'+index+'" disabled="disabled">'+statusHtml+'</select></td>';
+        serviceHTML+='<td>';
+        serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" class="subdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
+        if(flgSystemAdmin||CrntUserID==assgnuser){
+        serviceHTML+='<a herf="#" index-value='+index+' class="SubEdit"><span class="icon-action icon-edit"></a>';  
+        serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SubSave"><span class="icon-action icon-save"></a>';
+        }
+        serviceHTML+='</td>';
+        serviceHTML+='</tr>';
+        }
+
+      }
+      $('#tblSubsidy').html('');
+      $('#tblSubsidy').append(serviceHTML);
+
+      for(var i=0;i<allItems.length;i++)
+      {
+        if(allItems[i].AssignedTo1)
+        $('.UserDropdownSub'+i+'').val(allItems[i].AssignedTo1.ID);
+
+        if(allItems[i].RequestStatus)
+        $('.StatusDropdownSub'+i+'').val(allItems[i].RequestStatus.ID);
+      }
+
+    }).catch(function(error){ErrorCallBack(error,'LoadSubsidyRequest')});
+
+    $('#Subsidy').DataTable({
+      "scrollX": true,
+      "order": [[ 0, "desc" ]],
+      "columnDefs": [
+        {
+            "targets": [ 0 ],
+            "visible": false,
+        }]
+  });
+    $('.UserDropdown').attr('disabled',true);
+  }
+
+  async function LoadLeaseAgreement()
+  {
+      await sp.web.lists.getByTitle('LeaseAgreement').items
+      .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,LessorPapers,LessorName,EmailAddress,MobileNumber,FullAddress,TelephoneNumber,DurationFrom,DurationTo,NameOfConsultingFirm,ContactPerson,CoSoftNumber,LeaseAgreementCategory')
+      .orderBy("Modified", false)
+      .expand('AssignedTo1,AVName,Representative,RequestStatus')
+      .top(5000)
+      .get().then((allItems: any[]) => {
+        var serviceHTML='';
+        LeaseAgreementItems=allItems;
+        for (var index = 0; index < allItems.length; index++) 
+        {
+          
+          if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+          {
+          
+          var assgnuser='select';
+          
+          if(allItems[index].AssignedTo1)
+          assgnuser=allItems[index].AssignedTo1.ID; 
+  
+          serviceHTML+='<tr>';
+          serviceHTML+='<td>'+allItems[index].Modified+'</td>';
+          serviceHTML+='<td>'+allItems[index].ProjectName+'</td>';
+          serviceHTML+='<td>'+allItems[index].ProjectNumber+'</td>';
+          serviceHTML+='<td>'+allItems[index].NameOfAV+'</td>';
+          serviceHTML+='<td>'+moment(allItems[index].Created).format('DD MMMM YYYY')+'</td>';
+          serviceHTML+='<td><select class="UserDropdownLease'+index+'" disabled="disabled">'+Users+'</select></td>';
+          serviceHTML+='<td><select class="StatusDropdownLease'+index+'" disabled="disabled">'+statusHtml+'</select></td>';
+          serviceHTML+='<td>';
+          serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" class="LeasedetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
+          if(flgSystemAdmin||CrntUserID==assgnuser){
+          serviceHTML+='<a herf="#" index-value='+index+' class="LeaseEdit"><span class="icon-action icon-edit"></a>';  
+          serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="LeaseSave"><span class="icon-action icon-save"></a>';
+          }
+          serviceHTML+='</td>';
+          serviceHTML+='</tr>';
+          }
+  
+        }
+        $('#tblLease').html('');
+        $('#tblLease').append(serviceHTML);
+  
+        for(var i=0;i<allItems.length;i++)
+        {
+          if(allItems[i].AssignedTo1)
+          $('.UserDropdownLease'+i+'').val(allItems[i].AssignedTo1.ID);
+  
+          if(allItems[i].RequestStatus)
+          $('.StatusDropdownLease'+i+'').val(allItems[i].RequestStatus.ID);
+        }
+  
+      }).catch(function(error){ErrorCallBack(error,'LoadLeaseRequest')});
+  
+      $('#Lease').DataTable({
+        "scrollX": true,
+        "order": [[ 0, "desc" ]],
+        "columnDefs": [
+          {
+              "targets": [ 0 ],
+              "visible": false,
+          }]
+    });
+      $('.UserDropdown').attr('disabled',true);
+  }
+
+  async function Loadidpp()
+  {
+    await sp.web.lists.getByTitle('idpp').items
+      .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,DurationFrom,DurationTo')
+      .orderBy("Modified", false)
+      .expand('AssignedTo1,AVName,Representative,RequestStatus')
+      .top(5000)
+      .get().then((allItems: any[]) => {
+        var serviceHTML='';
+        IdppItems=allItems;
+        for (var index = 0; index < allItems.length; index++) 
+        {
+          
+          if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+          {
+          
+          var assgnuser='select';
+          
+          if(allItems[index].AssignedTo1)
+          assgnuser=allItems[index].AssignedTo1.ID; 
+  
+          serviceHTML+='<tr>';
+          serviceHTML+='<td>'+allItems[index].Modified+'</td>';
+          serviceHTML+='<td>'+allItems[index].ProjectName+'</td>';
+          serviceHTML+='<td>'+allItems[index].ProjectNumber+'</td>';
+          serviceHTML+='<td>'+allItems[index].NameOfAV+'</td>';
+          serviceHTML+='<td>'+moment(allItems[index].Created).format('DD MMMM YYYY')+'</td>';
+          serviceHTML+='<td><select class="UserDropdownidpp'+index+'" disabled="disabled">'+Users+'</select></td>';
+          serviceHTML+='<td><select class="StatusDropdownidpp'+index+'" disabled="disabled">'+statusHtml+'</select></td>';
+          serviceHTML+='<td>';
+          serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" class="idppdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
+          if(flgSystemAdmin||CrntUserID==assgnuser){
+          serviceHTML+='<a herf="#" index-value='+index+' class="idppEdit"><span class="icon-action icon-edit"></a>';  
+          serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="idppSave"><span class="icon-action icon-save"></a>';
+          }
+          serviceHTML+='</td>';
+          serviceHTML+='</tr>';
+          }
+  
+        }
+        $('#tblidpp').html('');
+        $('#tblidpp').append(serviceHTML);
+  
+        for(var i=0;i<allItems.length;i++)
+        {
+          if(allItems[i].AssignedTo1)
+          $('.UserDropdownidpp'+i+'').val(allItems[i].AssignedTo1.ID);
+  
+          if(allItems[i].RequestStatus)
+          $('.StatusDropdownidpp'+i+'').val(allItems[i].RequestStatus.ID);
+        }
+  
+      }).catch(function(error){ErrorCallBack(error,'LoadLeaseRequest')});
+  
+      $('#idpp').DataTable({
+        "scrollX": true,
+        "order": [[ 0, "desc" ]],
+        "columnDefs": [
+          {
+              "targets": [ 0 ],
+              "visible": false,
+          }]
+    });
+      $('.UserDropdown').attr('disabled',true);
   }
 
   async function LoadProcurementTeam()
