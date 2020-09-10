@@ -423,6 +423,12 @@ div.dataTables_filter, div.dataTables_length {
   .icon-save{
     background-image: url(../images/icon-save.png);
   }
+  .icon-followup{
+    background-image: url(../images/icon-followup.png);
+  }
+  .icon-track{
+    background-image: url(../images/icon-track.png);  
+  }
   .ControlZone-control
   {
       min-height: 480px;
@@ -435,4 +441,24 @@ div.dataTables_filter, div.dataTables_length {
   {
       position: absolute;
   }
+  .numbers {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    }
+    #txtProjectNum1 {
+    width: 45px;
+    }
+    #txtProjectNum2 {
+    width: 60px;
+    }
+    #txtProjectNum3 {
+    width: 35px;
+    }
+    #txtProjectNum4 {
+    width: 55px;
+    }
+    #txtProjectNum5 {
+    width: 43px;
+    }
 
