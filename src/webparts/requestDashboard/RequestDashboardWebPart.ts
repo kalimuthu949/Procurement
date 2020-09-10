@@ -14,14 +14,24 @@ import { SPComponentLoader } from "@microsoft/sp-loader";
 import 'jquery';
 import * as moment from 'moment';
 import 'datatables';
-import { sp } from "@pnp/sp";
+import { sp,EmailProperties } from "@pnp/sp";
 import '../../ExternalRef/css/style.css';
 import '../../ExternalRef/css/alertify.min.css';
 import '../../ExternalRef/css/bootstrap-datepicker.min.css';
 import '../../ExternalRef/js/bootstrap-datepicker.min.js';
 import '../../ExternalRef/js/bootstrap.min.js';
 import '../../../node_modules/datatables/media/css/jquery.dataTables.min.css';
+import * as Excel from "exceljs/dist/exceljs.min.js";
+import { saveAs } from 'file-saver';
 var alertify: any = require('../../ExternalRef/js/alertify.min.js');
+var FileSaver:any = require('file-saver');
+
+//var html2pdf = require('html2pdf.js');
+//import {html2pdf,html2canvas,jsPDF} from 'html2pdf.js';
+//import * as html2pdf from '../../../node_modules/jspdf-html2canvas/dist/bundle.js';
+//import * as jsPDF from '../../../node_modules/jspdf/dist/jspdf.min.js';
+
+import * as html2pdf from 'html2pdf.js';
 
 SPComponentLoader.loadCss("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
 
@@ -29,6 +39,7 @@ declare var $;
 var flgProcurementTeam=false;
 var flgSystemAdmin=false;
 var LoggedUserEmail='';
+var LoggedUserName='';
 var CrntUserID='';
 var GoodsRequest=[];
 var ServiceRequest=[];
@@ -41,6 +52,32 @@ var siteURL='';
 var Users='';
 var statusHtml='';
 var flgRepUser=false;
+var oTablegoods;
+var oTableservice;
+var oTablesubsidy;
+var oTablelease;
+var oTableidpp;
+
+/* start Html for status change in popup*/
+var htmlforstatuschange=`
+<div class="row goods-details">
+<div class="col-sm-3">
+<h5 class="goods-label">Date</h5>
+</div><div class="col-sm-1 text-center">:</div>
+<div class="col-sm-6">
+<input class="form-control form-control-datepicker" type="text" id="requestedDate">
+</div>
+</div></br>
+<div class="row goods-details">
+<div class="col-sm-3">
+<h5 class="goods-label">Notes</h5>
+</div><div class="col-sm-1 text-center">:</div>
+<div class="col-sm-6">
+<textarea id="txtNotes" style="margin: 0px; width: 345px; height: 85px;"></textarea>
+</div>
+</div>
+`;
+/* end Html for status change in popup*/
 
 export interface IRequestDashboardWebPartProps {
   description: string;
@@ -55,10 +92,12 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       });
     });
   }
-  
+
   public render(): void 
   { 
     LoggedUserEmail=this.context.pageContext.user.email;
+    LoggedUserName=this.context.pageContext.user.displayName;
+    var that=this;
     siteURL = this.context.pageContext.site.absoluteUrl;   
     this.domElement.innerHTML = `
     
@@ -87,6 +126,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
     
     <div id='GoodsTable'>
+    <select id='drpStatusforgoods'>
+    <option value="select">Select</option>
+    </select>
     <table id="Goods" style="width:100%">
     <thead>
     <tr>
@@ -97,6 +139,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <th>Date of Request</th>
     <th>Assigned To</th>
     <th>Status</th>
+    <th>StatusText</th>
     <th>Details</th>
     </tr>
     </thead>
@@ -116,6 +159,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
    
     <div id='ServiceTable'>
+    <select id='drpStatusforservice'>
+    <option value="select">Select</option>
+    </select>
     <table id="Service"  style="width:100%">
     <thead>
     <tr>
@@ -126,6 +172,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <th>Date of Request</th>
     <th>Assigned To</th>
     <th>Status</th>
+    <th>StatusText</th>
     <th>Details</th>
     </tr>
     </thead>
@@ -145,6 +192,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
    
     <div id='SubsidyTable'>
+    <select id='drpStatusforsubsidy'>
+    <option value="select">Select</option>
+    </select>
     <table id="Subsidy"  style="width:100%">
     <thead>
     <tr>
@@ -155,6 +205,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <th>Date of Request</th>
     <th>Assigned To</th>
     <th>Status</th>
+    <th>StatusText</th>
     <th>Details</th>
     </tr>
     </thead>
@@ -175,6 +226,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
    
     <div id='LeaseTable'>
+    <select id='drpStatusforlease'>
+    <option value="select">Select</option>
+    </select>
     <table id="Lease"  style="width:100%">
     <thead>
     <tr>
@@ -185,6 +239,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <th>Date of Request</th>
     <th>Assigned To</th>
     <th>Status</th>
+    <th>StatusText</th>
     <th>Details</th>
     </tr>
     </thead>
@@ -204,6 +259,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
    
     <div id='idppTable'>
+    <select id='drpStatusforidpp'>
+    <option value="select">Select</option>
+    </select>
     <table id="idpp"  style="width:100%">
     <thead>
     <tr>
@@ -214,6 +272,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <th>Date of Request</th>
     <th>Assigned To</th>
     <th>Status</th>
+    <th>StatusText</th>
     <th>Details</th>
     </tr>
     </thead>
@@ -235,7 +294,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
     <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-    
+    <input type="text" value="asfasfasfasfasfasfasf"/>
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -253,11 +312,30 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
   </div>
 
+  <div class="modal fade" id="myModalEdit" role="dialog">
+  <div class="modal-dialog">
+  
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id='EditDetails'>Edit Record</h4>
+      </div>
+      <div class="modal-body" id='modalbodyEdit'>
+        <p>Some text in the modal.</p>
+      </div>
+      <div class="modal-footer" id='divforbtn'>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id='btnUpdate'>Update</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
 
     `;
-
     //$('#GoodsTable').hide();
-    
     getLoggedInUserDetails();
     LoadAdminTeam();
     getAllFolders();
@@ -308,6 +386,21 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     $('#btnGoods').click(function()
     {
       location.href = siteURL+'/SitePages/NewGoodsRequest.aspx';
+    });
+
+    $('#btnSubsidy').click(function()
+    {
+      location.href = siteURL+'/SitePages/NewSubsidyRequest.aspx';
+    });
+
+    $('#btnLease').click(function()
+    {
+      location.href = siteURL+'/SitePages/NewLeaseRequest.aspx';
+    });
+    
+    $('#btnIdpp').click(function()
+    {
+      location.href = siteURL+'/SitePages/NewIdppRequest.aspx';
     });
 
     $(document).on('click','.GdsdetailView',function()
@@ -889,8 +982,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].KompOutputNumber +' - '+IdppItems[index].kompPercent+'</p></div></div>';
 
       HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].ShortDesc +'</p></div></div>';
-      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].DurationFrom +'</p></div></div>';
-      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+IdppItems[index].DurationTo +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+moment(IdppItems[index].DurationFrom).format('MM/DD/YYYY') +'</p></div></div>';
+      HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+moment(IdppItems[index].DurationTo).format('MM/DD/YYYY')+'</p></div></div>';
 
       for(var i=0;i<arrFiles.length;i++)
       {
@@ -914,82 +1007,515 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     $(document).on('click','.SerEdit',function()
     {
       var indexofEdit=$(this).attr('index-value');
+      var itemid=$(this).attr('req-id');
       var AssignedTo=$(".UserDropdownSER"+indexofEdit+" option:selected").val();
+      var Status=$(".StatusDropdownSER"+indexofEdit+" option:selected").val();
+
+      var html='';
+      html+='<div class="row goods-details">';
+      html+='<div class="col-sm-3">';
+      html+='<h5 class="goods-label">AssignedTo</h5></div>';
+      html+='<div class="col-sm-1 text-center">:</div>';
+      html+='<div class="col-sm-6">';
+      html+='<select class="UserDropdownSERPopup'+indexofEdit+'" disabled="disabled">'+Users+'<select>';
+      html+='</div>';
+      html+='</div></br>';
+
+      html+='<div class="row goods-details">';
+      html+='<div class="col-sm-3">';
+      html+='<h5 class="goods-label">Status</h5></div>';
+      html+='<div class="col-sm-1 text-center">:</div>';
+      html+='<div class="col-sm-6">';
+      html+='<select class="statuspopup StatusDropdownSERPopup'+indexofEdit+'" disabled="disabled">'+statusHtml+'<select>';
+      html+='</div>';
+      html+='</div></br>';
+
+      html+='<div id="divfordatefield"></div>';
+      
+      $("#modalbodyEdit").html(html);
+      $(".UserDropdownSERPopup"+indexofEdit+"").val(AssignedTo);
+      $(".StatusDropdownSERPopup"+indexofEdit+"").val(Status);
+
+      var htmlbutton='';
+      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" data-dismiss="modal" id="serbtnUpdate">Update</button>';
+      htmlbutton+='<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+      $("#divforbtn").html(htmlbutton);
 
       if(flgSystemAdmin)
-      $(".UserDropdownSER"+indexofEdit+"").attr('disabled',false);
+      $(".UserDropdownSERPopup"+indexofEdit+"").attr('disabled',false);
 
       if(CrntUserID==AssignedTo)
-      $(".StatusDropdownSER"+indexofEdit+"").attr('disabled',false);
+      $(".StatusDropdownSERPopup"+indexofEdit+"").attr('disabled',false);
       //alert($(".UserDropdownSER"+indexofEdit+" option:selected").val());
     });
 
     $(document).on('click','.GdsEdit',function()
     {
       var indexofEdit=$(this).attr('index-value');
+      var itemid=$(this).attr('req-id');
       var AssignedTo=$(".UserDropdownGDS"+indexofEdit+" option:selected").val();
+      var Status=$(".StatusDropdownGDS"+indexofEdit+" option:selected").val();
+
+
+      var html='';
+      html+='<div class="row goods-details">';
+      html+='<div class="col-sm-3">';
+      html+='<h5 class="goods-label">AssignedTo</h5></div>';
+      html+='<div class="col-sm-1 text-center">:</div>';
+      html+='<div class="col-sm-6">';
+      html+='<select class="UserDropdownGDSPopup'+indexofEdit+'" disabled="disabled">'+Users+'<select>';
+      html+='</div>';
+      html+='</div></br>';
+
+      html+='<div class="row goods-details">';
+      html+='<div class="col-sm-3">';
+      html+='<h5 class="goods-label">Status</h5></div>';
+      html+='<div class="col-sm-1 text-center">:</div>';
+      html+='<div class="col-sm-6">';
+      html+='<select class="statuspopup StatusDropdownGDSPopup'+indexofEdit+'" disabled="disabled">'+statusHtml+'<select>';
+      html+='</div>';
+      html+='</div></br>';
+
+      html+='<div id="divfordatefield"></div>';
+      
+      $("#modalbodyEdit").html(html);
+      $(".UserDropdownGDSPopup"+indexofEdit+"").val(AssignedTo);
+      $(".StatusDropdownGDSPopup"+indexofEdit+"").val(Status);
+
+      var htmlbutton='';
+      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" data-dismiss="modal" id="GdsbtnUpdate">Update</button>';
+      htmlbutton+='<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+      $("#divforbtn").html(htmlbutton);
 
       if(flgSystemAdmin)
-      $(".UserDropdownGDS"+indexofEdit+"").attr('disabled',false);
+      $(".UserDropdownGDSPopup"+indexofEdit+"").attr('disabled',false);
 
       if(CrntUserID==AssignedTo)
-      $(".StatusDropdownGDS"+indexofEdit+"").attr('disabled',false);
+      $(".StatusDropdownGDSPopup"+indexofEdit+"").attr('disabled',false);
+    });
+
+    $(document).on('click','.SubEdit',function()
+    {
+      var indexofEdit=$(this).attr('index-value');
+      var itemid=$(this).attr('req-id');
+      var AssignedTo=$(".UserDropdownSub"+indexofEdit+" option:selected").val();
+      var Status=$(".StatusDropdownSub"+indexofEdit+" option:selected").val();
+
+      var html='';
+      html+='<div class="row goods-details">';
+      html+='<div class="col-sm-3">';
+      html+='<h5 class="goods-label">AssignedTo</h5></div>';
+      html+='<div class="col-sm-1 text-center">:</div>';
+      html+='<div class="col-sm-6">';
+      html+='<select class="UserDropdownSubPopup'+indexofEdit+'" disabled="disabled">'+Users+'<select>';
+      html+='</div>';
+      html+='</div></br>';
+
+      html+='<div class="row goods-details">';
+      html+='<div class="col-sm-3">';
+      html+='<h5 class="goods-label">Status</h5></div>';
+      html+='<div class="col-sm-1 text-center">:</div>';
+      html+='<div class="col-sm-6">';
+      html+='<select class="StatusDropdownSubPopup'+indexofEdit+'" disabled="disabled">'+statusHtml+'<select>';
+      html+='</div>';
+      html+='</div></br>';
+      
+      $("#modalbodyEdit").html(html);
+      $(".UserDropdownSubPopup"+indexofEdit+"").val(AssignedTo);
+      $(".StatusDropdownSubPopup"+indexofEdit+"").val(Status);
+
+      var htmlbutton='';
+      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" data-dismiss="modal" id="SubbtnUpdate">Update</button>';
+      htmlbutton+='<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+      $("#divforbtn").html(htmlbutton);
+
+      if(flgSystemAdmin)
+      $(".UserDropdownSubPopup"+indexofEdit+"").attr('disabled',false);
+
+      if(CrntUserID==AssignedTo)
+      $(".StatusDropdownSubPopup"+indexofEdit+"").attr('disabled',false);
+    });
+
+    $(document).on('click','.LeaseEdit',function()
+    {
+      var indexofEdit=$(this).attr('index-value');
+      var itemid=$(this).attr('req-id');
+      var AssignedTo=$(".UserDropdownLease"+indexofEdit+" option:selected").val();
+      var Status=$(".StatusDropdownLease"+indexofEdit+" option:selected").val();
+
+      var html='';
+      html+='<div class="row goods-details">';
+      html+='<div class="col-sm-3">';
+      html+='<h5 class="goods-label">AssignedTo</h5></div>';
+      html+='<div class="col-sm-1 text-center">:</div>';
+      html+='<div class="col-sm-6">';
+      html+='<select class="UserDropdownLeasePopup'+indexofEdit+'" disabled="disabled">'+Users+'<select>';
+      html+='</div>';
+      html+='</div></br>';
+
+      html+='<div class="row goods-details">';
+      html+='<div class="col-sm-3">';
+      html+='<h5 class="goods-label">Status</h5></div>';
+      html+='<div class="col-sm-1 text-center">:</div>';
+      html+='<div class="col-sm-6">';
+      html+='<select class="StatusDropdownLeasePopup'+indexofEdit+'" disabled="disabled">'+statusHtml+'<select>';
+      html+='</div>';
+      html+='</div></br>';
+      
+      $("#modalbodyEdit").html(html);
+      $(".UserDropdownLeasePopup"+indexofEdit+"").val(AssignedTo);
+      $(".StatusDropdownLeasePopup"+indexofEdit+"").val(Status);
+
+      var htmlbutton='';
+      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" data-dismiss="modal" id="LeasebtnUpdate">Update</button>';
+      htmlbutton+='<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+      $("#divforbtn").html(htmlbutton);
+
+      if(flgSystemAdmin)
+      $(".UserDropdownLeasePopup"+indexofEdit+"").attr('disabled',false);
+
+      if(CrntUserID==AssignedTo)
+      $(".StatusDropdownLeasePopup"+indexofEdit+"").attr('disabled',false);
+    });
+
+    $(document).on('click','.idppEdit',function()
+    {
+      var indexofEdit=$(this).attr('index-value');
+      var itemid=$(this).attr('req-id');
+      var AssignedTo=$(".UserDropdownidpp"+indexofEdit+" option:selected").val();
+      var Status=$(".StatusDropdownidpp"+indexofEdit+" option:selected").val();
+
+      var html='';
+      html+='<div class="row goods-details">';
+      html+='<div class="col-sm-3">';
+      html+='<h5 class="goods-label">AssignedTo</h5></div>';
+      html+='<div class="col-sm-1 text-center">:</div>';
+      html+='<div class="col-sm-6">';
+      html+='<select class="UserDropdownidppPopup'+indexofEdit+'" disabled="disabled">'+Users+'<select>';
+      html+='</div>';
+      html+='</div></br>';
+
+      html+='<div class="row goods-details">';
+      html+='<div class="col-sm-3">';
+      html+='<h5 class="goods-label">Status</h5></div>';
+      html+='<div class="col-sm-1 text-center">:</div>';
+      html+='<div class="col-sm-6">';
+      html+='<select class="StatusDropdownidppPopup'+indexofEdit+'" disabled="disabled">'+statusHtml+'<select>';
+      html+='</div>';
+      html+='</div></br>';
+      
+      $("#modalbodyEdit").html(html);
+      $(".UserDropdownidppPopup"+indexofEdit+"").val(AssignedTo);
+      $(".StatusDropdownidppPopup"+indexofEdit+"").val(Status);
+
+      var htmlbutton='';
+      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" data-dismiss="modal" id="idppbtnUpdate">Update</button>';
+      htmlbutton+='<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
+      $("#divforbtn").html(htmlbutton);
+
+      if(flgSystemAdmin)
+      $(".UserDropdownidppPopup"+indexofEdit+"").attr('disabled',false);
+
+      if(CrntUserID==AssignedTo)
+      $(".StatusDropdownidppPopup"+indexofEdit+"").attr('disabled',false);
     });
 
     /* Save functionality */
 
-    $(document).on('click','.SerSave',function()
+    $(document).on('click','.SerSave,#serbtnUpdate',function(e)
     {
       var itemid=$(this).attr('req-id');
       var indexofEdit=$(this).attr('index-value');
       var alreadyAssgnUsr=$(this).attr('AssignedUser');
-      var AssignedUser=$(".UserDropdownSER"+indexofEdit+" option:selected").val();
-      var ReqStatus=$(".StatusDropdownSER"+indexofEdit+" option:selected").val();
+      var AssignedUser=$(".UserDropdownSERPopup"+indexofEdit+" option:selected").val();
+      var ReqStatus=$(".StatusDropdownSERPopup"+indexofEdit+" option:selected").val();
 
       if(AssignedUser!='Select')
       {
         $('.loading-modal').addClass('active');
         $('body').addClass('body-hidden');
         
-        var data; 
+        var data;
+        var statuschange=false; 
         data={"AssignedTo1Id":AssignedUser};
         if(ReqStatus!='Select')
         {
-          data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus};
+          if(!ServiceRequest[indexofEdit].StatusSummary)
+          ServiceRequest[indexofEdit].StatusSummary="";
+
+          var StatusSummary=ServiceRequest[indexofEdit].StatusSummary+""+$(".StatusDropdownSERPopup"+indexofEdit+" option:selected").text()+" by "+LoggedUserName+","+moment($("#requestedDate").val(),"MM/DD/YYYY").format("DD/MM/YYYY")+";";
+          if($("#requestedDate").val())
+          {
+            statuschange=true;
+            let requestedDate=(new Date(Date.parse(moment($("#requestedDate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
+            data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus,statuschangedate:requestedDate,statusnotes:$("#txtNotes").val(),StatusSummary:StatusSummary};
+          }else{
+            data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus};
+          }
         }
+        
+        if(statuschange)
+        sendmailforstatuschange($(".UserDropdownSERPopup"+indexofEdit+" option:selected").attr('user-email'));
 
         updaterequest(itemid,data,'ProcurementService',true);
-      } 
+      }
+      else
+        {
+          e.preventDefault();
+          alertify.error("Please Select Assignee");
+        } 
 
 
 
       
     });
 
-    $(document).on('click','.GdsSave',function()
+    $(document).on('click','.GdsSave,#GdsbtnUpdate',function()
     {
       var itemid=$(this).attr('req-id');
       var indexofEdit=$(this).attr('index-value');
       var alreadyAssgnUsr=$(this).attr('AssignedUser');
-      var AssignedUser=$(".UserDropdownGDS"+indexofEdit+" option:selected").val();
-      var ReqStatus=$(".StatusDropdownGDS"+indexofEdit+" option:selected").val();
+      var AssignedUser=$(".UserDropdownGDSPopup"+indexofEdit+" option:selected").val();
+      var ReqStatus=$(".StatusDropdownGDSPopup"+indexofEdit+" option:selected").val();
+      
 
       if(AssignedUser!='Select')
       {
+        $('.loading-modal').addClass('active');
+        $('body').addClass('body-hidden');
+        var statuschange=false;
         var data; 
         data={"AssignedTo1Id":AssignedUser};
 
         if(ReqStatus!='Select')
         {
-          data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus};
+          if(!GoodsRequest[indexofEdit].StatusSummary)
+          GoodsRequest[indexofEdit].StatusSummary="";
+          var StatusSummary=GoodsRequest[indexofEdit].StatusSummary+""+$(".StatusDropdownGDSPopup"+indexofEdit+" option:selected").text()+" by "+LoggedUserName+","+moment($("#requestedDate").val(),"MM/DD/YYYY").format("DD/MM/YYYY")+";";
+          if($("#requestedDate").val())
+          {
+            statuschange=true;
+            let requestedDate=(new Date(Date.parse(moment($("#requestedDate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
+            data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus,statuschangedate:requestedDate,statusnotes:$("#txtNotes").val(),StatusSummary:StatusSummary};
+          }else{
+            data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus};
+          }
+          
         }
-
+        if(statuschange)
+        sendmailforstatuschange($(".UserDropdownGDSPopup"+indexofEdit+" option:selected").attr('user-email'));
         updaterequest(itemid,data,'ProcurementGoods',true);
       }
     });
     
+    $(document).on('click','.SubSave,#SubbtnUpdate',function()
+    {
+      var itemid=$(this).attr('req-id');
+      var indexofEdit=$(this).attr('index-value');
+      var alreadyAssgnUsr=$(this).attr('AssignedUser');
+      var AssignedUser=$(".UserDropdownSubPopup"+indexofEdit+" option:selected").val();
+      var ReqStatus=$(".StatusDropdownSubPopup"+indexofEdit+" option:selected").val();
 
-    
+      if(AssignedUser!='Select')
+      {
+        var statuschange=false;
+        var data; 
+        data={"AssignedTo1Id":AssignedUser};
+
+        if(ReqStatus!='Select')
+        {
+          if(!LocalSubsidyItems[indexofEdit].StatusSummary)
+          LocalSubsidyItems[indexofEdit].StatusSummary="";
+          var StatusSummary=LocalSubsidyItems[indexofEdit].StatusSummary+""+$(".StatusDropdownSubPopup"+indexofEdit+" option:selected").text()+" by "+LoggedUserName+","+moment($("#requestedDate").val(),"MM/DD/YYYY").format("DD/MM/YYYY")+";";
+          if($("#requestedDate").val())
+          {
+            statuschange=true;
+            let requestedDate=(new Date(Date.parse(moment($("#requestedDate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
+            data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus,statuschangedate:requestedDate,statusnotes:$("#txtNotes").val(),StatusSummary:StatusSummary};
+          }else{
+            data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus};
+          }
+        }
+        if(statuschange)
+        sendmailforstatuschange($(".UserDropdownSubPopup"+indexofEdit+" option:selected").attr('user-email'));
+        updaterequest(itemid,data,'LocalSubsidy',true);
+      }
+    });
+
+    $(document).on('click','.LeaseSave,#LeasebtnUpdate',function()
+    {
+      var itemid=$(this).attr('req-id');
+      var indexofEdit=$(this).attr('index-value');
+      var alreadyAssgnUsr=$(this).attr('AssignedUser');
+      var AssignedUser=$(".UserDropdownLeasePopup"+indexofEdit+" option:selected").val();
+      var ReqStatus=$(".StatusDropdownLeasePopup"+indexofEdit+" option:selected").val();
+
+      if(AssignedUser!='Select')
+      {
+        var statuschange=false;
+        var data; 
+        data={"AssignedTo1Id":AssignedUser};
+
+        if(ReqStatus!='Select')
+        {
+          if(!LeaseAgreementItems[indexofEdit].StatusSummary)
+          LeaseAgreementItems[indexofEdit].StatusSummary="";
+          var StatusSummary=LeaseAgreementItems[indexofEdit].StatusSummary+""+$(".StatusDropdownLeasePopup"+indexofEdit+" option:selected").text()+" by "+LoggedUserName+","+moment($("#requestedDate").val(),"MM/DD/YYYY").format("DD/MM/YYYY")+";";
+          if($("#requestedDate").val())
+          {
+            statuschange=true;
+            let requestedDate=(new Date(Date.parse(moment($("#requestedDate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
+            data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus,statuschangedate:requestedDate,statusnotes:$("#txtNotes").val(),StatusSummary:StatusSummary};
+          }else{
+            data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus};
+          }
+        }
+        if(statuschange)
+        sendmailforstatuschange($(".UserDropdownLeasePopup"+indexofEdit+" option:selected").attr('user-email'));
+        updaterequest(itemid,data,'LeaseAgreement',true);
+      }
+    });
+
+    $(document).on('click','.idppSave,#idppbtnUpdate',function()
+    {
+      var itemid=$(this).attr('req-id');
+      var indexofEdit=$(this).attr('index-value');
+      var alreadyAssgnUsr=$(this).attr('AssignedUser');
+      var AssignedUser=$(".UserDropdownidppPopup"+indexofEdit+" option:selected").val();
+      var ReqStatus=$(".StatusDropdownidppPopup"+indexofEdit+" option:selected").val();
+
+      if(AssignedUser!='Select')
+      {
+        var statuschange=false;
+        var data; 
+        data={"AssignedTo1Id":AssignedUser};
+
+        if(ReqStatus!='Select')
+        {
+          if(!IdppItems[indexofEdit].StatusSummary)
+          IdppItems[indexofEdit].StatusSummary="";
+          var StatusSummary=IdppItems[indexofEdit].StatusSummary+""+$(".StatusDropdownidppPopup"+indexofEdit+" option:selected").text()+" by "+LoggedUserName+","+moment($("#requestedDate").val(),"MM/DD/YYYY").format("DD/MM/YYYY")+";";
+          if($("#requestedDate").val())
+          {
+            statuschange=true;
+            let requestedDate=(new Date(Date.parse(moment($("#requestedDate").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
+            data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus,statuschangedate:requestedDate,statusnotes:$("#txtNotes").val(),StatusSummary:StatusSummary};
+          }else{
+            data={"AssignedTo1Id":AssignedUser,"RequestStatusId":ReqStatus};
+          }
+        }
+        if(statuschange)
+        sendmailforstatuschange($(".UserDropdownidppPopup"+indexofEdit+" option:selected").attr('user-email'));
+        updaterequest(itemid,data,'IDPP',true);
+      }
+    });
+
+    /*Followup funtionality*/
+    $(document).on('click','.Gdsfollowup',function()
+    {
+      var indexofEdit=$(this).attr('index-value');
+      sendfollowup($(".UserDropdownGDS"+indexofEdit+" option:selected").attr('user-email'));
+    });
+    $(document).on('click','.servicefollowup',function()
+    {
+      var indexofEdit=$(this).attr('index-value');
+      sendfollowup($(".UserDropdownSER"+indexofEdit+" option:selected").attr('user-email'));
+    });
+    $(document).on('click','.subsidyfollowup',function()
+    {
+      var indexofEdit=$(this).attr('index-value');
+      sendfollowup($(".UserDropdownSub"+indexofEdit+" option:selected").attr('user-email'));
+    });
+    $(document).on('click','.Leasefollowup',function()
+    {
+      var indexofEdit=$(this).attr('index-value');
+      sendfollowup($(".UserDropdownLease"+indexofEdit+" option:selected").attr('user-email'));
+    });
+    $(document).on('click','.idppfollowup',function()
+    {
+      var indexofEdit=$(this).attr('index-value');
+      sendfollowup($(".UserDropdownidpp"+indexofEdit+" option:selected").attr('user-email'));
+    });
+
+    /*datatable search*/
+    $("#drpStatusforgoods").change(function()
+    {
+      if($("#drpStatusforgoods option:selected").val() == "Select")
+      {
+        oTablegoods.column(7).search('').draw();
+      }
+      else
+      {
+        //oTable.column(4).search($("#drpStatus option:selected").text()).draw();
+        oTablegoods.column(7).search($("#drpStatusforgoods option:selected").val()).draw();
+      }
+      
+    });
+
+    $("#drpStatusforservice").change(function()
+    {
+      if($("#drpStatusforservice option:selected").val() == "Select")
+      {
+        oTableservice.column(7).search('').draw();
+      }
+      else
+      {
+        //oTable.column(4).search($("#drpStatus option:selected").text()).draw();
+        oTableservice.column(7).search($("#drpStatusforservice option:selected").val()).draw();
+      }
+      
+    });
+
+    $("#drpStatusforsubsidy").change(function()
+    {
+      if($("#drpStatusforsubsidy option:selected").val() == "Select")
+      {
+        oTablesubsidy.column(7).search('').draw();
+      }
+      else
+      {
+        //oTable.column(4).search($("#drpStatus option:selected").text()).draw();
+        oTablesubsidy.column(7).search($("#drpStatusforsubsidy option:selected").val()).draw();
+      }
+      
+    });
+
+    $("#drpStatusforlease").change(function()
+    {
+      if($("#drpStatusforlease option:selected").val() == "Select")
+      {
+        oTablelease.column(7).search('').draw();
+      }
+      else
+      {
+        //oTable.column(4).search($("#drpStatus option:selected").text()).draw();
+        oTablelease.column(7).search($("#drpStatusforlease option:selected").val()).draw();
+      }
+      
+    });
+
+    $("#drpStatusforidpp").change(function()
+    {
+      if($("#drpStatusforidpp option:selected").val() == "Select")
+      {
+        oTableidpp.column(7).search('').draw();
+      }
+      else
+      {
+        //oTable.column(4).search($("#drpStatus option:selected").text()).draw();
+        oTableidpp.column(7).search($("#drpStatusforidpp option:selected").val()).draw();
+      }
+      
+    });
+
+    /*Bind date field and notes field*/
+    $(document).on('change','.statuspopup',function()
+    {
+      
+      $("#divfordatefield").html(htmlforstatuschange);
+        $("#requestedDate").datepicker("setDate", new Date());
+        $("#requestedDate").datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});
+    });
   }
 
   protected get dataVersion(): Version {
@@ -1022,21 +1548,22 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 async function LoadGoodsRequest()
   {
     await sp.web.lists.getByTitle('ProcurementGoods').items
-    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,RequestStatus/ID,RequestStatus/Title,Created,Modified,KompOutputNumber,kompPercent,isKompOutput,Specifications,ShortDesc,RequestItem,JOD,EUR,DeliveryTime,WarrantyTime,FullAddress,ContactPersonName,PersonEmail,PersonMobile,ProsoftNumber,Agreement,GoodsCategory')
+    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,RequestStatus/ID,RequestStatus/Title,Author/Title,Author/ID,Created,Modified,KompOutputNumber,kompPercent,isKompOutput,Specifications,ShortDesc,RequestItem,JOD,EUR,DeliveryTime,WarrantyTime,FullAddress,ContactPersonName,PersonEmail,PersonMobile,ProsoftNumber,Agreement,GoodsCategory,StatusSummary')
     .orderBy("Modified",false)
-    .expand('AssignedTo1,AVName,Representative,RequestStatus')
+    .expand('AssignedTo1,AVName,Representative,RequestStatus,Author')
     .top(5000)
     .get().then((allItems: any[]) => {
       var goodsHTML='';
       GoodsRequest=allItems;
       for (var index = 0; index < allItems.length; index++) 
       {
-        if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
-        {
-          var assgnuser='select';
         
+        var assgnuser='select';
         if(allItems[index].AssignedTo1)
         assgnuser=allItems[index].AssignedTo1.ID;
+        //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+        if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
+        {
         
         goodsHTML+='<tr>';
         goodsHTML+='<td>'+allItems[index].Modified+'</td>';
@@ -1046,13 +1573,26 @@ async function LoadGoodsRequest()
         goodsHTML+='<td>'+moment(allItems[index].Created).format('DD MMMM YYYY')+'</td>';
         goodsHTML+='<td><select class="UserDropdownGDS'+index+'" disabled="disabled">'+Users+'<select></td>';
         goodsHTML+='<td><select class="StatusDropdownGDS'+index+'" disabled="disabled">'+statusHtml+'<select></td>';
+        
+        if(allItems[index].RequestStatus)
+        goodsHTML+='<td>'+allItems[index].RequestStatus.ID+'</td>';
+        else
+        goodsHTML+='<td>Select</td>';
+
         goodsHTML+='<td>';
-        goodsHTML+='<a herf="#" req-id="'+allItems[index].ID+'" class="GdsdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></span></a>';
+        goodsHTML+='<a href="#" req-id="'+allItems[index].ID+'" class="GdsdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></span></a>';
         if(flgSystemAdmin||CrntUserID==assgnuser)
         {
-        goodsHTML+='<a herf="#" index-value='+index+' class="GdsEdit"><span class="icon-action icon-edit"></span></a>';
-        goodsHTML+='<a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="GdsSave"><span class="icon-action icon-save"></span></a>';
+        goodsHTML+='<a href="#" index-value='+index+' req-id="'+allItems[index].ID+'" class="GdsEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></span></a>';
+        //goodsHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="GdsSave"><span class="icon-action icon-save"></span></a>';
         }
+
+        if(assgnuser!='select'&&CrntUserID==allItems[index].Author.ID)
+        goodsHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="Gdsfollowup"><span class="icon-action icon-followup"></span></a>';
+
+        if(CrntUserID==allItems[index].Author.ID)
+        goodsHTML+='<a href="../../SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=pg"><span class="icon-action icon-track"></span></a>';
+
         goodsHTML+='</td>';
         goodsHTML+='</tr>';
 
@@ -1073,12 +1613,12 @@ async function LoadGoodsRequest()
 
     }).catch(function(error){ErrorCallBack(error,'InsertService')});
 
-    $('#Goods').DataTable({
+      oTablegoods=$('#Goods').DataTable({
       "scrollX": true,
       "order": [[ 0, "desc" ]],
       "columnDefs": [
         {
-            "targets": [ 0 ],
+            "targets": [ 0,7 ],
             "visible": false,
         }  
     ]
@@ -1088,9 +1628,9 @@ async function LoadGoodsRequest()
   async function LoadServiceRequest()
   {
     await sp.web.lists.getByTitle('ProcurementService').items
-    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus')
+    .select('ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus,StatusSummary')
     .orderBy("Modified", false)
-    .expand('AssignedTo1,AVName,Representative,RequestStatus')
+    .expand('AssignedTo1,AVName,Representative,RequestStatus,Author')
     .top(5000)
     .get().then((allItems: any[]) => {
       var serviceHTML='';
@@ -1098,13 +1638,12 @@ async function LoadGoodsRequest()
       for (var index = 0; index < allItems.length; index++) 
       {
         
-        if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
-        {
-        
         var assgnuser='select';
-        
         if(allItems[index].AssignedTo1)
-        assgnuser=allItems[index].AssignedTo1.ID; 
+        assgnuser=allItems[index].AssignedTo1.ID;
+        //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+        if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
+        {
 
         serviceHTML+='<tr>';
         serviceHTML+='<td>'+allItems[index].Modified+'</td>';
@@ -1114,12 +1653,22 @@ async function LoadGoodsRequest()
         serviceHTML+='<td>'+moment(allItems[index].Created).format('DD MMMM YYYY')+'</td>';
         serviceHTML+='<td><select class="UserDropdownSER'+index+'" disabled="disabled">'+Users+'</select></td>';
         serviceHTML+='<td><select class="StatusDropdownSER'+index+'" disabled="disabled">'+statusHtml+'</select></td>';
+        if(allItems[index].RequestStatus)
+        serviceHTML+='<td>'+allItems[index].RequestStatus.ID+'</td>';
+        else
+        serviceHTML+='<td>Select</td>';
         serviceHTML+='<td>';
-        serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" class="serdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
+        serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" class="serdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
         if(flgSystemAdmin||CrntUserID==assgnuser){
-        serviceHTML+='<a herf="#" index-value='+index+' class="SerEdit"><span class="icon-action icon-edit"></a>';  
-        serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SerSave"><span class="icon-action icon-save"></a>';
+        serviceHTML+='<a href="#" index-value='+index+' req-id="'+allItems[index].ID+'" class="SerEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';  
+        //serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SerSave"><span class="icon-action icon-save"></a>';
         }
+        if(assgnuser!='select'&&CrntUserID==allItems[index].Author.ID)
+        serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="servicefollowup"><span class="icon-action icon-followup"></span></a>';
+
+        if(CrntUserID==allItems[index].Author.ID)
+        serviceHTML+='<a href="../../SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=sr"><span class="icon-action icon-track"></span></a>';
+
         serviceHTML+='</td>';
         serviceHTML+='</tr>';
         }
@@ -1139,12 +1688,12 @@ async function LoadGoodsRequest()
 
     }).catch(function(error){ErrorCallBack(error,'LoadServiceRequest')});
 
-    $('#Service').DataTable({
+    oTableservice=$('#Service').DataTable({
       "scrollX": true,
       "order": [[ 0, "desc" ]],
       "columnDefs": [
         {
-            "targets": [ 0 ],
+            "targets": [ 0,7 ],
             "visible": false,
         }]
   });
@@ -1154,9 +1703,9 @@ async function LoadGoodsRequest()
   async function LoadSubsidyRequest()
   {
     await sp.web.lists.getByTitle('LocalSubsidy').items
-    .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,SubsidyCategory,isKompOutput,KompOutputNumber,kompPercent,JOD,EUR,ShortDesc,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,NameOfBeneficiary,DurationFrom,DurationTo,CoSoftNumber,PaymentStatus,CoSoftNumber')
+    .select('ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,SubsidyCategory,isKompOutput,KompOutputNumber,kompPercent,JOD,EUR,ShortDesc,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,NameOfBeneficiary,DurationFrom,DurationTo,CoSoftNumber,PaymentStatus,CoSoftNumber,StatusSummary')
     .orderBy("Modified", false)
-    .expand('AssignedTo1,AVName,Representative,RequestStatus')
+    .expand('AssignedTo1,AVName,Representative,RequestStatus,Author')
     .top(5000)
     .get().then((allItems: any[]) => {
       var serviceHTML='';
@@ -1164,14 +1713,13 @@ async function LoadGoodsRequest()
       for (var index = 0; index < allItems.length; index++) 
       {
         
-        if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+        var assgnuser='select';
+        if(allItems[index].AssignedTo1)
+        assgnuser=allItems[index].AssignedTo1.ID;
+        //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+        if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
         {
         
-        var assgnuser='select';
-        
-        if(allItems[index].AssignedTo1)
-        assgnuser=allItems[index].AssignedTo1.ID; 
-
         serviceHTML+='<tr>';
         serviceHTML+='<td>'+allItems[index].Modified+'</td>';
         serviceHTML+='<td>'+allItems[index].ProjectName+'</td>';
@@ -1180,12 +1728,22 @@ async function LoadGoodsRequest()
         serviceHTML+='<td>'+moment(allItems[index].Created).format('DD MMMM YYYY')+'</td>';
         serviceHTML+='<td><select class="UserDropdownSub'+index+'" disabled="disabled">'+Users+'</select></td>';
         serviceHTML+='<td><select class="StatusDropdownSub'+index+'" disabled="disabled">'+statusHtml+'</select></td>';
+        if(allItems[index].RequestStatus)
+        serviceHTML+='<td>'+allItems[index].RequestStatus.ID+'</td>';
+        else
+        serviceHTML+='<td>Select</td>';
         serviceHTML+='<td>';
-        serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" class="subdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
+        serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" class="subdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
         if(flgSystemAdmin||CrntUserID==assgnuser){
-        serviceHTML+='<a herf="#" index-value='+index+' class="SubEdit"><span class="icon-action icon-edit"></a>';  
-        serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SubSave"><span class="icon-action icon-save"></a>';
+        serviceHTML+='<a href="#" index-value='+index+' req-id="'+allItems[index].ID+'" class="SubEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';  
+        //serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SubSave"><span class="icon-action icon-save"></a>';
         }
+        if(assgnuser!='select'&&CrntUserID==allItems[index].Author.ID)
+        serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="subsidyfollowup"><span class="icon-action icon-followup"></span></a>';
+        
+        if(CrntUserID==allItems[index].Author.ID)
+        serviceHTML+='<a href="../../SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=ls"><span class="icon-action icon-track"></span></a>';
+
         serviceHTML+='</td>';
         serviceHTML+='</tr>';
         }
@@ -1205,12 +1763,12 @@ async function LoadGoodsRequest()
 
     }).catch(function(error){ErrorCallBack(error,'LoadSubsidyRequest')});
 
-    $('#Subsidy').DataTable({
+    oTablesubsidy=$('#Subsidy').DataTable({
       "scrollX": true,
       "order": [[ 0, "desc" ]],
       "columnDefs": [
         {
-            "targets": [ 0 ],
+            "targets": [ 0,7 ],
             "visible": false,
         }]
   });
@@ -1220,9 +1778,9 @@ async function LoadGoodsRequest()
   async function LoadLeaseAgreement()
   {
       await sp.web.lists.getByTitle('LeaseAgreement').items
-      .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,LessorPapers,LessorName,EmailAddress,MobileNumber,FullAddress,TelephoneNumber,DurationFrom,DurationTo,NameOfConsultingFirm,ContactPerson,CoSoftNumber,LeaseAgreementCategory')
+      .select('ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,LessorPapers,LessorName,EmailAddress,MobileNumber,FullAddress,TelephoneNumber,DurationFrom,DurationTo,NameOfConsultingFirm,ContactPerson,CoSoftNumber,LeaseAgreementCategory,StatusSummary')
       .orderBy("Modified", false)
-      .expand('AssignedTo1,AVName,Representative,RequestStatus')
+      .expand('AssignedTo1,AVName,Representative,RequestStatus,Author')
       .top(5000)
       .get().then((allItems: any[]) => {
         var serviceHTML='';
@@ -1230,14 +1788,13 @@ async function LoadGoodsRequest()
         for (var index = 0; index < allItems.length; index++) 
         {
           
-          if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
-          {
-          
           var assgnuser='select';
-          
           if(allItems[index].AssignedTo1)
-          assgnuser=allItems[index].AssignedTo1.ID; 
-  
+          assgnuser=allItems[index].AssignedTo1.ID;
+          //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+          if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
+          {
+
           serviceHTML+='<tr>';
           serviceHTML+='<td>'+allItems[index].Modified+'</td>';
           serviceHTML+='<td>'+allItems[index].ProjectName+'</td>';
@@ -1246,12 +1803,22 @@ async function LoadGoodsRequest()
           serviceHTML+='<td>'+moment(allItems[index].Created).format('DD MMMM YYYY')+'</td>';
           serviceHTML+='<td><select class="UserDropdownLease'+index+'" disabled="disabled">'+Users+'</select></td>';
           serviceHTML+='<td><select class="StatusDropdownLease'+index+'" disabled="disabled">'+statusHtml+'</select></td>';
+          if(allItems[index].RequestStatus)
+          serviceHTML+='<td>'+allItems[index].RequestStatus.ID+'</td>';
+          else
+          serviceHTML+='<td>Select</td>';
           serviceHTML+='<td>';
-          serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" class="LeasedetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
+          serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" class="LeasedetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
           if(flgSystemAdmin||CrntUserID==assgnuser){
-          serviceHTML+='<a herf="#" index-value='+index+' class="LeaseEdit"><span class="icon-action icon-edit"></a>';  
-          serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="LeaseSave"><span class="icon-action icon-save"></a>';
+          serviceHTML+='<a href="#" index-value='+index+' req-id="'+allItems[index].ID+'" class="LeaseEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';  
+          //serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="LeaseSave"><span class="icon-action icon-save"></a>';
           }
+          if(assgnuser!='select'&&CrntUserID==allItems[index].Author.ID)
+          serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="Leasefollowup"><span class="icon-action icon-followup"></span></a>';
+
+          if(CrntUserID==allItems[index].Author.ID)
+          serviceHTML+='<a href="../../SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=la"><span class="icon-action icon-track"></span></a>';
+
           serviceHTML+='</td>';
           serviceHTML+='</tr>';
           }
@@ -1271,12 +1838,12 @@ async function LoadGoodsRequest()
   
       }).catch(function(error){ErrorCallBack(error,'LoadLeaseRequest')});
   
-      $('#Lease').DataTable({
+      oTablelease=$('#Lease').DataTable({
         "scrollX": true,
         "order": [[ 0, "desc" ]],
         "columnDefs": [
           {
-              "targets": [ 0 ],
+              "targets": [ 0,7 ],
               "visible": false,
           }]
     });
@@ -1286,9 +1853,9 @@ async function LoadGoodsRequest()
   async function Loadidpp()
   {
     await sp.web.lists.getByTitle('idpp').items
-      .select('ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,DurationFrom,DurationTo')
+      .select('ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,DurationFrom,DurationTo,StatusSummary')
       .orderBy("Modified", false)
-      .expand('AssignedTo1,AVName,Representative,RequestStatus')
+      .expand('AssignedTo1,AVName,Representative,RequestStatus,Author')
       .top(5000)
       .get().then((allItems: any[]) => {
         var serviceHTML='';
@@ -1296,14 +1863,13 @@ async function LoadGoodsRequest()
         for (var index = 0; index < allItems.length; index++) 
         {
           
-          if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+          var assgnuser='select';
+          if(allItems[index].AssignedTo1)
+          assgnuser=allItems[index].AssignedTo1.ID;
+          //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
+          if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
           {
           
-          var assgnuser='select';
-          
-          if(allItems[index].AssignedTo1)
-          assgnuser=allItems[index].AssignedTo1.ID; 
-  
           serviceHTML+='<tr>';
           serviceHTML+='<td>'+allItems[index].Modified+'</td>';
           serviceHTML+='<td>'+allItems[index].ProjectName+'</td>';
@@ -1312,12 +1878,22 @@ async function LoadGoodsRequest()
           serviceHTML+='<td>'+moment(allItems[index].Created).format('DD MMMM YYYY')+'</td>';
           serviceHTML+='<td><select class="UserDropdownidpp'+index+'" disabled="disabled">'+Users+'</select></td>';
           serviceHTML+='<td><select class="StatusDropdownidpp'+index+'" disabled="disabled">'+statusHtml+'</select></td>';
+          if(allItems[index].RequestStatus)
+          serviceHTML+='<td>'+allItems[index].RequestStatus.ID+'</td>';
+          else
+          serviceHTML+='<td>Select</td>';
           serviceHTML+='<td>';
-          serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" class="idppdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
+          serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" class="idppdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
           if(flgSystemAdmin||CrntUserID==assgnuser){
-          serviceHTML+='<a herf="#" index-value='+index+' class="idppEdit"><span class="icon-action icon-edit"></a>';  
-          serviceHTML+='<a herf="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="idppSave"><span class="icon-action icon-save"></a>';
+          serviceHTML+='<a href="#" index-value='+index+' req-id="'+allItems[index].ID+'" class="idppEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';  
+          //serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="idppSave"><span class="icon-action icon-save"></a>';
           }
+          if(assgnuser!='select'&&CrntUserID==allItems[index].Author.ID)
+          serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="idppfollowup"><span class="icon-action icon-followup"></span></a>';
+
+          if(CrntUserID==allItems[index].Author.ID)
+          serviceHTML+='<a href="../../SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=idpp"><span class="icon-action icon-track"></span></a>';
+
           serviceHTML+='</td>';
           serviceHTML+='</tr>';
           }
@@ -1337,12 +1913,12 @@ async function LoadGoodsRequest()
   
       }).catch(function(error){ErrorCallBack(error,'LoadLeaseRequest')});
   
-      $('#idpp').DataTable({
+      oTableidpp=$('#idpp').DataTable({
         "scrollX": true,
         "order": [[ 0, "desc" ]],
         "columnDefs": [
           {
-              "targets": [ 0 ],
+              "targets": [ 0,7 ],
               "visible": false,
           }]
     });
@@ -1381,7 +1957,7 @@ async function LoadGoodsRequest()
           for(var i=0;i<allItems.length;i++)
           {
             //Users+='<select class="UserDropdown">';
-            Users+='<option User-id="' + allItems[i].Id + '"  value="' + allItems[i].Id + '">' + allItems[i].Title + '</option>';
+            Users+='<option User-id="' + allItems[i].Id + '"  User-email="' + allItems[i].Email + '"  value="' + allItems[i].Id + '">' + allItems[i].Title + '</option>';
             //Users+='</select>';
           }
           
@@ -1404,6 +1980,9 @@ async function LoadGoodsRequest()
           }
           
         }
+        $("#drpStatusforgoods,#drpStatusforservice,#drpStatusforsubsidy,#drpStatusforlease,#drpStatusforidpp").html('');
+        $("#drpStatusforgoods,#drpStatusforservice,#drpStatusforsubsidy,#drpStatusforlease,#drpStatusforidpp").html(statusHtml);
+
     }).catch(function(error){ErrorCallBack(error,'LoadProcurementTeam')});
   }
 
@@ -1428,9 +2007,12 @@ async function LoadGoodsRequest()
         {
           $('#btnGoods').prop('disabled',true);
           $('#btnService').prop('disabled',true);
+          $('#btnSubsidy').prop('disabled',true);
+          $('#btnLease').prop('disabled',true);
+          $('#btnIdpp').prop('disabled',true);
         }
 
-    });
+    }).catch(function(error){ErrorCallBack(error,'LoadProjects')});
   }
 
   async function getLoggedInUserDetails()
@@ -1468,10 +2050,10 @@ async function LoadGoodsRequest()
   {
     $('.loading-modal').addClass('active');
     $('body').addClass('body-hidden');
+
     let lstupdate=await sp.web.lists.getByTitle(listname);
     lstupdate.items.getById(itemid).update(data).then((allItems: any) => 
     {
-        //alert('updated');
         if(close){
           $('.loading-modal').removeClass('active');
           $('body').removeClass('body-hidden');
@@ -1481,7 +2063,67 @@ async function LoadGoodsRequest()
     }).catch(function(error){ErrorCallBack(error,'updategoodsrequest')});
   }
 
+  async function sendfollowup(user)
+  {
+    
+    /*var element = document.getElementById('modalbody');
+    var opt = {
+      margin:       1,
+      filename:     'myfile.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf(element,opt);*/
+     
+    // New Promise-based usage:
+    //html2pdf().from(element).set(opt).save();
+     
+    // Old monolithic-style usage:
+    //html2pdf(element,opt);
+     /*html2pdf().from(element).set(opt).toPdf().output('datauristring').then(function (pdfAsString) {
+      // The PDF has been converted to a Data URI string and passed to this function.
+      // Use pdfAsString however you like (send as email, etc)!
   
+        var arr = pdfAsString.split(',');
+        pdfAsString= arr[1];    
+  
+  
+          });*/
+
+
+
+    var maildetails={
+      To: [user],
+      CC: [],
+      Subject: "This email is about...",
+      Body: "Here is the body for folowup messaage",
+  }
+    await sendemail(maildetails);
+  }
+
+  async function sendmailforstatuschange(user)
+  {
+    var maildetails={
+      To: [user],
+      CC: [],
+      Subject: "This email is about...",
+      Body: "Here is the body for status messaage",
+  }
+    await sendemail(maildetails);
+  }
+
+  async function sendemail(maildetails)
+  {
+    let emailProps: EmailProperties = maildetails;
+  
+  await sp.utility.sendEmail(emailProps).then(_ => {
+  
+      console.log("Email Sent!");
+  }).catch(function(error){ErrorCallBack(error,'sendemail')});
+  }
+
 function ErrorCallBack(error,methodname)
 {	
   $('.loading-modal').removeClass('active');

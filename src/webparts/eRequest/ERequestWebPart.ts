@@ -12,7 +12,7 @@ import * as strings from 'ERequestWebPartStrings';
 
 import 'jquery';
 import * as moment from 'moment';
-import { sp } from "@pnp/sp";
+import { sp,EmailProperties } from "@pnp/sp";
 import "@pnp/polyfill-ie11"; 
 import '../../ExternalRef/css/style.css';
 import '../../ExternalRef/css/alertify.min.css';
@@ -27,12 +27,16 @@ declare var $;
 var filesuploaded=0;
 var fileslength=0;
 var siteURL = '';
+var serverURL='';
 var CrntUserID='';
 var flgRepUser=false;
 var formSubmitting=false;
 var filesotherAttachment=[];
 var ProjectDetails=[];
 var filesQuantity=[];
+var ProjectAvEmail='';
+var ProcuremntHeadEmail='';
+var _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png",".xlsx"];
 
 
 var ChoicesServices = [
@@ -2317,6 +2321,7 @@ private readonly Leaseamendment=`
   IDPP Request Html End 
   //summary
   */
+ 
 
 
   public render(): void {
@@ -2324,8 +2329,9 @@ private readonly Leaseamendment=`
     var that=this;
     this.domElement.innerHTML = this.requestoptions;
     siteURL = this.context.pageContext.site.absoluteUrl;
+    serverURL=this.context.pageContext.site.serverRelativeUrl;
 
-    
+    LoadFileTypes();
     
 
 
@@ -2472,6 +2478,8 @@ private readonly Leaseamendment=`
       }*/
       
       $("#NameofAV").val($('#projectName option:selected').attr('proj-av'));
+      ProjectAvEmail=$('#projectName option:selected').attr('proj-av-email');
+      ProcuremntHeadEmail=$('#projectName option:selected').attr('proj-HOP-email');
       var PrjctNum=$('#projectName option:selected').attr('Proj-Num');
       var PrjctNum1=PrjctNum.split('-');
       var PrjctNum2=PrjctNum1[0].split('.');
@@ -2528,8 +2536,11 @@ private readonly Leaseamendment=`
         for (let index = 0; index < $(this)[0].files.length; index++)  
         {
           const file = $('#fileQuantities')[0].files[index];
+          if(ValidateSingleInput($('#fileQuantities')[0]))
+          {
           filesQuantity.push(file);
           $('#quantityFilesContainer').append('<div class="quantityFiles">' + '<span class="upload-filename">'+file.name+'</span>' + '<a filename='+file.name+' class="clsRemove" href="#">x</a></div>');
+          }
         }
         $(this).val('');
         $(this).parent().find('label').text('Choose File'); 
@@ -2543,9 +2554,10 @@ private readonly Leaseamendment=`
         for (let index = 0; index < $(this)[0].files.length; index++) 
         {
           const file = $('#others')[0].files[index];
+          if(ValidateSingleInput($('#others')[0])){
           filesotherAttachment.push(file);
-          
           $('#otherAttachmentFiles').append('<div class="quantityFiles">' + '<span class="upload-filename">'+file.name+'</span>' + '<a filename='+file.name+' class="clsothersRemove" href="#">x</a></div>');
+          }
         }
         $(this).val('');
         $(this).parent().find('label').text('Choose File');
@@ -2657,7 +2669,9 @@ $(document).on('change','.clsAgreement',function()
     */
         $(document).on('change','.custom-file-input',function()
         {
-        if ($(this).val()) {
+        if(ValidateSingleInput($(this)[0]))
+        {
+          if ($(this).val()) {
           var fileValue=$(this).val()
             // returns string containing everything from the end of the string 
             //   that is not a back/forward slash or an empty string on error
@@ -2672,8 +2686,10 @@ $(document).on('change','.clsAgreement',function()
           $(this).parent().find('label').text('Choose File');
 
         }
+      }
       });
 
+          
       $(document).on('click', '#btnSubmit', function ()
       {
         
@@ -5314,6 +5330,7 @@ async function createFolder(FolderName,ListID,files)
 await sp.web.folders.add("ProcurementServices/"+FolderName+"/"+ListID+"").then(function (data)
 {  
     console.log("Folder is created at " + data.data.ServerRelativeUrl);
+    sendfollowup(ProjectAvEmail,ProcuremntHeadEmail);
     UploadFile(data.data.ServerRelativeUrl,files);
       
 }).catch(function(error){ErrorCallBack(error,'createFolder')});
@@ -5387,7 +5404,7 @@ async function getLoggedInUserDetails()
 
 async function LoadProjects()
   {
-    await sp.web.lists.getByTitle('Projects').items.select('Title,Id,ProjectNumber,ProjectAV/Title,ProjectAV/ID,Representative/ID').expand('ProjectAV,Representative').getAll().then((allItems: any[]) => 
+    await sp.web.lists.getByTitle('Projects').items.select('Title,Id,ProjectNumber,ProjectAV/Title,ProjectAV/ID,ProjectAV/EMail,Representative/ID,HeadOfProcurement/ID,HeadOfProcurement/EMail').expand('ProjectAV,Representative,HeadOfProcurement').getAll().then((allItems: any[]) => 
     {
       for (var index = 0; index < allItems.length; index++) 
       {
@@ -5398,7 +5415,7 @@ async function LoadProjects()
           if(CrntUserID==allItems[index].Representative[indexForRep].ID)
           {
             flgRepUser=true;
-            $('#projectName').append('<option Proj-Num="' + element.ProjectNumber + '" Proj-Rp-id="' + element.Representative.ID + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
+            $('#projectName').append('<option Proj-Num="' + element.ProjectNumber + '" Proj-Av-email="' + element.ProjectAV.EMail + '" Proj-Av-id="' + element.ProjectAV.ID + '" Proj-HOP-email="' + element.HeadOfProcurement.EMail + '" Proj-Av="' + element.ProjectAV.Title + '"  proj-id="' + element.Id + '" value="' + element.Title + '">' + element.Title + '</option>');
             var arrRepUsers=[];
             for(var i=0;i<allItems[index].Representative.length;i++)
             {
@@ -5419,6 +5436,17 @@ async function LoadProjects()
     console.log(siteURL);
   }
 
+  async function LoadFileTypes()
+  {
+    await sp.web.getList(""+serverURL+"/Lists/FileTypes").items.select('Title').get().then((allItems: any[]) => {
+      _validFileExtensions=[];
+      for (var index = 0; index < allItems.length; index++) 
+      {
+        _validFileExtensions.push("."+allItems[index].Title);
+      }
+    }).catch(function(error){ErrorCallBack(error,'LoadFileTypes')});
+  }
+
   function AlertMessage(strMewssageEN) {
 
   
@@ -5435,7 +5463,51 @@ async function LoadProjects()
      }).show().setHeader('<em>Confirmation</em> ').set('closable', false);
    
    }
+   async function sendfollowup(touser,ccuser)
+   {
+     
+     var maildetails={
+       To: [touser],
+       CC: [ccuser],
+       Subject: "This email is about...",
+       Body: "Here is the body for New request",
+   }
+     await sendemail(maildetails);
+   }
  
+   async function sendemail(maildetails)
+   {
+     let emailProps: EmailProperties = maildetails;
+   
+   await sp.utility.sendEmail(emailProps).then(_ => {
+   
+       console.log("Email Sent!");
+   }).catch(function(error){ErrorCallBack(error,'sendemail')});
+   }
+   
+function ValidateSingleInput(oInput) {
+  if (oInput.type == "file") {
+      var sFileName = oInput.value;
+       if (sFileName.length > 0) {
+          var blnValid = false;
+          for (var j = 0; j < _validFileExtensions.length; j++) {
+              var sCurExtension = _validFileExtensions[j];
+              if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                  blnValid = true;
+                  break;
+              }
+          }
+           
+          if (!blnValid) {
+              alertify.error("Sorry allowed extensions are: " + _validFileExtensions.join(", "));
+              oInput.value = "";
+              return false;
+          }
+      }
+  }
+  return true;
+}
+
  function ErrorCallBack(error,methodname)
  {	
    $('.loading-modal').removeClass('active');
