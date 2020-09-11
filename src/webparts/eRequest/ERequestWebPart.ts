@@ -20,6 +20,7 @@ import '../../ExternalRef/css/bootstrap-datepicker.min.css';
 import '../../ExternalRef/js/bootstrap-datepicker.min.js';
 //var moment: any =  require('../../../node_modules/moment/min/moment.min.js');
 var alertify: any = require('../../ExternalRef/js/alertify.min.js');
+import * as html2pdf from 'html2pdf.js';
 
 SPComponentLoader.loadCss("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
 declare var $;
@@ -37,10 +38,12 @@ var filesQuantity=[];
 var ProjectAvEmail='';
 var ProcuremntHeadEmail='';
 var _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png",".xlsx"];
-
+var filename='';
+var RequestID='';
+var pdfdetails=[];
 
 var ChoicesServices = [
-  'Direct Award','Shortlisted tender','Public tender','Local Subsidy','Lease Agreement','iDPP','Contract Amendment','Request from a Framework Agreement'
+  'Direct Award','Shortlisted tender','Public tender','Contract Amendment','Request from a Framework Agreement'
 ];
 
 
@@ -65,6 +68,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart <IERequestWeb
   <div class="spinner-border" role="status"> 
   <span class="sr-only">Loading...</span>
 </div></div>
+<div id="divforpdf" style="display:none;"></div>
   <h4 class='page-heading'>E-Request</h4>
   <div class="row">
   <div class="col-sm-12">
@@ -194,12 +198,14 @@ export default class ERequestWebPart extends BaseClientSideWebPart <IERequestWeb
       <div class="col-sm-6">
       <div class="form-group">
       <label>Project Number:<span class="star">*</span></label>
+      <div class="numbers">
       <!--<input class="form-control" type="text" id="projectNumber" value="">-->
-      <input id='txtProjectNum1' class="form-control prjctNum" type="text" maxlength="2" />.
-      <input id='txtProjectNum2' class="form-control prjctNum" type="text" maxlength="4" />.
-      <input id='txtProjectNum3' class="form-control prjctNum" type="text" maxlength="1" />-
-      <input id='txtProjectNum4' class="form-control prjctNum" type="text" maxlength="3" />.
-      <input id='txtProjectNum5' class="form-control prjctNum" type="text" maxlength="2" />
+      <input id='txtProjectNum1' class="form-control prjctNum" type="text" readonly maxlength="2" />.
+      <input id='txtProjectNum2' class="form-control prjctNum" type="text" readonly maxlength="4" />.
+      <input id='txtProjectNum3' class="form-control prjctNum" type="text" readonly maxlength="1" />_
+      <input id='txtProjectNum4' class="form-control prjctNum" type="text"  maxlength="3" />.
+      <input id='txtProjectNum5' class="form-control prjctNum" type="text"  maxlength="2" />
+      </div>
     </div>
     </div>
 
@@ -209,7 +215,14 @@ export default class ERequestWebPart extends BaseClientSideWebPart <IERequestWeb
     <div class="col-sm-6">
     <div class="form-group">
       <label>PN for ZAS:<span class="star">*</span></label>
-      <input class="form-control" type="text" id="pnForZAS" value="">
+      <div class="numbers">
+      <!--<input class="form-control" type="text" id="pnForZAS" value="">-->
+      <input id='txtpnforzas1' class="form-control prjctpnforzas" type="text" maxlength="2" />.
+      <input id='txtpnforzas2' class="form-control prjctpnforzas" type="text" maxlength="4" />.
+      <input id='txtpnforzas3' class="form-control prjctpnforzas" type="text" maxlength="1" />_
+      <input id='txtpnforzas4' class="form-control prjctpnforzas" type="text" maxlength="3" />.
+      <input id='txtpnforzas5' class="form-control prjctpnforzas" type="text" maxlength="2" />
+      </div>
     </div>
     </div>
     <div class="col-sm-6">
@@ -444,20 +457,22 @@ private readonly newdocHtml=`
 <div class="row">
 <div class="col-sm-6">
 <div class="form-group">
+<label id="lbljustification">justification</label>
 <div class="input-group">
 <div class="custom-file">
   <input type="file" id="nonneutralFile" class="form-control custom-file-input">
-  <label class="custom-file-label" for="nonneutralFile">Attach a justification</label>
+  <label class="custom-file-label" for="nonneutralFile">Choose File</label>
   </div>
   </div>
   </div>
   </div>
   <div class="col-sm-6">
 <div class="form-group">
+<label id="lblVSRC">Valid Supplier’s Registration</label>
 <div class="input-group">
 <div class="custom-file">
   <input type="file" id="VSRC" class="form-control custom-file-input">
-  <label class="custom-file-label" for="VSRC">Valid Supplier’s Registration</label>
+  <label class="custom-file-label" for="VSRC">Choose File</label>
   </div>
   </div>
   </div>
@@ -468,20 +483,22 @@ private readonly newdocHtml=`
   <div class="row">
 <div class="col-sm-6">
 <div class="form-group">
+<label id="lblVSCP">Valid Supplier’s Company Profile</label>
 <div class="input-group">
 <div class="custom-file">
   <input type="file" id="VSCP" class="form-control custom-file-input">
-  <label class="custom-file-label" for="VSCP">Valid Supplier’s Company Profile</label>
+  <label class="custom-file-label" for="VSCP">Choose File</label>
   </div>
   </div>
   </div>
   </div>
   <div class="col-sm-6">
 <div class="form-group">
+<label id="lblVSSPAC">Sole Provider Certificate</label>
 <div class="input-group">
 <div class="custom-file">
   <input type="file" id="VSSPAC" class="form-control custom-file-input">
-  <label class="custom-file-label" for="VSSPAC">Sole Provider Certificate</label>
+  <label class="custom-file-label" for="VSSPAC">Choose File</label>
   </div>
   </div>
   </div>
@@ -497,7 +514,7 @@ private readonly newdocHtml=`
   </div>
     </div>
 
-  <div class="col-sm-3">
+  <div class="col-sm-5">
   <div class="form-group">
   <label>Email :<span class="star">*</span></label> <input type="email" id='Email' class="contactEmail form-control" value="">
   </div>
@@ -595,20 +612,20 @@ private readonly ProcurementofGoodsAmendment=`
 
 private readonly RequestfromaFrameworkAgreement=`
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
     <div class="form-group">
       <input class="radio-stylish" type="radio" name="Agreement" id="ITFramework" value="IT Framework Agreement">
       <span class="radio-element"></span>
       <label class="stylish-label" for="ITFramework">IT Framework Agreement</label>
     </div>
-    </div><div class="col-sm-3">
+    </div><div class="col-sm-4">
     <div class="form-group">
       <input class="radio-stylish" type="radio" name="Agreement" id="FurnitureFramework" value="Furniture Framework Agreement">
       <span class="radio-element"></span>
       <label class="stylish-label" for="FurnitureFramework">Furniture Framework Agreement</label>
     </div>
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-4">
     <div class="form-group">
       <input class="radio-stylish" type="radio" name="Agreement" id="StationaryFramework" value="Stationary Framework Agreement">
       <span class="radio-element"></span>
@@ -2364,7 +2381,7 @@ private readonly Leaseamendment=`
       requestHtml=that.requestcategoriesforlease;
       else if(projectname=='idpp')
       {
-      requestHtml=that.commonHtml+that.iDPP; 
+      requestHtml=that.commonHtml+that.iDPP;
       getLoggedInUserDetails();
       LoadProjects();
       }
@@ -2374,7 +2391,7 @@ private readonly Leaseamendment=`
       if(projectname=='idpp'){//for the purpose of idpp option
       $( "#Fromdate" ).datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});
       $( "#Todate" ).datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});}
-
+      $(".page-heading").text("IDPP"); 
     });
     
     
@@ -2756,6 +2773,16 @@ $(document).on('change','.clsAgreement',function()
       }
   });
 
+  $(document).on('keyup','.prjctpnforzas',function () {
+    if (this.value.length == this.maxLength) {
+      var $next = $(this).next('.prjctpnforzas');
+      if ($next.length)
+          $(this).next('.prjctpnforzas').focus();
+      else
+          $(this).blur();
+    }
+});
+
   $(document).on('change', "#chkKomp", function (){
     if ($(this).prop('checked')) 
     {
@@ -2849,7 +2876,7 @@ function removeQuantityfile(filename)
 
 function CreateGoodsRequest()
 {
-
+  
   let arrFiles=[];
   if(MandatoryValidation())
   {
@@ -2865,6 +2892,7 @@ function CreateGoodsRequest()
     }
     
     let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+    let txtpnForZAS= $('#txtpnforzas1').val()+'.'+$('#txtpnforzas2').val()+'.'+$('#txtpnforzas3').val()+'-'+$('#txtpnforzas4').val()+'.'+$('#txtpnforzas5').val();
     var ProjectIndex;
     for(var prNum=0;prNum<ProjectDetails.length;prNum++)
     {
@@ -2904,7 +2932,7 @@ function CreateGoodsRequest()
       kompPercent:$('#outputnumber').val()
 
     }
-    
+
     if($("#chkMoreItem").prop('checked'))
     {
       if($('#costFile')[0].files.length>0)
@@ -2957,6 +2985,41 @@ function CreateGoodsRequest()
       
     }
 
+    pdfdetails=[];
+    pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
+    pdfdetails.push({"Title":"Project Number","Value":projectNumber});
+    pdfdetails.push({"Title":"PN for ZAS","Value":txtpnForZAS});
+    pdfdetails.push({"Title":"Name of Budget Responsible Person (AV)","Value":$("#NameofAV").val()});
+    if($("#chkKomp").prop('checked'))
+    {
+      pdfdetails.push({"Title":"Komp Output","Value":"Checked"});
+      pdfdetails.push({"Title":"KompOutput Number","Value":$('#outputnumber').val()});
+      pdfdetails.push({"Title":"KompOutput Percent","Value":$('#percent').val()});
+    }
+    pdfdetails.push({"Title":"Short Description","Value":$("#shortDescription").val()});
+
+    if($("input[name='Specifications']:checked").val()=='Nonneutral Specifications')
+    {
+      pdfdetails.push({"Title":"Name Of Contact Person","Value":$('#CntctPrsn').val()});
+      pdfdetails.push({"Title":"Email","Value":$("#Email").val()});
+      pdfdetails.push({"Title":"Mobile Number","Value":$("#MobileNumber").val()});
+    }
+    
+    pdfdetails.push({"Title":"JOD","Value":$("#JOD").val(),});
+    pdfdetails.push({"Title":"EUR","Value":$("#EUR").val()});
+    pdfdetails.push({"Title":"Requested Warranty Time","Value":$("#requestedWarrantyTime").val()});
+    pdfdetails.push({"Title":"Requested Delivery Time","Value":$("#requestedDeliveryTime").val()});
+
+
+    $(".custom-file-input").each(function()
+    {
+       if( $(this)[0].files.length>0)
+       {
+        var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+        pdfdetails.push({"Title":name[0],"Value":"Attached"});
+       }
+    });
+    //createpdf(pdfdetails);
     InsertGoodsRequest(Servicedata,arrFiles);
   }
   else
@@ -2973,6 +3036,7 @@ function creategoodsamendment()
     $('body').addClass('body-hidden');
     let DelivertimeTime=(new Date(Date.parse(moment($("#requestedDeliveryTime").val(),"MM/DD/YYYY").format("YYYY-MM-DD")))).toISOString();
     let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+    let txtpnForZAS= $('#txtpnforzas1').val()+'.'+$('#txtpnforzas2').val()+'.'+$('#txtpnforzas3').val()+'-'+$('#txtpnforzas4').val()+'.'+$('#txtpnforzas5').val();
       var ProjectIndex;
       for(var prNum=0;prNum<ProjectDetails.length;prNum++)
       {
@@ -3014,6 +3078,29 @@ function creategoodsamendment()
     if($('#fileQuantitiesNochange')[0].files.length>0)
     arrFiles.push({'FolderName':'AmendmentSpecfications','files':$('#fileQuantitiesNochange')[0].files});
 
+    pdfdetails=[];
+    pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
+    pdfdetails.push({"Title":"Project Number","Value":projectNumber});
+    pdfdetails.push({"Title":"PN for ZAS","Value":txtpnForZAS});
+    pdfdetails.push({"Title":"Name of Budget Responsible Person (AV)","Value":$("#NameofAV").val()});
+    if($("#chkKomp").prop('checked'))
+    {
+      pdfdetails.push({"Title":"Komp Output","Value":"Checked"});
+      pdfdetails.push({"Title":"KompOutput Number","Value":$('#outputnumber').val()});
+      pdfdetails.push({"Title":"KompOutput Percent","Value":$('#percent').val()});
+    }
+    pdfdetails.push({"Title":"Pro Soft Number","Value":$("#prosoftnum").val()});
+    pdfdetails.push({"Title":"Requested Delivery Time","Value":$("#requestedDeliveryTime").val()});
+    $(".custom-file-input").each(function()
+    {
+       if( $(this)[0].files.length>0)
+       {
+        var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+        pdfdetails.push({"Title":name[0],"Value":"Attached"});
+       }
+    });
+    //createpdf(pdfdetails);
+
     InsertGoodsRequest(Servicedata,arrFiles);
 
   }
@@ -3026,6 +3113,7 @@ function createrequestframework()
     $('.loading-modal').addClass('active');
     $('body').addClass('body-hidden');
     let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+    let txtpnForZAS= $('#txtpnforzas1').val()+'.'+$('#txtpnforzas2').val()+'.'+$('#txtpnforzas3').val()+'-'+$('#txtpnforzas4').val()+'.'+$('#txtpnforzas5').val();
     var ProjectIndex;
     for(var prNum=0;prNum<ProjectDetails.length;prNum++)
     {
@@ -3062,6 +3150,29 @@ function createrequestframework()
     if($('#AdditionalInformation')[0].files.length>0)
     arrFiles.push({'FolderName':'AdditionalInformation','files':$('#AdditionalInformation')[0].files});
 
+    pdfdetails=[];
+    pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
+    pdfdetails.push({"Title":"Project Number","Value":projectNumber});
+    pdfdetails.push({"Title":"PN for ZAS","Value":txtpnForZAS});
+    pdfdetails.push({"Title":"Name of Budget Responsible Person (AV)","Value":$("#NameofAV").val()});
+    if($("#chkKomp").prop('checked'))
+    {
+      pdfdetails.push({"Title":"Komp Output","Value":"Checked"});
+      pdfdetails.push({"Title":"KompOutput Number","Value":$('#outputnumber').val()});
+      pdfdetails.push({"Title":"KompOutput Percent","Value":$('#percent').val()});
+    }
+    pdfdetails.push({"Title":"Agreement Type","Value":$("input[name='Agreement']:checked").val()});
+    pdfdetails.push({"Title":"JOD","Value":$("#JOD").val()});
+    pdfdetails.push({"Title":"EUR","Value":$("#EUR").val()});
+    $(".custom-file-input").each(function()
+    {
+       if( $(this)[0].files.length>0)
+       {
+        var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+        pdfdetails.push({"Title":name[0],"Value":"Attached"});
+       }
+    });
+  
     InsertGoodsRequest(Servicedata,arrFiles);
     
   }
@@ -3074,6 +3185,8 @@ async function InsertGoodsRequest(Servicedata,arrFiles)
    {
      
      //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
+     RequestID=data.data.ID;
+     createpdf(pdfdetails,"GD-"+data.data.ID);
      if($('#Drpreqcategories option:selected').val()=='goods')
      createContact("GD-"+data.data.ID);
 
@@ -3126,6 +3239,14 @@ function MandatoryValidation()
     
   var isAllValueFilled=true;
 
+  var isprojectnumberempty = $('.prjctNum').filter(function() {
+    return this.value == ''
+  });
+
+  var isprojectpnforzasempty=$('.prjctpnforzas').filter(function() {
+    return this.value == ''
+  });
+
   if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
   
     if($('#projectName option:selected').val()=='Select')
@@ -3133,16 +3254,21 @@ function MandatoryValidation()
 		alertify.error('Please Choose Project Name');
 		isAllValueFilled=false;
   }
-  /*else if(!$.trim($("#projectNumber").val()))
+  else if(isprojectnumberempty.length>0)
 	{
-		alertify.error('Please Enter Project Number');
+		alertify.error('Please Enter valid Project Number');
 		isAllValueFilled=false;
-  }*/
-  else if(!$.trim($("#pnForZAS").val()))
+  }
+  else if(isprojectpnforzasempty.length>0)
+	{
+		alertify.error('Please Enter valid PN For ZAS');
+		isAllValueFilled=false;
+  }
+  /*else if(!$.trim($("#pnForZAS").val()))
 	{
 		alertify.error('Please Enter PN For ZAS');
 		isAllValueFilled=false;
-  }
+  }*/
   else if(!$.trim($("#NameofAV").val()))
 	{
 		alertify.error('Please Enter Name of AV');
@@ -3288,6 +3414,13 @@ function MandatoryValidation()
   function mandatoryvalidationforgoodsamendment()
   {
     var isAllValueFilled=true;
+    var isprojectnumberempty = $('.prjctNum').filter(function() {
+      return this.value == ''
+    });
+  
+    var isprojectpnforzasempty=$('.prjctpnforzas').filter(function() {
+      return this.value == ''
+    });
 
   if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
   
@@ -3296,11 +3429,21 @@ function MandatoryValidation()
 		alertify.error('Please Choose Project Name');
 		isAllValueFilled=false;
   }
-  else if(!$.trim($("#pnForZAS").val()))
+  else if(isprojectnumberempty.length>0)
+	{
+		alertify.error('Please Enter valid Project Number');
+		isAllValueFilled=false;
+  }
+  else if(isprojectpnforzasempty.length>0)
+	{
+		alertify.error('Please Enter valid PN For ZAS');
+		isAllValueFilled=false;
+  }
+  /*else if(!$.trim($("#pnForZAS").val()))
 	{
 		alertify.error('Please Enter PN For ZAS');
 		isAllValueFilled=false;
-  }
+  }*/
   else if(!$.trim($("#NameofAV").val()))
 	{
 		alertify.error('Please Enter Name of AV');
@@ -3327,7 +3470,13 @@ function MandatoryValidation()
   function mandatoryvalidationforrequestframeworkagreement()
   {
     var isAllValueFilled=true;
-
+    var isprojectnumberempty = $('.prjctNum').filter(function() {
+      return this.value == ''
+    });
+  
+    var isprojectpnforzasempty=$('.prjctpnforzas').filter(function() {
+      return this.value == ''
+    });
   if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
   
     if($('#projectName option:selected').val()=='Select')
@@ -3335,11 +3484,21 @@ function MandatoryValidation()
 		alertify.error('Please Choose Project Name');
 		isAllValueFilled=false;
   }
-  else if(!$.trim($("#pnForZAS").val()))
+  else if(isprojectnumberempty.length>0)
+	{
+		alertify.error('Please Enter valid Project Number');
+		isAllValueFilled=false;
+  }
+  else if(isprojectpnforzasempty.length>0)
+	{
+		alertify.error('Please Enter valid PN For ZAS');
+		isAllValueFilled=false;
+  }
+  /*else if(!$.trim($("#pnForZAS").val()))
 	{
 		alertify.error('Please Enter PN For ZAS');
 		isAllValueFilled=false;
-  }
+  }*/
   else if(!$.trim($("#NameofAV").val()))
 	{
 		alertify.error('Please Enter Name of AV');
@@ -3394,6 +3553,7 @@ function LoadServices()
     {
 
       let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+      let txtpnForZAS= $('#txtpnforzas1').val()+'.'+$('#txtpnforzas2').val()+'.'+$('#txtpnforzas3').val()+'-'+$('#txtpnforzas4').val()+'.'+$('#txtpnforzas5').val();
       var ProjectIndex;
       for(var prNum=0;prNum<ProjectDetails.length;prNum++)
       {
@@ -3403,6 +3563,18 @@ function LoadServices()
           break;
         }
       }
+
+      pdfdetails=[];
+          pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
+          pdfdetails.push({"Title":"Project Number","Value":projectNumber});
+          pdfdetails.push({"Title":"PN for ZAS","Value":txtpnForZAS});
+          pdfdetails.push({"Title":"Name of Budget Responsible Person (AV)","Value":$("#NameofAV").val()});
+          if($("#chkKomp").prop('checked'))
+          {
+            pdfdetails.push({"Title":"Komp Output","Value":"Checked"});
+            pdfdetails.push({"Title":"KompOutput Number","Value":$('#outputnumber').val()});
+            pdfdetails.push({"Title":"KompOutput Percent","Value":$('#percent').val()});
+          }
 
       if($('#choicesservices option:selected').val()=='Direct Award')
       {
@@ -3465,6 +3637,28 @@ function LoadServices()
             
           }
 
+          
+          pdfdetails.push({"Title":"Name Of Consulting Firm/Appariser","Value":$("#NameOfFirm").val()});
+          pdfdetails.push({"Title":"Area Of Activity","Value":$("#AreaActivy").val()});
+          pdfdetails.push({"Title":"Short Description","Value":$("#shortDescription").val()});
+          pdfdetails.push({"Title":"Full Address","Value":$("#FullAddress").val()});
+          pdfdetails.push({"Title":"Contract Person from the Firm","Value":$("#CntctPrsn").val()});
+          pdfdetails.push({"Title":"Telephone Number","Value":$("#TeleNumber").val()});
+          pdfdetails.push({"Title":"Email","Value":$("#Email").val()});
+          pdfdetails.push({"Title":"Mobile Number","Value":$("#MobileNumber").val()});
+          pdfdetails.push({"Title":"Duration of the assignment (From Date)","Value":$("#Fromdate").val()});
+          pdfdetails.push({"Title":"Duration of the assignment (To Date)","Value":$("#Todate").val()});
+          pdfdetails.push({"Title":"JOD","Value":$("#JOD").val()});
+          pdfdetails.push({"Title":"EUR","Value":$("#EUR").val()});
+          $(".custom-file-input").each(function()
+          {
+             if( $(this)[0].files.length>0)
+             {
+              var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+              pdfdetails.push({"Title":name[0],"Value":"Attached"});
+             }
+          });
+          //createpdf(pdfdetails);
           InsertService(Servicedata,arrFiles);
         }
         else
@@ -3527,6 +3721,21 @@ function LoadServices()
           arrFiles.push({'FolderName':'ShortList','files':$('#shortlist')[0].files});
           arrFiles.push({'FolderName':'TechAssGrid','files':$('#Assessment')[0].files});
 
+          pdfdetails.push({"Title":"Short Description of the Requested Service","Value":$("#shortDescription").val()});
+          pdfdetails.push({"Title":"Duration of the assignment (From Date)","Value":$("#Fromdate").val()});
+          pdfdetails.push({"Title":"Duration of the assignment (To Date)","Value":$("#Todate").val()});
+          pdfdetails.push({"Title":"JOD","Value":$("#JOD").val()});
+          pdfdetails.push({"Title":"EUR","Value":$("#EUR").val()});
+          $(".custom-file-input").each(function()
+          {
+             if( $(this)[0].files.length>0)
+             {
+              var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+              pdfdetails.push({"Title":name[0],"Value":"Attached"});
+             }
+          });
+          //createpdf(pdfdetails);
+
           InsertService(Servicedata,arrFiles);
         }
         else
@@ -3585,6 +3794,21 @@ function LoadServices()
 
           arrFiles.push({'FolderName':'NewsAdvertisement','files':$('#newspaperFile')[0].files});
           arrFiles.push({'FolderName':'TechAssGrid','files':$('#Assessment')[0].files});
+
+          pdfdetails.push({"Title":"Short Description of the Requested Service","Value":$("#shortDescription").val()});
+          pdfdetails.push({"Title":"Duration of the assignment (From Date)","Value":$("#Fromdate").val()});
+          pdfdetails.push({"Title":"Duration of the assignment (To Date)","Value":$("#Todate").val()});
+          pdfdetails.push({"Title":"JOD","Value":$("#JOD").val()});
+          pdfdetails.push({"Title":"EUR","Value":$("#EUR").val()});
+          $(".custom-file-input").each(function()
+          {
+             if( $(this)[0].files.length>0)
+             {
+              var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+              pdfdetails.push({"Title":name[0],"Value":"Attached"});
+             }
+          });
+          //createpdf(pdfdetails);
 
           InsertService(Servicedata,arrFiles);
         }
@@ -3884,6 +4108,23 @@ function LoadServices()
 
                 arrFiles.push({'FolderName':'Terms','files':$('#terms')[0].files});
 
+                pdfdetails.push({"Title":"Name Of Consulting Firm/Appariser","Value":$("#NameOfFirm").val()});
+                pdfdetails.push({"Title":"Short Description of the Requested Service","Value":$("#shortDescription").val()});
+                pdfdetails.push({"Title":"Full Address","Value":$("#FullAddress").val()});
+                pdfdetails.push({"Title":"Contract Person from the Firm","Value":$("#CntctPrsn").val()});
+                pdfdetails.push({"Title":"Telephone Number","Value":$("#TeleNumber").val()});
+                pdfdetails.push({"Title":"Email","Value":$("#Email").val()});
+                pdfdetails.push({"Title":"Mobile Number","Value":$("#MobileNumber").val()});
+
+                $(".custom-file-input").each(function()
+                {
+                  if( $(this)[0].files.length>0)
+                  {
+                    var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+                    pdfdetails.push({"Title":name[0],"Value":"Attached"});
+                  }
+                });
+                //createpdf(pdfdetails);
                 InsertService(Servicedata,arrFiles);
                 
         }
@@ -3943,6 +4184,19 @@ function LoadServices()
                   
                 }
 
+                pdfdetails.push({"Title":"Agreement Type","Value":$("input[name='Agreement']:checked").val()});
+                pdfdetails.push({"Title":"JOD","Value":$("#JOD").val()});
+                pdfdetails.push({"Title":"EUR","Value":$("#EUR").val()});
+                $(".custom-file-input").each(function()
+                {
+                  if( $(this)[0].files.length>0)
+                  {
+                    var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+                    pdfdetails.push({"Title":name[0],"Value":"Attached"});
+                  }
+                });
+                //createpdf(pdfdetails);
+
                 InsertService(Servicedata,arrFiles);
         }
       }
@@ -3962,6 +4216,7 @@ async function InsertService(Servicedata,arrFiles)
      {
        
        //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
+       createpdf(pdfdetails,"SR-"+data.data.ID);
       for(var i=0;i<arrFiles.length;i++)
        {
           createFolder(arrFiles[i].FolderName,data.data.ID,arrFiles[i].files);
@@ -3974,18 +4229,35 @@ async function InsertService(Servicedata,arrFiles)
 
 function MandatoryValidationForService()
 {
-	var isAllValueFilled=true;
+  var isAllValueFilled=true;
+  var isprojectnumberempty = $('.prjctNum').filter(function() {
+    return this.value == ''
+  });
+
+  var isprojectpnforzasempty=$('.prjctpnforzas').filter(function() {
+    return this.value == ''
+  });
 	if ($('.ajs-message').length > 0) { $('.ajs-message').remove();}
 	if($('#projectName option:selected').val()=='Select')
 	{
 		alertify.error('Please Choose Project Name');
 		isAllValueFilled=false;
   }
-  else if(!$.trim($("#pnForZAS").val()))
+  else if(isprojectnumberempty.length>0)
+	{
+		alertify.error('Please Enter valid Project Number');
+		isAllValueFilled=false;
+  }
+  else if(isprojectpnforzasempty.length>0)
+	{
+		alertify.error('Please Enter valid PN For ZAS');
+		isAllValueFilled=false;
+  }
+  /*else if(!$.trim($("#pnForZAS").val()))
 	{
 		alertify.error('Please Enter PN For ZAS');
 		isAllValueFilled=false;
-  }
+  }*/
   else if(!$.trim($("#NameofAV").val()))
 	{
 		alertify.error('Please Enter Name of AV');
@@ -4621,6 +4893,7 @@ function CreateLeaseAgreement()
   {
 
     let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+    let txtpnForZAS= $('#txtpnforzas1').val()+'.'+$('#txtpnforzas2').val()+'.'+$('#txtpnforzas3').val()+'-'+$('#txtpnforzas4').val()+'.'+$('#txtpnforzas5').val();
     var ProjectIndex;
     for(var prNum=0;prNum<ProjectDetails.length;prNum++)
     {
@@ -4630,6 +4903,21 @@ function CreateLeaseAgreement()
         break;
       }
     }
+
+    pdfdetails=[];
+    pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
+    pdfdetails.push({"Title":"Project Number","Value":projectNumber});
+    pdfdetails.push({"Title":"PN for ZAS","Value":txtpnForZAS});
+    pdfdetails.push({"Title":"Name of Budget Responsible Person (AV)","Value":$("#NameofAV").val()});
+    if($("#chkKomp").prop('checked'))
+    {
+      pdfdetails.push({"Title":"Komp Output","Value":"Checked"});
+      pdfdetails.push({"Title":"KompOutput Number","Value":$('#outputnumber').val()});
+      pdfdetails.push({"Title":"KompOutput Percent","Value":$('#percent').val()});
+    }
+    pdfdetails.push({"Title":"Short Description","Value":$("#shortDescription").val()});
+    pdfdetails.push({"Title":"Duration of the lease (From Date)","Value":$("#Fromdate").val()});
+    pdfdetails.push({"Title":"Duration of the lease (To Date)","Value":$("#Todate").val()});
         
         if(mandatoryforLease())
         {
@@ -4687,6 +4975,21 @@ function CreateLeaseAgreement()
                   }
                   
                 }
+
+                pdfdetails.push({"Title":"Full Address","Value":$("#FullAddress").val()});
+                pdfdetails.push({"Title":"Lessor Name","Value":$("#LessorName").val()});
+                pdfdetails.push({"Title":"Telephone Number","Value":$("#TeleNumber").val()});
+                pdfdetails.push({"Title":"Email","Value":$("#Email").val()});
+                pdfdetails.push({"Title":"Mobile Number","Value":$("#MobileNumber").val()});
+                $(".custom-file-input").each(function()
+                {
+                  if( $(this)[0].files.length>0)
+                  {
+                    var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+                    pdfdetails.push({"Title":name[0],"Value":"Attached"});
+                  }
+                });
+                //createpdf(pdfdetails);
 
                 InsertLease(Servicedata,arrFiles);
               }
@@ -4746,6 +5049,22 @@ function CreateLeaseAgreement()
                   }
                   
                 }
+
+                pdfdetails.push({"Title":"Full Address","Value":$("#FullAddress").val()});
+                pdfdetails.push({"Title":"Name Of Firm","Value":$("#NameOfFirm").val()});
+                pdfdetails.push({"Title":"Name Of Contact Person","Value":$("#CntctPrsn").val()});
+                pdfdetails.push({"Title":"Telephone Number","Value":$("#TeleNumber").val()});
+                pdfdetails.push({"Title":"Email","Value":$("#Email").val()});
+                pdfdetails.push({"Title":"Mobile Number","Value":$("#MobileNumber").val()});
+                $(".custom-file-input").each(function()
+                {
+                  if( $(this)[0].files.length>0)
+                  {
+                    var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+                    pdfdetails.push({"Title":name[0],"Value":"Attached"});
+                  }
+                });
+                //createpdf(pdfdetails);
                 InsertLease(Servicedata,arrFiles);
               }
               else
@@ -4773,6 +5092,7 @@ function CreateLeaseamendment()
   {
 
     let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+    let txtpnForZAS= $('#txtpnforzas1').val()+'.'+$('#txtpnforzas2').val()+'.'+$('#txtpnforzas3').val()+'-'+$('#txtpnforzas4').val()+'.'+$('#txtpnforzas5').val();
     var ProjectIndex;
     for(var prNum=0;prNum<ProjectDetails.length;prNum++)
     {
@@ -4821,6 +5141,28 @@ function CreateLeaseamendment()
           arrFiles.push({'FolderName':'Financialstatus','files':$('#Financialstatus')[0].files});
 
 
+          pdfdetails=[];
+          pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
+          pdfdetails.push({"Title":"Project Number","Value":projectNumber});
+          pdfdetails.push({"Title":"PN for ZAS","Value":txtpnForZAS});
+          pdfdetails.push({"Title":"Name of Budget Responsible Person (AV)","Value":$("#NameofAV").val()});
+          if($("#chkKomp").prop('checked'))
+          {
+            pdfdetails.push({"Title":"Komp Output","Value":"Checked"});
+            pdfdetails.push({"Title":"KompOutput Number","Value":$('#outputnumber').val()});
+            pdfdetails.push({"Title":"KompOutput Percent","Value":$('#percent').val()});
+          }
+          pdfdetails.push({"Title":"Lease Agreement CoSoft Number","Value":$("#cosoftnum").val()});
+      
+          $(".custom-file-input").each(function()
+          {
+             if( $(this)[0].files.length>0)
+             {
+              var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+              pdfdetails.push({"Title":name[0],"Value":"Attached"});
+             }
+          });
+          //createpdf(pdfdetails);
           InsertLease(Servicedata,arrFiles);
         }
         else
@@ -4869,6 +5211,7 @@ async function InsertLease(Servicedata,arrFiles)
      {
        
        //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
+       createpdf(pdfdetails,"LA-"+data.data.ID);
       for(var i=0;i<arrFiles.length;i++)
        {
           createFolder(arrFiles[i].FolderName,"LA-"+data.data.ID,arrFiles[i].files);
@@ -4899,6 +5242,7 @@ function CreateSubsidy()
   {
 
     let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+    let txtpnForZAS= $('#txtpnforzas1').val()+'.'+$('#txtpnforzas2').val()+'.'+$('#txtpnforzas3').val()+'-'+$('#txtpnforzas4').val()+'.'+$('#txtpnforzas5').val();
     var ProjectIndex;
     for(var prNum=0;prNum<ProjectDetails.length;prNum++)
     {
@@ -4969,7 +5313,39 @@ function CreateSubsidy()
             }
             
           }
+          
+          pdfdetails=[];
+          pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
+          pdfdetails.push({"Title":"Project Number","Value":projectNumber});
+          pdfdetails.push({"Title":"PN for ZAS","Value":txtpnForZAS});
+          pdfdetails.push({"Title":"Name of Budget Responsible Person (AV)","Value":$("#NameofAV").val()});
+          if($("#chkKomp").prop('checked'))
+          {
+            pdfdetails.push({"Title":"Komp Output","Value":"Checked"});
+            pdfdetails.push({"Title":"KompOutput Number","Value":$('#outputnumber').val()});
+            pdfdetails.push({"Title":"KompOutput Percent","Value":$('#percent').val()});
+          }
+          pdfdetails.push({"Title":"Name Of Beneficiary","Value":$("#NameOfBenficiary").val()});
+          pdfdetails.push({"Title":"Short Description of the Requested Local Subsidy","Value":$("#shortDescription").val()});
+          pdfdetails.push({"Title":"Full Address","Value":$("#FullAddress").val()});
+          pdfdetails.push({"Title":"Contract Person from the Firm","Value":$("#CntctPrsn").val()});
+          pdfdetails.push({"Title":"Telephone Number","Value":$("#TeleNumber").val()});
+          pdfdetails.push({"Title":"Email","Value":$("#Email").val()});
+          pdfdetails.push({"Title":"Mobile Number","Value":$("#MobileNumber").val()});
+          pdfdetails.push({"Title":"Duration of the assignment (From Date)","Value":$("#Fromdate").val()});
+          pdfdetails.push({"Title":"Duration of the assignment (To Date)","Value":$("#Todate").val()});
+          pdfdetails.push({"Title":"JOD","Value":$("#JOD").val()});
+          pdfdetails.push({"Title":"EUR","Value":$("#EUR").val()});
 
+          $(".custom-file-input").each(function()
+          {
+            if( $(this)[0].files.length>0)
+            {
+              var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+              pdfdetails.push({"Title":name[0],"Value":"Attached"});
+            }
+          });
+          //createpdf(pdfdetails);
           InsertSubsidy(Servicedata,arrFiles);
         }
         else
@@ -4991,6 +5367,7 @@ function CreateSubsidyAmendemnt()
   {
 
     let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+    let txtpnForZAS= $('#txtpnforzas1').val()+'.'+$('#txtpnforzas2').val()+'.'+$('#txtpnforzas3').val()+'-'+$('#txtpnforzas4').val()+'.'+$('#txtpnforzas5').val();
     var ProjectIndex;
     for(var prNum=0;prNum<ProjectDetails.length;prNum++)
     {
@@ -5039,8 +5416,28 @@ function CreateSubsidyAmendemnt()
           if($('#Financialstatus')[0].files.length>0)
           arrFiles.push({'FolderName':'Financialstatus','files':$('#Financialstatus')[0].files});
 
-          
-          
+          pdfdetails=[];
+          pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
+          pdfdetails.push({"Title":"Project Number","Value":projectNumber});
+          pdfdetails.push({"Title":"PN for ZAS","Value":txtpnForZAS});
+          pdfdetails.push({"Title":"Name of Budget Responsible Person (AV)","Value":$("#NameofAV").val()});
+          if($("#chkKomp").prop('checked'))
+          {
+            pdfdetails.push({"Title":"Komp Output","Value":"Checked"});
+            pdfdetails.push({"Title":"KompOutput Number","Value":$('#outputnumber').val()});
+            pdfdetails.push({"Title":"KompOutput Percent","Value":$('#percent').val()});
+          }
+          pdfdetails.push({"Title":"Local Subsidy CoSoft Number","Value":$('#cosoftnum').val()});
+          $(".custom-file-input").each(function()
+          {
+            if( $(this)[0].files.length>0)
+            {
+              var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+              pdfdetails.push({"Title":name[0],"Value":"Attached"});
+            }
+          });
+
+          //createpdf(pdfdetails);
           InsertSubsidy(Servicedata,arrFiles);
         }
         else
@@ -5063,6 +5460,7 @@ async function InsertSubsidy(Servicedata,arrFiles)
      {
        
        //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
+       createpdf(pdfdetails,"LS-"+data.data.ID);
       for(var i=0;i<arrFiles.length;i++)
        {
           createFolder(arrFiles[i].FolderName,"SD-"+data.data.ID,arrFiles[i].files);
@@ -5238,6 +5636,7 @@ function createIdpp()
     {
 
       let projectNumber= $('#txtProjectNum1').val()+'.'+$('#txtProjectNum2').val()+'.'+$('#txtProjectNum3').val()+'-'+$('#txtProjectNum4').val()+'.'+$('#txtProjectNum5').val();
+      let txtpnForZAS= $('#txtpnforzas1').val()+'.'+$('#txtpnforzas2').val()+'.'+$('#txtpnforzas3').val()+'-'+$('#txtpnforzas4').val()+'.'+$('#txtpnforzas5').val();
       var ProjectIndex;
       for(var prNum=0;prNum<ProjectDetails.length;prNum++)
       {
@@ -5287,6 +5686,31 @@ function createIdpp()
       arrFiles.push({'FolderName':'CompetitionReport','files':$('#CompetitionReport')[0].files});
       arrFiles.push({'FolderName':'Budget','files':$('#Budget')[0].files});
 
+      pdfdetails=[];
+      pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
+      pdfdetails.push({"Title":"Project Number","Value":projectNumber});
+      pdfdetails.push({"Title":"PN for ZAS","Value":txtpnForZAS});
+      pdfdetails.push({"Title":"Name of Budget Responsible Person (AV)","Value":$("#NameofAV").val()});
+      if($("#chkKomp").prop('checked'))
+      {
+        pdfdetails.push({"Title":"Komp Output","Value":"Checked"});
+        pdfdetails.push({"Title":"KompOutput Number","Value":$('#outputnumber').val()});
+        pdfdetails.push({"Title":"KompOutput Percent","Value":$('#percent').val()});
+      }
+      pdfdetails.push({"Title":"Short Description","Value":$("#shortDescription").val()});
+      pdfdetails.push({"Title":"Duration of the assignment (From Date)","Value":$("#Fromdate").val()});
+      pdfdetails.push({"Title":"Duration of the assignment (To Date)","Value":$("#Todate").val()});
+  
+      $(".custom-file-input").each(function()
+      {
+         if( $(this)[0].files.length>0)
+         {
+          var name=$(this).parent().parent().parent()[0].children[0].innerText.split(':');
+          pdfdetails.push({"Title":name[0],"Value":"Attached"});
+         }
+      });
+      //createpdf(pdfdetails);
+
       InsertIdpp(Servicedata,arrFiles);
     }
     else
@@ -5309,6 +5733,7 @@ async function InsertIdpp(Servicedata,arrFiles)
      {
        
        //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
+       createpdf(pdfdetails,"idpp-"+data.data.ID);
       for(var i=0;i<arrFiles.length;i++)
        {
           createFolder(arrFiles[i].FolderName,"IDP-"+data.data.ID,arrFiles[i].files);
@@ -5330,7 +5755,7 @@ async function createFolder(FolderName,ListID,files)
 await sp.web.folders.add("ProcurementServices/"+FolderName+"/"+ListID+"").then(function (data)
 {  
     console.log("Folder is created at " + data.data.ServerRelativeUrl);
-    sendfollowup(ProjectAvEmail,ProcuremntHeadEmail);
+    //sendnewrequestmail(ProjectAvEmail,ProcuremntHeadEmail);
     UploadFile(data.data.ServerRelativeUrl,files);
       
 }).catch(function(error){ErrorCallBack(error,'createFolder')});
@@ -5463,7 +5888,7 @@ async function LoadProjects()
      }).show().setHeader('<em>Confirmation</em> ').set('closable', false);
    
    }
-   async function sendfollowup(touser,ccuser)
+   async function sendnewrequestmail(touser,ccuser)
    {
      
      var maildetails={
@@ -5506,6 +5931,72 @@ function ValidateSingleInput(oInput) {
       }
   }
   return true;
+}
+
+async function createpdf(pdfdetails,filename)
+{
+ var HTMLGoods='';
+ HTMLGoods+='<div class="" role="dialog"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title">New Request Details</h4></div><div class="modal-body">';
+ for(var i=0;i<pdfdetails.length;i++)
+ {
+
+  HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+pdfdetails[i].Title+'</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+pdfdetails[i].Value+'</p></div></div>';
+ }
+ HTMLGoods+='</div><div class="modal-footer" ></div></div></div></div>';
+ $("#divforpdf").html('');
+ $("#divforpdf").html(HTMLGoods);
+
+ var opt = {
+  margin:       1,
+  filename:     'myfile.pdf',
+  image:        { type: 'jpeg', quality: 0.98 },
+  html2canvas:  { scale: 2 },
+  jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+};         
+$("#divforpdf").show(); 
+let elem = document.getElementById('divforpdf');
+ await html2pdf().from(elem).set(opt).outputPdf('arraybuffer').then((result) => 
+ {
+  // handle your result here...
+  $("#divforpdf").hide();
+   uploadpdf(result,filename);
+ }).catch(function(error){ErrorCallBack(error,'html2pdf')});
+
+}
+
+async function uploadpdf(result,filename)
+{
+  
+  
+  await sp.web.getFolderByServerRelativeUrl("NewRequests")
+  .files.add(filename+".pdf", result, true).then(function(data)
+  {
+    updatemetadata(data);
+
+  }).catch(function(error){ErrorCallBack(error,'uploadpdf')});
+}
+
+async function  updatemetadata(data) 
+{
+  await data.file.listItemAllFields.get().then(function(listItemAllFields)
+    {
+      updatepdf(listItemAllFields);
+
+    }).catch(function(error){ErrorCallBack(error,'dataFiles')});
+}
+
+async function updatepdf(listItemAllFields) 
+{
+  var RequestType=$('#Drpreqcategories option:selected').text();
+  if(!$('#Drpreqcategories option:selected').val())
+  RequestType="IDPP";
+  
+  var hstrydata={RequestType:RequestType,AVNameId:$('#projectName option:selected').attr('Proj-Av-id')};  
+  sp.web.lists.getByTitle("NewRequests").items.getById(listItemAllFields.Id).update(hstrydata)
+      .then(function(results)
+      {
+        //alert("pdf generated");
+      }).catch(function(error){ErrorCallBack(error,'files')});  
 }
 
  function ErrorCallBack(error,methodname)
