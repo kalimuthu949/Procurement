@@ -57,6 +57,9 @@ var oTableservice;
 var oTablesubsidy;
 var oTablelease;
 var oTableidpp;
+var Procurementusers=[];
+var sheetNames=[];
+var isHOD=false;
 
 /* start Html for status change in popup*/
 var htmlforstatuschange=`
@@ -122,11 +125,13 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <div class='btnDiv'> 
     <div>
     <input class="btn btn-primary" type='button' id='btnGoods' value='Create Goods Request'>
+    <input class="btn btn-primary" type='button' id='btnExcel' value='Excel'>
+    <input class="btn btn-primary" type='button' data-type="goods" id='btnHODExcel' value='Excel'>
     </div>
     </div>
     
     <div id='GoodsTable'>
-    <select id='drpStatusforgoods'>
+    <select id='drpStatusforgoods' class="clsStatus">
     <option value="select">Select</option>
     </select>
     <table id="Goods" style="width:100%">
@@ -137,8 +142,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <th>Project Number</th>
     <th>Name Of AV</th>
     <th>Date of Request</th>
-    <th>Assigned To</th>
-    <th>Status</th>
+    <th>Assigned To</th> 
+    <th style="width: 40px !important;">Status</th>
     <th>StatusText</th>
     <th>Details</th>
     </tr>
@@ -155,11 +160,13 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <div class='btnDiv'>
     <div>
     <input class="btn btn-primary" type='button' id='btnService' value='Create Service Request'>
+    <input class="btn btn-primary" type='button' id='btnExcel' value='Excel'>
+    <input class="btn btn-primary" type='button' data-type="service" id='btnHODExcel' value='Excel'>
     </div>
     </div>
    
     <div id='ServiceTable'>
-    <select id='drpStatusforservice'>
+    <select id='drpStatusforservice' class="clsStatus">
     <option value="select">Select</option>
     </select>
     <table id="Service"  style="width:100%">
@@ -188,11 +195,13 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <div class='btnDiv'>
     <div>
     <input class="btn btn-primary" type='button' id='btnSubsidy' value='Create Local Subsidy'>
+    <input class="btn btn-primary" type='button' id='btnExcel' value='Excel'>
+    <input class="btn btn-primary" type='button' data-type="subsidy" id='btnHODExcel' value='Excel'>
     </div>
     </div>
    
     <div id='SubsidyTable'>
-    <select id='drpStatusforsubsidy'>
+    <select id='drpStatusforsubsidy' class="clsStatus">
     <option value="select">Select</option>
     </select>
     <table id="Subsidy"  style="width:100%">
@@ -222,11 +231,13 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <div class='btnDiv'>
     <div>
     <input class="btn btn-primary" type='button' id='btnLease' value='Create Lease Agreement'>
+    <input class="btn btn-primary" type='button' id='btnExcel' value='Excel'>
+    <input class="btn btn-primary" type='button' data-type="lease" id='btnHODExcel' value='Excel'>
     </div>
     </div>
    
     <div id='LeaseTable'>
-    <select id='drpStatusforlease'>
+    <select id='drpStatusforlease' class="clsStatus">
     <option value="select">Select</option>
     </select>
     <table id="Lease"  style="width:100%">
@@ -255,11 +266,13 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <div class='btnDiv'>
     <div>
     <input class="btn btn-primary" type='button' id='btnIdpp' value='Create IDPP'>
+    <input class="btn btn-primary" type='button' id='btnExcel' value='Excel'>
+    <input class="btn btn-primary" type='button' data-type="idpp" id='btnHODExcel' value='Excel'>
     </div>
     </div>
    
     <div id='idppTable'>
-    <select id='drpStatusforidpp'>
+    <select id='drpStatusforidpp' class="clsStatus">
     <option value="select">Select</option>
     </select>
     <table id="idpp"  style="width:100%">
@@ -294,7 +307,6 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
     <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
-    <input type="text" value="asfasfasfasfasfasfasf"/>
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
@@ -340,6 +352,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     LoadAdminTeam();
     getAllFolders();
     LoadProcurementTeamMembers();
+    LoadHeadofProcurementTeamMembers();
     LoadStatus();
     LoadProjects();
     LoadProcurementTeam();
@@ -401,6 +414,27 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     $('#btnIdpp').click(function()
     {
       location.href = siteURL+'/SitePages/NewIdppRequest.aspx';
+    });
+
+    /*Excel click functionailty*/
+    $("#btnExcel").click(function ()
+    {
+      generateExcel();
+    });
+    $("#btnHODExcel").click(function ()
+    {
+      
+      if($(this).attr('data-type')=="goods")
+      generateHODExcel(GoodsRequest);
+      else if($(this).attr('data-type')=="service")
+      generateHODExcel(ServiceRequest);
+      else if($(this).attr('data-type')=="subsidy")
+      generateHODExcel(LocalSubsidyItems);
+      else if($(this).attr('data-type')=="lease")
+      generateHODExcel(LeaseAgreementItems);
+      else if($(this).attr('data-type')=="idpp")
+      generateHODExcel(IdppItems);
+
     });
 
     $(document).on('click','.GdsdetailView',function()
@@ -684,7 +718,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     $(document).on('click','.subdetailView',function(){
       var that=$(this);
       var index;
-      var serviceID=that.attr('req-id');
+      var serviceID="LS-"+that.attr('req-id');
       LocalSubsidyItems.forEach(function(val,key)
       {
           if(val.ID==that.attr('req-id'))
@@ -792,7 +826,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     $(document).on('click','.LeasedetailView',function(){
       var that=$(this);
       var index;
-      var serviceID=that.attr('req-id');
+      var serviceID="LA-"+that.attr('req-id');
       LeaseAgreementItems.forEach(function(val,key)
       {
           if(val.ID==that.attr('req-id'))
@@ -912,7 +946,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     $(document).on('click','.idppdetailView',function(){
       var that=$(this);
       var index;
-      var serviceID=that.attr('req-id');
+      var serviceID="IDP-"+that.attr('req-id');
       IdppItems.forEach(function(val,key)
       {
           if(val.ID==that.attr('req-id'))
@@ -1037,7 +1071,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       $(".StatusDropdownSERPopup"+indexofEdit+"").val(Status);
 
       var htmlbutton='';
-      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" data-dismiss="modal" id="serbtnUpdate">Update</button>';
+      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" id="serbtnUpdate">Update</button>';
       htmlbutton+='<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
 
@@ -1083,7 +1117,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       $(".StatusDropdownGDSPopup"+indexofEdit+"").val(Status);
 
       var htmlbutton='';
-      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" data-dismiss="modal" id="GdsbtnUpdate">Update</button>';
+      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" id="GdsbtnUpdate">Update</button>';
       htmlbutton+='<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
 
@@ -1125,7 +1159,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       $(".StatusDropdownSubPopup"+indexofEdit+"").val(Status);
 
       var htmlbutton='';
-      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" data-dismiss="modal" id="SubbtnUpdate">Update</button>';
+      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" id="SubbtnUpdate">Update</button>';
       htmlbutton+='<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
 
@@ -1167,7 +1201,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       $(".StatusDropdownLeasePopup"+indexofEdit+"").val(Status);
 
       var htmlbutton='';
-      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" data-dismiss="modal" id="LeasebtnUpdate">Update</button>';
+      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default"  id="LeasebtnUpdate">Update</button>';
       htmlbutton+='<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
 
@@ -1209,7 +1243,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       $(".StatusDropdownidppPopup"+indexofEdit+"").val(Status);
 
       var htmlbutton='';
-      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default" data-dismiss="modal" id="idppbtnUpdate">Update</button>';
+      htmlbutton+='<button req-id="'+itemid+'" assigneduser="'+AssignedTo+'" index-value="'+indexofEdit+'" type="button" class="btn btn-default"  id="idppbtnUpdate">Update</button>';
       htmlbutton+='<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
 
@@ -1234,6 +1268,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       {
         $('.loading-modal').addClass('active');
         $('body').addClass('body-hidden');
+        $("#myModalEdit").modal("hide");
         
         var data;
         var statuschange=false; 
@@ -1261,7 +1296,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       }
       else
         {
-          e.preventDefault();
+          
           alertify.error("Please Select Assignee");
         } 
 
@@ -1283,6 +1318,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       {
         $('.loading-modal').addClass('active');
         $('body').addClass('body-hidden');
+        $("#myModalEdit").modal("hide");
         var statuschange=false;
         var data; 
         data={"AssignedTo1Id":AssignedUser};
@@ -1306,6 +1342,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
         sendmailforstatuschange($(".UserDropdownGDSPopup"+indexofEdit+" option:selected").attr('user-email'));
         updaterequest(itemid,data,'ProcurementGoods',true);
       }
+      else
+      { 
+          alertify.error("Please Select Assignee");
+      } 
     });
     
     $(document).on('click','.SubSave,#SubbtnUpdate',function()
@@ -1318,6 +1358,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
       if(AssignedUser!='Select')
       {
+        $('.loading-modal').addClass('active');
+        $('body').addClass('body-hidden');
+        $("#myModalEdit").modal("hide");
         var statuschange=false;
         var data; 
         data={"AssignedTo1Id":AssignedUser};
@@ -1340,6 +1383,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
         sendmailforstatuschange($(".UserDropdownSubPopup"+indexofEdit+" option:selected").attr('user-email'));
         updaterequest(itemid,data,'LocalSubsidy',true);
       }
+      else
+      { 
+          alertify.error("Please Select Assignee");
+      } 
     });
 
     $(document).on('click','.LeaseSave,#LeasebtnUpdate',function()
@@ -1352,6 +1399,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
       if(AssignedUser!='Select')
       {
+        $('.loading-modal').addClass('active');
+        $('body').addClass('body-hidden');
+        $("#myModalEdit").modal("hide");
         var statuschange=false;
         var data; 
         data={"AssignedTo1Id":AssignedUser};
@@ -1374,6 +1424,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
         sendmailforstatuschange($(".UserDropdownLeasePopup"+indexofEdit+" option:selected").attr('user-email'));
         updaterequest(itemid,data,'LeaseAgreement',true);
       }
+      else
+      { 
+          alertify.error("Please Select Assignee");
+      } 
     });
 
     $(document).on('click','.idppSave,#idppbtnUpdate',function()
@@ -1386,6 +1440,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
       if(AssignedUser!='Select')
       {
+        
+        $('.loading-modal').addClass('active');
+        $('body').addClass('body-hidden');
+        $("#myModalEdit").modal("hide");
         var statuschange=false;
         var data; 
         data={"AssignedTo1Id":AssignedUser};
@@ -1408,6 +1466,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
         sendmailforstatuschange($(".UserDropdownidppPopup"+indexofEdit+" option:selected").attr('user-email'));
         updaterequest(itemid,data,'IDPP',true);
       }
+      else
+      { 
+          alertify.error("Please Select Assignee");
+      } 
     });
 
     /*Followup funtionality*/
@@ -1517,6 +1579,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
         $("#requestedDate").datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});
     });
   }
+  
 
   protected get dataVersion(): Version {
   return Version.parse('1.0');
@@ -1615,6 +1678,7 @@ async function LoadGoodsRequest()
 
       oTablegoods=$('#Goods').DataTable({
       "scrollX": true,
+      "bLengthChange": false,
       "order": [[ 0, "desc" ]],
       "columnDefs": [
         {
@@ -1690,6 +1754,7 @@ async function LoadGoodsRequest()
 
     oTableservice=$('#Service').DataTable({
       "scrollX": true,
+      "bLengthChange": false,
       "order": [[ 0, "desc" ]],
       "columnDefs": [
         {
@@ -1765,6 +1830,7 @@ async function LoadGoodsRequest()
 
     oTablesubsidy=$('#Subsidy').DataTable({
       "scrollX": true,
+      "bLengthChange": false,
       "order": [[ 0, "desc" ]],
       "columnDefs": [
         {
@@ -1840,6 +1906,7 @@ async function LoadGoodsRequest()
   
       oTablelease=$('#Lease').DataTable({
         "scrollX": true,
+        "bLengthChange": false,
         "order": [[ 0, "desc" ]],
         "columnDefs": [
           {
@@ -1915,6 +1982,7 @@ async function LoadGoodsRequest()
   
       oTableidpp=$('#idpp').DataTable({
         "scrollX": true,
+        "bLengthChange": false,
         "order": [[ 0, "desc" ]],
         "columnDefs": [
           {
@@ -1922,8 +1990,8 @@ async function LoadGoodsRequest()
               "visible": false,
           }]
     });
-      $('.UserDropdown').attr('disabled',true);
-  }
+    $('.UserDropdown').attr('disabled',true);
+  } 
 
   async function LoadProcurementTeam()
   {
@@ -1951,7 +2019,8 @@ async function LoadGoodsRequest()
   {
     await sp.web.siteGroups.getByName('ProcurementTeam').users.get().then((allItems: any[]) => 
     {
-        if(allItems.length>0)
+      Procurementusers=allItems;  
+      if(allItems.length>0)
         {
           Users+='<option value="Select">Select</option>';
           for(var i=0;i<allItems.length;i++)
@@ -1963,6 +2032,29 @@ async function LoadGoodsRequest()
           
         }
     }).catch(function(error){ErrorCallBack(error,'LoadProcurementTeam')});
+  }
+
+  async function LoadHeadofProcurementTeamMembers()
+  {
+    await sp.web.siteGroups.getByName('HeadOfProcurement').users.get().then((allItems: any[]) => 
+    {
+      isHOD=false; 
+      if(allItems.length>0)
+        {
+          
+          for(var i=0;i<allItems.length;i++)
+          {
+            if(allItems[i].Id==CrntUserID)
+            isHOD=true;
+          }
+
+          if(isHOD)
+          $("#btnExcel").hide();
+          else
+          $("#btnHODExcel").hide();
+          
+        }
+    }).catch(function(error){ErrorCallBack(error,'LoadHeadofProcurementTeamMembers')});
   }
 
   async function LoadStatus()
@@ -2092,6 +2184,14 @@ async function LoadGoodsRequest()
   
           });*/
 
+          /*const elem = document.getElementById('modalbody');
+          html2pdf().from(elem).outputPdf('arraybuffer').then((result) => 
+          {
+          // handle your result here...
+          UploadFile("NewRequests",result);
+          
+          });*/
+
 
 
     var maildetails={
@@ -2118,14 +2218,235 @@ async function LoadGoodsRequest()
   {
     let emailProps: EmailProperties = maildetails;
   
-  await sp.utility.sendEmail(emailProps).then(_ => {
-  
-      console.log("Email Sent!");
+  await sp.utility.sendEmail(emailProps).then(_ => 
+  {
+      //AlertMessage("Followup mail sent");  
+      alert("");
   }).catch(function(error){ErrorCallBack(error,'sendemail')});
   }
+
+function AlertMessage(strMewssageEN) {
+
+  
+  
+    alertify.alert().setting({
+   
+       'label':'OK',
+   
+       'message': strMewssageEN ,
+   
+       'onok': function(){window.location.href=siteURL+'/SitePages/RequestDashboard.aspx';} 
+ 
+   
+     }).show().setHeader('<em>Confirmation</em> ').set('closable', false);
+   
+   }
 
 function ErrorCallBack(error,methodname)
 {	
   $('.loading-modal').removeClass('active');
   alert(error);
 }
+
+async function UploadFile(FolderUrl,files)
+{
+  //if(files.length>0)
+  //{
+    await sp.web.getFolderByServerRelativeUrl(FolderUrl).files.add("testgin.pdf", files, true).then(function(data)
+    {
+        
+          AlertMessage("Goods Request is created in the System");
+
+    }).catch(function(error){ErrorCallBack(error,'uploadFiles')});
+    //}
+}
+
+function generateExcel()
+  {
+    var excelSheetArray=[];
+    const workbook = new Excel.Workbook();
+    const ProcurementGoodsworksheet = workbook.addWorksheet('ProcurementGoods');
+    const ProcurementServiceworksheet = workbook.addWorksheet('ProcurementService');
+
+    const LocalSubsidyworksheet = workbook.addWorksheet('LocalSubsidy');
+
+    const IDPPworksheet = workbook.addWorksheet('IDPP');
+
+    const LeaseAgreementworksheet = workbook.addWorksheet('LeaseAgreement');
+    excelSheetArray.push(ProcurementGoodsworksheet,ProcurementServiceworksheet,LocalSubsidyworksheet,IDPPworksheet,LeaseAgreementworksheet)
+
+    var dobCol = ProcurementGoodsworksheet.getRow(1); // You can define a row like 2 , 3
+      for(let i=0;i<excelSheetArray.length;i++)
+      {
+   
+
+        excelSheetArray[i].columns = [
+          { header: "Project Name", key: "ProjectName", width: 25 },
+          { header: "ProjectNumber", key: "ProjectNumber", width: 25 },
+          { header: "NameOfAV", key: "NameOfAV", width: 25 },
+          //{ header: "AVName", key: "AVName", width: 25 },
+          { header: "PNForZAS", key: "PNForZAS", width: 25 },
+          { header: "Assigned To", key: "AssignedTo1", width: 25 },
+          { header: "Status", key: "RequestStatus", width: 25 }
+          
+        ];
+         if(excelSheetArray[i].name=="ProcurementGoods")
+         var loopArray=GoodsRequest
+         else if(excelSheetArray[i].name=="ProcurementService")
+         var loopArray=ServiceRequest
+         else if(excelSheetArray[i].name=="LocalSubsidy")
+         var loopArray=LocalSubsidyItems
+         else if(excelSheetArray[i].name=="IDPP")
+         var loopArray=IdppItems
+         else if(excelSheetArray[i].name=="LeaseAgreement")
+         var loopArray=LeaseAgreementItems
+
+         loopArray.forEach(function(item, index) {
+        var AssignedToValue="";
+        var status="";
+
+          if(item.Representative)
+          {
+            var repValue:any=[]
+            item.Representative.map((rep,i)=>{
+                repValue.push(rep.Title)
+            });
+          }
+          if(item.AssignedTo1)
+          {
+             AssignedToValue=item.AssignedTo1.Title
+          }
+
+          if(item.RequestStatus!=undefined)
+          {
+             status=item.RequestStatus.Title;
+          }
+
+          excelSheetArray[i].addRow({
+            ProjectName:item.ProjectName,
+            ProjectNumber: item.ProjectNumber,
+            NameOfAV: item.NameOfAV,
+            //AVName: item.AVName.Title,
+            PNForZAS: item.PNForZAS,
+            AssignedToValue:AssignedToValue,
+            RequestStatus:status
+          });
+        });
+        
+        
+        
+        ['A1', 'B1', 'C1', 'D1','E1','F1'].map(key => {
+          excelSheetArray[i].getCell(key).fill ={type: 'pattern', pattern:'solid', fgColor:{argb:'FFFFFF00'}}
+        });
+        excelSheetArray[i].eachRow({ includeEmpty: true }, function(cell,index) {
+          cell._cells.map((key,index)=>{
+        
+            excelSheetArray[i].getCell(key._address).border = {
+                top: {style:'thin'},
+            left: {style:'thin'},
+            bottom: {style:'thin'},
+            right: {style:'thin'}
+              };
+            
+        
+          })
+        
+          });
+        
+      }
+    
+
+
+
+  workbook.xlsx.writeBuffer().then(buffer => FileSaver.saveAs(new Blob([buffer]), `${Date.now()}_Requests.xlsx`))
+  .catch(err => console.log('Error writing excel export', err))
+  }
+
+  function generateHODExcel(array)
+    {
+      
+      const HODworkbook = new Excel.Workbook();
+      sheetNames=[];
+      Procurementusers.map((user,i)=>{
+        var sheetName=user.Title
+         sheetName = HODworkbook.addWorksheet(sheetName);
+         sheetNames.push(sheetName);
+         sheetName.columns = [
+          { header: "Project Name", key: "ProjectName", width: 25 },
+          { header: "ProjectNumber", key: "ProjectNumber", width: 25 },
+          { header: "NameOfAV", key: "NameOfAV", width: 25 },
+          //{ header: "AVName", key: "AVName", width: 25 },
+          { header: "PNForZAS", key: "PNForZAS", width: 25 },
+          //{ header: "Representative", key: "Representative", width: 25 },
+          { header: "Assign To", key: "AssignedTo1", width: 25 },
+          { header: "Status", key: "RequestStatus", width: 25 }
+          
+        ];
+      });
+
+      sheetNames.map((sheet,i)=>{
+          var loopsheet=sheet;
+       var  loopedArray= array.filter((data)=>
+       {
+         if(data.AssignedTo1)
+         return data.AssignedTo1.Title==loopsheet.name
+         
+        });
+
+       loopedArray.forEach(function(item, index) {
+        var AssignedToValue="";
+        var status="";
+        if(item.Representative)
+        {
+          var repValue:any=[]
+          item.Representative.map((rep,i)=>{
+              repValue.push(rep.Title)
+          });
+        }
+        if(item.AssignedTo1)
+        {
+           AssignedToValue=item.AssignedTo1.Title
+        }
+        if(item.RequestStatus!=undefined)
+          {
+             status=item.RequestStatus.Title;
+          }
+        loopsheet.addRow({
+          ProjectName:item.ProjectName,
+          ProjectNumber: item.ProjectNumber,
+          NameOfAV: item.NameOfAV,
+          //AVName: item.AVName.Title,
+          PNForZAS: item.PNForZAS,
+          //Representative:repValue.toString(),
+          AssignedTo1:AssignedToValue,
+          RequestStatus:status
+        });
+      });
+      
+      
+      
+      ['A1', 'B1', 'C1', 'D1','E1','F1'].map(key => {
+        loopsheet.getCell(key).fill ={type: 'pattern', pattern:'solid', fgColor:{argb:'FFFFFF00'}}
+      });
+      loopsheet.eachRow({ includeEmpty: true }, function(cell,index) {
+        cell._cells.map((key,index)=>{
+      
+          loopsheet.getCell(key._address).border = {
+              top: {style:'thin'},
+          left: {style:'thin'},
+          bottom: {style:'thin'},
+          right: {style:'thin'}
+            };
+          
+      
+        })
+      
+        });
+      });
+
+      
+      HODworkbook.xlsx.writeBuffer().then(buffer => FileSaver.saveAs(new Blob([buffer]), `${Date.now()}Users.xlsx`))
+  .catch(err => console.log('Error writing excel export', err))
+
+
+    }

@@ -236,7 +236,7 @@ th.dt-center, td.dt-center { text-align: center; }
 }
 #FilesTable_wrapper
 {
-    width: 115%;
+    width: 100%;
 }
 div.dataTables_filter, div.dataTables_length {
     padding: 10px;
@@ -290,7 +290,8 @@ div.dataTables_filter, div.dataTables_length {
     display: inline-block;
 }
 .tab-content input {
-    border: 1px solid #f5f5f5;
+    border: 1px solid #323232;
+    border-radius: 5px;
 }
 
 
@@ -442,7 +443,7 @@ div.dataTables_filter, div.dataTables_length {
       position: absolute;
   }
   .numbers {
-    width: 60%;
+    width: 80%;
     display: flex;
     justify-content: space-between;
     }
@@ -460,5 +461,10 @@ div.dataTables_filter, div.dataTables_length {
     }
     #txtProjectNum5 {
     width: 43px;
+    }
+
+    .clsStatus {
+        width: 40%;
+        margin: 18px 0 10px 0;
     }
 
