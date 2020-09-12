@@ -3078,6 +3078,9 @@ function creategoodsamendment()
     if($('#fileQuantitiesNochange')[0].files.length>0)
     arrFiles.push({'FolderName':'AmendmentSpecfications','files':$('#fileQuantitiesNochange')[0].files});
 
+    if($('#others')[0].files.length>0)
+    arrFiles.push({'FolderName':'Others','files':$('#others')[0].files});
+
     pdfdetails=[];
     pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
     pdfdetails.push({"Title":"Project Number","Value":projectNumber});
@@ -3181,12 +3184,12 @@ async function InsertGoodsRequest(Servicedata,arrFiles)
 {
 
    fileslength=arrFiles.length;
-   await sp.web.lists.getByTitle("ProcurementGoods").items.add(Servicedata).then(function(data)
+   await sp.web.lists.getByTitle("ProcurementGoods").items.add(Servicedata).then(async function(data)
    {
      
      //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
      RequestID=data.data.ID;
-     createpdf(pdfdetails,"GD-"+data.data.ID);
+     await createpdf(pdfdetails,"GD-"+data.data.ID);
      if($('#Drpreqcategories option:selected').val()=='goods')
      createContact("GD-"+data.data.ID);
 
@@ -5416,6 +5419,9 @@ function CreateSubsidyAmendemnt()
           if($('#Financialstatus')[0].files.length>0)
           arrFiles.push({'FolderName':'Financialstatus','files':$('#Financialstatus')[0].files});
 
+          if($('#MinisterApproval')[0].files.length>0)
+          arrFiles.push({'FolderName':'MinisterApproval','files':$('#MinisterApproval')[0].files});
+
           pdfdetails=[];
           pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
           pdfdetails.push({"Title":"Project Number","Value":projectNumber});
@@ -5463,7 +5469,7 @@ async function InsertSubsidy(Servicedata,arrFiles)
        createpdf(pdfdetails,"LS-"+data.data.ID);
       for(var i=0;i<arrFiles.length;i++)
        {
-          createFolder(arrFiles[i].FolderName,"SD-"+data.data.ID,arrFiles[i].files);
+          createFolder(arrFiles[i].FolderName,"LS-"+data.data.ID,arrFiles[i].files);
        }
 
        
@@ -5733,14 +5739,12 @@ async function InsertIdpp(Servicedata,arrFiles)
      {
        
        //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
-       createpdf(pdfdetails,"idpp-"+data.data.ID);
-      for(var i=0;i<arrFiles.length;i++)
-       {
-          createFolder(arrFiles[i].FolderName,"IDP-"+data.data.ID,arrFiles[i].files);
-       }
+          createpdf(pdfdetails,"idpp-"+data.data.ID);
+          for(var i=0;i<arrFiles.length;i++)
+          {
+            createFolder(arrFiles[i].FolderName,"IDP-"+data.data.ID,arrFiles[i].files);
+          }
 
-       
-         
      }).catch(function(error){ErrorCallBack(error,'InsertIdpp')});
 }
 
@@ -5969,18 +5973,18 @@ async function uploadpdf(result,filename)
   
   
   await sp.web.getFolderByServerRelativeUrl("NewRequests")
-  .files.add(filename+".pdf", result, true).then(function(data)
+  .files.add(filename+".pdf", result, true).then(async function(data)
   {
-    updatemetadata(data);
+    await updatemetadata(data);
 
   }).catch(function(error){ErrorCallBack(error,'uploadpdf')});
 }
 
 async function  updatemetadata(data) 
 {
-  await data.file.listItemAllFields.get().then(function(listItemAllFields)
+  await data.file.listItemAllFields.get().then(async function(listItemAllFields)
     {
-      updatepdf(listItemAllFields);
+      await updatepdf(listItemAllFields);
 
     }).catch(function(error){ErrorCallBack(error,'dataFiles')});
 }
@@ -5992,10 +5996,10 @@ async function updatepdf(listItemAllFields)
   RequestType="IDPP";
   
   var hstrydata={RequestType:RequestType,AVNameId:$('#projectName option:selected').attr('Proj-Av-id')};  
-  sp.web.lists.getByTitle("NewRequests").items.getById(listItemAllFields.Id).update(hstrydata)
-      .then(function(results)
+  await sp.web.lists.getByTitle("NewRequests").items.getById(listItemAllFields.Id).update(hstrydata)
+      .then(async function(results)
       {
-        //alert("pdf generated");
+        await alert("pdf generated");
       }).catch(function(error){ErrorCallBack(error,'files')});  
 }
 

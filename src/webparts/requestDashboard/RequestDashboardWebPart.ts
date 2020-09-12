@@ -125,8 +125,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <div class='btnDiv'> 
     <div>
     <input class="btn btn-primary" type='button' id='btnGoods' value='Create Goods Request'>
-    <input class="btn btn-primary" type='button' id='btnExcel' value='Excel'>
-    <input class="btn btn-primary" type='button' data-type="goods" id='btnHODExcel' value='Excel'>
+    <input class="btn btn-primary btnExcel" type='button' id='btnExcel' value='Excel'>
+    <input class="btn btn-primary btnHODExcel" type='button' data-type="goods" id='btnHODExcel' value='Excel'>
     </div>
     </div>
     
@@ -160,8 +160,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <div class='btnDiv'>
     <div>
     <input class="btn btn-primary" type='button' id='btnService' value='Create Service Request'>
-    <input class="btn btn-primary" type='button' id='btnExcel' value='Excel'>
-    <input class="btn btn-primary" type='button' data-type="service" id='btnHODExcel' value='Excel'>
+    <input class="btn btn-primary btnExcel" type='button' id='btnExcel' value='Excel'>
+    <input class="btn btn-primary btnHODExcel" type='button' data-type="service" id='btnHODExcel' value='Excel'>
     </div>
     </div>
    
@@ -195,8 +195,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <div class='btnDiv'>
     <div>
     <input class="btn btn-primary" type='button' id='btnSubsidy' value='Create Local Subsidy'>
-    <input class="btn btn-primary" type='button' id='btnExcel' value='Excel'>
-    <input class="btn btn-primary" type='button' data-type="subsidy" id='btnHODExcel' value='Excel'>
+    <input class="btn btn-primary btnExcel" type='button' id='btnExcel' value='Excel'>
+    <input class="btn btn-primary btnHODExcel" type='button' data-type="subsidy" id='btnHODExcel' value='Excel'>
     </div>
     </div>
    
@@ -231,8 +231,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <div class='btnDiv'>
     <div>
     <input class="btn btn-primary" type='button' id='btnLease' value='Create Lease Agreement'>
-    <input class="btn btn-primary" type='button' id='btnExcel' value='Excel'>
-    <input class="btn btn-primary" type='button' data-type="lease" id='btnHODExcel' value='Excel'>
+    <input class="btn btn-primary btnExcel" type='button' id='btnExcel' value='Excel'>
+    <input class="btn btn-primary btnHODExcel" type='button' data-type="lease" id='btnHODExcel' value='Excel'>
     </div>
     </div>
    
@@ -266,8 +266,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     <div class='btnDiv'>
     <div>
     <input class="btn btn-primary" type='button' id='btnIdpp' value='Create IDPP'>
-    <input class="btn btn-primary" type='button' id='btnExcel' value='Excel'>
-    <input class="btn btn-primary" type='button' data-type="idpp" id='btnHODExcel' value='Excel'>
+    <input class="btn btn-primary btnExcel" type='button' id='btnExcel' value='Excel'>
+    <input class="btn btn-primary btnHODExcel" type='button' data-type="idpp" id='btnHODExcel' value='Excel'>
     </div>
     </div>
    
@@ -393,27 +393,27 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
     $('#btnService').click(function()
     {
-      location.href = siteURL+'/SitePages/NewServiceRequest.aspx';
+      location.href = siteURL+'/SitePages/New-Request.aspx';
     });
     
     $('#btnGoods').click(function()
     {
-      location.href = siteURL+'/SitePages/NewGoodsRequest.aspx';
+      location.href = siteURL+'/SitePages/New-Request.aspx';
     });
 
     $('#btnSubsidy').click(function()
     {
-      location.href = siteURL+'/SitePages/NewSubsidyRequest.aspx';
+      location.href = siteURL+'/SitePages/New-Request.aspx';
     });
 
     $('#btnLease').click(function()
     {
-      location.href = siteURL+'/SitePages/NewLeaseRequest.aspx';
+      location.href = siteURL+'/SitePages/New-Request.aspx';
     });
     
     $('#btnIdpp').click(function()
     {
-      location.href = siteURL+'/SitePages/NewIdppRequest.aspx';
+      location.href = siteURL+'/SitePages/New-Request.aspx';
     });
 
     /*Excel click functionailty*/
@@ -453,17 +453,29 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
       let arrFiles=[];
       let otherFiles=[];
-      
+      let NeutralSpecfication=[];
+      let Quantities=[];
 
-      arrFiles.push({'Name':'Quantities','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'CostFile','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'NeutralSpecfication','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'AdditionalInformation','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'FilledCatalogue','FileName':'N/A','FileURl':'N/A'});
+      if(GoodsRequest[index].GoodsCategory=="goods")
+      {
+        arrFiles.push({'Name':'CostFile','FileName':'N/A','FileURl':'N/A','displayName':'CostFile'});
+        arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A','displayName':'ShortList'});
+        arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A','displayName':'Technical Part of the Newspaper Advertisement'});
+        arrFiles.push({'Name':'Quantities','FileName':'N/A','FileURl':'N/A','displayName':'Specifications and Quantities'});
+        arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A','displayName':'Other Attachments'});
+        arrFiles.push({'Name':'NeutralSpecfication','FileName':'N/A','FileURl':'N/A','displayName':'Nonneutral Specifications'});
+      }
+      else if(GoodsRequest[index].GoodsCategory=="goodsamendment")
+      {
+        arrFiles.push({'Name':'AmendmentSpecfications','FileName':'N/A','FileURl':'N/A','displayName':'Specifications and Quantities'});
+        arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A','displayName':'Other Attachments'});
+        arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A','displayName':'Justification for Amendment'});
+      }
+      else if(GoodsRequest[index].GoodsCategory=="framework")
+      {
+        arrFiles.push({'Name':'AdditionalInformation','FileName':'N/A','FileURl':'N/A','displayName':'Additional Information'});
+        arrFiles.push({'Name':'FilledCatalogue','FileName':'N/A','FileURl':'N/A','displayName':'Filled Catalogue'});
+      }
 
       $.each(arrFiles,function(key,val)
       {
@@ -478,14 +490,23 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
                   for(var k=0;k<ProcurementServiceFiles['Folders'][i].Folders[j].Files.length;k++)
                   {
                     
-                    if(ProcurementServiceFiles['Folders'][i].Name!='Others'){
-                    arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
-                    arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;}
+                    if(ProcurementServiceFiles['Folders'][i].Name=='Others')
+                    {
+                      otherFiles.push({'displayname':'Other Attachments','Name':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,'Url':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
+                    }
+                    else if(ProcurementServiceFiles['Folders'][i].Name=='Quantities')
+                    {
+                      Quantities.push({'displayname':'Specifications and Quantities','Name':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,'Url':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
+                    }
+                    else if(ProcurementServiceFiles['Folders'][i].Name=='NeutralSpecfication')
+                    {
+                      NeutralSpecfication.push({'displayname':'Nonneutral Specifications','Name':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,'Url':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
+                    }
                     else
                     {
-                      otherFiles.push({'Name':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,'Url':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl})
+                      arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
+                      arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
                     }
-                  
                   }
                 }
               }
@@ -507,7 +528,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       if(GoodsRequest[index].isKompOutput=="Yes")
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].KompOutputNumber +' - '+GoodsRequest[index].kompPercent+'</p></div></div>';
       
-      
+      //goods request popup
       if(GoodsRequest[index].GoodsCategory=="goods")
       {
         HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ShortDesc+'</p></div></div>';
@@ -522,55 +543,76 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
           HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Contact Person</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ContactPersonName+'</p></div></div>';
           HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].PersonEmail+'</p></div></div>';
           HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].PersonMobile+'</p></div></div>';
-        }
-        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Quantities</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[0].FileURl)+' target="_blank">'+arrFiles[0].FileName+'</a></p></div></div>';
-        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">ShortList</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[1].FileURl)+' target="_blank">'+arrFiles[1].FileName+'</a></p></div></div>';
-        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">NewsAdvertisement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[2].FileURl)+' target="_blank">'+arrFiles[2].FileName+'</a></p></div></div>';
-        for(var idxOther=0;idxOther<otherFiles.length;idxOther++)
-        {
-          HTMLGoods+='<div class="row goods-details">';
-          HTMLGoods+='<div class="col-sm-3"><h5 class="goods-label">Others</h5></div>';
-          HTMLGoods+='<div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div></div>';
-        }
-        if(GoodsRequest[index].RequestItem=='Yes')
-        {
-        HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Cost Item</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[4].FileURl)+' target="_blank"> '+arrFiles[4].FileName+'</a></p></div></div>';
-        }
-        if(GoodsRequest[index].Specifications=='Nonneutral Specifications')
-        {
-          HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Specification</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[5].FileURl)+' target="_blank"> '+arrFiles[5].FileName+'</a></p></div></div>';
-        }
-      }//for goods request popup
+        }        
+      }
+    //above codefor goods amendment popup
     else if(GoodsRequest[index].GoodsCategory=="goodsamendment")
     {
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">ProSoft Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].ProsoftNumber+'</p></div></div>';
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Delivery Time</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+moment(GoodsRequest[index].DeliveryTime).format('MM/DD/YYYY')+'</p></div></div>';
-      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Quantities</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[0].FileURl)+' target="_blank">'+arrFiles[0].FileName+'</a></p></div></div>';
-      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Justification for Amendment</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[6].FileURl)+' target="_blank">'+arrFiles[6].FileName+'</a></p></div></div>';
-      for(var idxOther=0;idxOther<otherFiles.length;idxOther++)
-        {
-          HTMLGoods+='<div class="row goods-details">';
-          HTMLGoods+='<div class="col-sm-3"><h5 class="goods-label">Others</h5></div>';
-          HTMLGoods+='<div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div></div>';
-        }
-    }//for goods amendment popup
+    }
+    //for goods framework popup
     else if(GoodsRequest[index].GoodsCategory=="framework")
     {
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Framework Agreement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].Agreement+'</p></div></div>';
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].JOD+'</p></div></div>';
       HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">'+GoodsRequest[index].EUR+'</p></div></div>';
-      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Additional Information</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[7].FileURl)+' target="_blank">'+arrFiles[7].FileName+'</a></p></div></div>';
-      HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Filled Catalogue</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[8].FileURl)+' target="_blank">'+arrFiles[8].FileName+'</a></p></div></div>';
-    }//for goods framework popup
+    }
 
       
+      for(var i=0;i<arrFiles.length;i++)
+      {
+        if(arrFiles[i].FileURl!='N/A')
+        {
+          HTMLGoods+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].displayName +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
+        }
+      } 
+      
+      
+      if(otherFiles.length>0)
+      {
+          for(var idxOther=0;idxOther<otherFiles.length;idxOther++)
+          {
+              if(idxOther==0)
+              {
+                HTMLGoods+='<div class="row goods-details">';
+                HTMLGoods+='<div class="col-sm-3"><h5 class="goods-label">'+otherFiles[0].displayname+'</h5></div>';
+                HTMLGoods+='<div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div>';
+                HTMLGoods+='</div>';
+              }
+              else
+              {
+                HTMLGoods+='<div class="row goods-details">';
+                HTMLGoods+='<div class="col-sm-3"><h5 class="goods-label"> </h5></div>';
+                HTMLGoods+='<div class="col-sm-1 text-center"> </div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div>';
+                HTMLGoods+='</div>';
+              }
+          }   
+      }
+      if(Quantities.length>0)
+      {
+        for(var idxquantity=0;idxquantity<Quantities.length;idxquantity++)
+        {
+            if(idxquantity==0)
+            {
+              HTMLGoods+='<div class="row goods-details">';
+              HTMLGoods+='<div class="col-sm-3"><h5 class="goods-label">'+Quantities[0].displayname+'</h5></div>';
+              HTMLGoods+='<div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(Quantities[idxquantity].Url)+' target="_blank"> '+Quantities[idxquantity].Name+'</a></p></div>';
+              HTMLGoods+='</div>';
+            }else
+            {
+              HTMLGoods+='<div class="row goods-details">';
+              HTMLGoods+='<div class="col-sm-3"><h5 class="goods-label"> </h5></div>';
+              HTMLGoods+='<div class="col-sm-1 text-center"> </div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(Quantities[idxquantity].Url)+' target="_blank"> '+Quantities[idxquantity].Name+'</a></p></div>';
+              HTMLGoods+='</div>';
+            }
+        }
+      }
       $('#ProjectDetails').html('');
       $('#ProjectDetails').html("Goods Request Details for "+GoodsRequest[index].ProjectName);
       $('#modalbody').html('');
       $('#modalbody').append(HTMLGoods);
-      
 
-    
     });
 
     $(document).on('click','.serdetailView',function()
@@ -589,33 +631,35 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
 
       let arrFiles=[];
+      let otherFiles=[];
       
 
-      arrFiles.push({'Name':'EstimatedCost','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Terms','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'TechAssGrid','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'ProjectProposal','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Budget','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Profile','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'BankDetails','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'CommercialSuitability','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RegCert','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'LessorID','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'OwnerDocs','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'DirectorApproval','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'LandScheme','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'}); 
-      arrFiles.push({'Name':'CVExperts','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'FinancialReports','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'AgreementConcept','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Vergabedok','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'SummaryActionPlan','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'CompetitionReport','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'EstimatedCost','FileName':'N/A','FileURl':'N/A','displayname':'Estimated Cost'});
+      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A','displayname':'Justification'});
+      arrFiles.push({'Name':'Terms','FileName':'N/A','FileURl':'N/A','displayname':'Terms Of Reference'});
+      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A','displayname':'Other Attachments'});
+      arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A','displayname':'ShortList'});
+      arrFiles.push({'Name':'TechAssGrid','FileName':'N/A','FileURl':'N/A','displayname':'Technical Assessment Grid'});
+      arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A','displayname':'Technical Part of the Newspaper Advertisement'});
+      arrFiles.push({'Name':'ProjectProposal','FileName':'N/A','FileURl':'N/A','displayname':'ProjectProposal'});
+      arrFiles.push({'Name':'Budget','FileName':'N/A','FileURl':'N/A','displayname':'Budget'});
+      arrFiles.push({'Name':'Profile','FileName':'N/A','FileURl':'N/A','displayname':'Profile'});
+      arrFiles.push({'Name':'BankDetails','FileName':'N/A','FileURl':'N/A','displayname':'BankDetails'});
+      arrFiles.push({'Name':'CommercialSuitability','FileName':'N/A','FileURl':'N/A','displayname':'CommercialSuitability'});
+      arrFiles.push({'Name':'RegCert','FileName':'N/A','FileURl':'N/A','displayname':'RegCert'});
+      arrFiles.push({'Name':'LessorID','FileName':'N/A','FileURl':'N/A','displayname':'LessorID'});
+      arrFiles.push({'Name':'OwnerDocs','FileName':'N/A','FileURl':'N/A','displayname':'OwnerDocs'});
+      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A','displayname':'RmoApproval'});
+      arrFiles.push({'Name':'DirectorApproval','FileName':'N/A','FileURl':'N/A','displayname':'DirectorApproval'});
+      arrFiles.push({'Name':'LandScheme','FileName':'N/A','FileURl':'N/A','displayname':'LandScheme'});
+      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A','displayname':'RmoApproval'}); 
+      arrFiles.push({'Name':'CVExperts','FileName':'N/A','FileURl':'N/A','displayname':'CVExperts'});
+      arrFiles.push({'Name':'Financialstatus','FileName':'N/A','FileURl':'N/A','displayname':'Financial status of the done payments'});
+      arrFiles.push({'Name':'AgreementConcept','FileName':'N/A','FileURl':'N/A','displayname':'AgreementConcept'});
+      arrFiles.push({'Name':'Vergabedok','FileName':'N/A','FileURl':'N/A','displayname':'Vergabedok'});
+      arrFiles.push({'Name':'SummaryActionPlan','FileName':'N/A','FileURl':'N/A','displayname':'SummaryActionPlan'});
+      arrFiles.push({'Name':'CompetitionReport','FileName':'N/A','FileURl':'N/A','displayname':'CompetitionReport'});
+      arrFiles.push({'Name':'FilledRequest','FileName':'N/A','FileURl':'N/A','displayname':'Filled Request Form for Legal Services'});
 
       $.each(arrFiles,function(key,val)
       {
@@ -629,8 +673,15 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
                 {
                   for(var k=0;k<ProcurementServiceFiles['Folders'][i].Folders[j].Files.length;k++)
                   {
+                    if(ProcurementServiceFiles['Folders'][i].Name=='Others')
+                    {
+                      otherFiles.push({'displayname':'Other Attachments','Name':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,'Url':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
+                    }
+                    else
+                    {
                     arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
                     arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                    }
                   
                   }
                 }
@@ -701,8 +752,29 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       {
         if(arrFiles[i].FileURl!='N/A')
         {
-          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].displayname +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
         }
+      }
+
+      if(otherFiles.length>0)
+      {
+          for(var idxOther=0;idxOther<otherFiles.length;idxOther++)
+          {
+              if(idxOther==0)
+              {
+                HTMLservice+='<div class="row goods-details">';
+                HTMLservice+='<div class="col-sm-3"><h5 class="goods-label">'+otherFiles[0].displayname+'</h5></div>';
+                HTMLservice+='<div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div>';
+                HTMLservice+='</div>';
+              }
+              else
+              {
+                HTMLservice+='<div class="row goods-details">';
+                HTMLservice+='<div class="col-sm-3"><h5 class="goods-label"> </h5></div>';
+                HTMLservice+='<div class="col-sm-1 text-center"> </div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div>';
+                HTMLservice+='</div>';
+              }
+          }   
       }
 
 
@@ -729,33 +801,24 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
 
       let arrFiles=[];
-      
+      let otherFiles=[];
 
-      arrFiles.push({'Name':'EstimatedCost','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Terms','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'TechAssGrid','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'ProjectProposal','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Budget','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Profile','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'BankDetails','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'CommercialSuitability','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RegCert','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'LessorID','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'OwnerDocs','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'DirectorApproval','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'LandScheme','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'}); 
-      arrFiles.push({'Name':'CVExperts','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'FinancialReports','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'AgreementConcept','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Vergabedok','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'SummaryActionPlan','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'CompetitionReport','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A','displayname':'Other Attachments'});
+      arrFiles.push({'Name':'ProjectProposal','FileName':'N/A','FileURl':'N/A','displayname':'Project Proposal'});
+      arrFiles.push({'Name':'Budget','FileName':'N/A','FileURl':'N/A','displayname':'Budget Break-down'});
+      arrFiles.push({'Name':'Profile','FileName':'N/A','FileURl':'N/A','displayname':'Profile'});
+      arrFiles.push({'Name':'BankDetails','FileName':'N/A','FileURl':'N/A','displayname':'Bank Details'});
+      arrFiles.push({'Name':'CommercialSuitability','FileName':'N/A','FileURl':'N/A','displayname':'Commercial & Legal Suitability Check'});
+      arrFiles.push({'Name':'RegCert','FileName':'N/A','FileURl':'N/A','displayname':'Registration Certificate'});
+      arrFiles.push({'Name':'MinisterApproval','FileName':'N/A','FileURl':'N/A','displayname':'Approval from the Prime Minister/ Authorized Ministry'});
+      arrFiles.push({'Name':'HQApproval','FileName':'N/A','FileURl':'N/A','displayname':'Checklist for HQ Approval'});
+
+      arrFiles.push({'Name':'MinisterApproval','FileName':'N/A','FileURl':'N/A','displayname':'Prime Minister approval for the additional budget'});
+      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A','displayname':'Justification for Amendment'});
+      arrFiles.push({'Name':'Budget','FileName':'N/A','FileURl':'N/A','displayname':'Modified Budget Breakdown (signed and stamped)'});
+      arrFiles.push({'Name':'ProjectProposal','FileName':'N/A','FileURl':'N/A','displayname':'Modified Project Proposal (signed and stamped)'});
+      arrFiles.push({'Name':'Financialstatus','FileName':'N/A','FileURl':'N/A','displayname':'Financial status of the done payments'});
+
 
       $.each(arrFiles,function(key,val)
       {
@@ -769,8 +832,22 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
                 {
                   for(var k=0;k<ProcurementServiceFiles['Folders'][i].Folders[j].Files.length;k++)
                   {
-                    arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
-                    arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                    if(ProcurementServiceFiles['Folders'][i].Name=='Others')
+                    {
+                      otherFiles.push({'displayname':'Other Attachments','Name':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,'Url':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
+                    }
+                    else
+                    {
+                      if(ProcurementServiceFiles['Folders'][i].Name=='Others')
+                      {
+                        otherFiles.push({'displayname':'Other Attachments','Name':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,'Url':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
+                      }
+                      else
+                      {
+                        arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
+                        arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                      }
+                    }
                   
                   }
                 }
@@ -812,6 +889,27 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
         {
           HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
         }
+      }
+
+      if(otherFiles.length>0)
+      {
+          for(var idxOther=0;idxOther<otherFiles.length;idxOther++)
+          {
+              if(idxOther==0)
+              {
+                HTMLservice+='<div class="row goods-details">';
+                HTMLservice+='<div class="col-sm-3"><h5 class="goods-label">'+otherFiles[0].displayname+'</h5></div>';
+                HTMLservice+='<div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div>';
+                HTMLservice+='</div>';
+              }
+              else
+              {
+                HTMLservice+='<div class="row goods-details">';
+                HTMLservice+='<div class="col-sm-3"><h5 class="goods-label"> </h5></div>';
+                HTMLservice+='<div class="col-sm-1 text-center"> </div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div>';
+                HTMLservice+='</div>';
+              }
+          }   
       }
 
       
@@ -959,31 +1057,17 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       let arrFiles=[];
       
 
-      arrFiles.push({'Name':'EstimatedCost','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Terms','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'TechAssGrid','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'ProjectProposal','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Budget','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Profile','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'BankDetails','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'CommercialSuitability','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RegCert','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'LessorID','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'OwnerDocs','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'DirectorApproval','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'LandScheme','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'}); 
-      arrFiles.push({'Name':'CVExperts','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'FinancialReports','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'AgreementConcept','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Vergabedok','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'SummaryActionPlan','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'CompetitionReport','FileName':'N/A','FileURl':'N/A'});
+
+      arrFiles.push({'Name':'Budget','FileName':'N/A','FileURl':'N/A','displayname':'Budget Plan'});
+      arrFiles.push({'Name':'Profile','FileName':'N/A','FileURl':'N/A','displayname':'Company Profile'});
+      arrFiles.push({'Name':'BankDetails','FileName':'N/A','FileURl':'N/A','displayname':'Bank Details'});      
+      arrFiles.push({'Name':'RegCert','FileName':'N/A','FileURl':'N/A','displayname':'Company’s Registration Certificate'});
+      arrFiles.push({'Name':'CVExperts','FileName':'N/A','FileURl':'N/A','displayname':'CVs Of Experts'});
+      arrFiles.push({'Name':'FinancialReports','FileName':'N/A','FileURl':'N/A','displayname':'Financial Reports'});
+      arrFiles.push({'Name':'AgreementConcept','FileName':'N/A','FileURl':'N/A','displayname':'Brief concept For Agreement'});
+      arrFiles.push({'Name':'Vergabedok','FileName':'N/A','FileURl':'N/A','displayname':'Vergabedok'});
+      arrFiles.push({'Name':'SummaryActionPlan','FileName':'N/A','FileURl':'N/A','displayname':'Summary Action Plan'});
+      arrFiles.push({'Name':'CompetitionReport','FileName':'N/A','FileURl':'N/A','displayname':'Competition Report'});
 
       $.each(arrFiles,function(key,val)
       {
@@ -1692,7 +1776,7 @@ async function LoadGoodsRequest()
   async function LoadServiceRequest()
   {
     await sp.web.lists.getByTitle('ProcurementService').items
-    .select('ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus,StatusSummary')
+    .select('ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus,StatusSummary,Agreement')
     .orderBy("Modified", false)
     .expand('AssignedTo1,AVName,Representative,RequestStatus,Author')
     .top(5000)
@@ -2049,9 +2133,9 @@ async function LoadGoodsRequest()
           }
 
           if(isHOD)
-          $("#btnExcel").hide();
+          $(".btnExcel").hide();
           else
-          $("#btnHODExcel").hide();
+          $(".btnHODExcel").hide();
           
         }
     }).catch(function(error){ErrorCallBack(error,'LoadHeadofProcurementTeamMembers')});
@@ -2220,8 +2304,8 @@ async function LoadGoodsRequest()
   
   await sp.utility.sendEmail(emailProps).then(_ => 
   {
-      //AlertMessage("Followup mail sent");  
-      alert("");
+      AlertMessage("Followup mail sent");
+        
   }).catch(function(error){ErrorCallBack(error,'sendemail')});
   }
 
@@ -2235,7 +2319,7 @@ function AlertMessage(strMewssageEN) {
    
        'message': strMewssageEN ,
    
-       'onok': function(){window.location.href=siteURL+'/SitePages/RequestDashboard.aspx';} 
+       'onok': function(){window.location.href="#";} 
  
    
      }).show().setHeader('<em>Confirmation</em> ').set('closable', false);
