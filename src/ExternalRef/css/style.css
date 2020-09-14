@@ -323,7 +323,7 @@ div.dataTables_filter, div.dataTables_length {
     left: 0;
 }
 .dataTables_filter {
-    right: 175px;
+    right: 250px;
 }
 .spinner-border {
     /* display: inline-block; when show */
@@ -464,7 +464,7 @@ div.dataTables_filter, div.dataTables_length {
     }
 
     .clsStatus {
-        width: 40%;
+        width: 28%;
         margin: 18px 0 10px 0;
     }
 
@@ -472,4 +472,5 @@ div.dataTables_filter, div.dataTables_length {
         width:100% !important;
         max-width:100% !important;
         }
+
 

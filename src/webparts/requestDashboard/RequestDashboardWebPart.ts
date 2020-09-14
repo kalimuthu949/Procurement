@@ -4,7 +4,7 @@ import {
   PropertyPaneTextField
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
-import { escape, each } from '@microsoft/sp-lodash-subset';
+import { escape, each, findIndex } from '@microsoft/sp-lodash-subset';
 
 import styles from './RequestDashboardWebPart.module.scss';
 import * as strings from 'RequestDashboardWebPartStrings';
@@ -131,10 +131,11 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
     
     <div id='GoodsTable'>
+    <label>Status:</label>
     <select id='drpStatusforgoods' class="clsStatus">
     <option value="select">Select</option>
     </select>
-    <table id="Goods" style="width:100%">
+    <table id="Goods" class="display" style="width:100%">
     <thead>
     <tr>
     <th>Id</th>
@@ -166,10 +167,11 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
    
     <div id='ServiceTable'>
+    <label>Status:</label>
     <select id='drpStatusforservice' class="clsStatus">
     <option value="select">Select</option>
     </select>
-    <table id="Service"  style="width:100%">
+    <table id="Service" class="display" style="width:100%">
     <thead>
     <tr>
     <th>Id</th>
@@ -201,10 +203,11 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
    
     <div id='SubsidyTable'>
+    <label>Status:</label>
     <select id='drpStatusforsubsidy' class="clsStatus">
     <option value="select">Select</option>
     </select>
-    <table id="Subsidy"  style="width:100%">
+    <table id="Subsidy" class="display" style="width:100%">
     <thead>
     <tr>
     <th>Id</th>
@@ -237,10 +240,11 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
    
     <div id='LeaseTable'>
+    <label>Status:</label>
     <select id='drpStatusforlease' class="clsStatus">
     <option value="select">Select</option>
     </select>
-    <table id="Lease"  style="width:100%">
+    <table id="Lease" class="display" style="width:100%">
     <thead>
     <tr>
     <th>Id</th>
@@ -272,10 +276,11 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
     </div>
    
     <div id='idppTable'>
+    <label>Status:</label>
     <select id='drpStatusforidpp' class="clsStatus">
     <option value="select">Select</option>
     </select>
-    <table id="idpp"  style="width:100%">
+    <table id="idpp" class="display" style="width:100%">
     <thead>
     <tr>
     <th>Id</th>
@@ -437,20 +442,21 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
 
     });
 
-    $(document).on('click','.GdsdetailView',function()
+    $(document).on('click','.GdsdetailView',async function()
     {
       
       var that=$(this);
       var index;
       var gdsID="GD-"+that.attr('req-id');//Ref Id Of goods is like GD-1
-      GoodsRequest.forEach(function(val,key)
+      await GoodsRequest.forEach(function(val,key)
       {
           if(val.ID==that.attr('req-id'))
           {
             index=key;
+            return false;
           }
       });
-
+      
       let arrFiles=[];
       let otherFiles=[];
       let NeutralSpecfication=[];
@@ -626,6 +632,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
           if(val.ID==that.attr('req-id'))
           {
             index=key;
+            return false;
           }
       });
 
@@ -796,6 +803,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
           if(val.ID==that.attr('req-id'))
           {
             index=key;
+            return false;
           }
       });
 
@@ -930,38 +938,28 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
           if(val.ID==that.attr('req-id'))
           {
             index=key;
+            return false;
           }
       });
 
 
       let arrFiles=[];
+      let otherFiles=[];
       
+      arrFiles.push({'Name':'Profile','FileName':'N/A','FileURl':'N/A','displayname':'Company Profile'});
+      arrFiles.push({'Name':'RegCert','FileName':'N/A','FileURl':'N/A','displayname':'Registration Certificate'});
+      arrFiles.push({'Name':'LessorID','FileName':'N/A','FileURl':'N/A','displayname':'Lessor ID'});
+      arrFiles.push({'Name':'OwnerDocs','FileName':'N/A','FileURl':'N/A','displayname':'Estate Ownership Documents'});
+      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A','displayname':'RmoApproval'});
+      arrFiles.push({'Name':'BankDetails','FileName':'N/A','FileURl':'N/A','displayname':'Bank Details'});
+      arrFiles.push({'Name':'DirectorApproval','FileName':'N/A','FileURl':'N/A','displayname':'Country Director Approval'});
+      arrFiles.push({'Name':'LandScheme','FileName':'N/A','FileURl':'N/A','displayname':'Land Scheme'});
+      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A','displayname':'Rmo Approval'});
+      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A','displayname':'Other Attachments'});
 
-      arrFiles.push({'Name':'EstimatedCost','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Terms','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Others','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'ShortList','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'TechAssGrid','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'NewsAdvertisement','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'ProjectProposal','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Budget','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Profile','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'BankDetails','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'CommercialSuitability','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RegCert','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'LessorID','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'OwnerDocs','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'DirectorApproval','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'LandScheme','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'RmoApproval','FileName':'N/A','FileURl':'N/A'}); 
-      arrFiles.push({'Name':'CVExperts','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'FinancialReports','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'AgreementConcept','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'Vergabedok','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'SummaryActionPlan','FileName':'N/A','FileURl':'N/A'});
-      arrFiles.push({'Name':'CompetitionReport','FileName':'N/A','FileURl':'N/A'});
+      arrFiles.push({'Name':'ModifiedOffer','FileName':'N/A','FileURl':'N/A','displayname':'Modified offer by the lessor'});
+      arrFiles.push({'Name':'Justification','FileName':'N/A','FileURl':'N/A','displayname':'Justification for contract supplement signed by the project AV'});
+      arrFiles.push({'Name':'Financialstatus','FileName':'N/A','FileURl':'N/A','displayname':'Financial status of the done payments'});
 
       $.each(arrFiles,function(key,val)
       {
@@ -975,9 +973,15 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
                 {
                   for(var k=0;k<ProcurementServiceFiles['Folders'][i].Folders[j].Files.length;k++)
                   {
-                    arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
-                    arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
-                  
+                    if(ProcurementServiceFiles['Folders'][i].Name=='Others')
+                    {
+                      otherFiles.push({'displayname':'Other Attachments','Name':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name,'Url':ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl});
+                    }
+                    else
+                    {
+                      arrFiles[key].FileName=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].Name;
+                      arrFiles[key].FileURl=ProcurementServiceFiles['Folders'][i].Folders[j].Files[k].ServerRelativeUrl;
+                    }
                   }
                 }
               }
@@ -1028,8 +1032,28 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
       {
         if(arrFiles[i].FileURl!='N/A')
         {
-          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].Name +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
+          HTMLservice+='<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">'+ arrFiles[i].displayname +' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(arrFiles[i].FileURl)+' target="_blank"> '+arrFiles[i].FileName+'</a></p></div></div>';
         }
+      }
+      if(otherFiles.length>0)
+      {
+          for(var idxOther=0;idxOther<otherFiles.length;idxOther++)
+          {
+              if(idxOther==0)
+              {
+                HTMLservice+='<div class="row goods-details">';
+                HTMLservice+='<div class="col-sm-3"><h5 class="goods-label">'+otherFiles[0].displayname+'</h5></div>';
+                HTMLservice+='<div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div>';
+                HTMLservice+='</div>';
+              }
+              else
+              {
+                HTMLservice+='<div class="row goods-details">';
+                HTMLservice+='<div class="col-sm-3"><h5 class="goods-label"> </h5></div>';
+                HTMLservice+='<div class="col-sm-1 text-center"> </div><div class="col-sm-6"><p class="goodsresult"><a href='+encodeURI(otherFiles[idxOther].Url)+' target="_blank"> '+otherFiles[idxOther].Name+'</a></p></div>';
+                HTMLservice+='</div>';
+              }
+          }   
       }
 
       
@@ -1050,6 +1074,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
           if(val.ID==that.attr('req-id'))
           {
             index=key;
+            return false;
           }
       });
 
@@ -1663,6 +1688,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart <IReq
         $("#requestedDate").datepicker({autoclose:true, daysOfWeekDisabled: [5,6]});
     });
   }
+
+  /*remove add contact*/
+  
   
 
   protected get dataVersion(): Version {
@@ -1709,7 +1737,7 @@ async function LoadGoodsRequest()
         if(allItems[index].AssignedTo1)
         assgnuser=allItems[index].AssignedTo1.ID;
         //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
-        if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
+        if(flgSystemAdmin||isHOD||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
         {
         
         goodsHTML+='<tr>';
@@ -1738,7 +1766,7 @@ async function LoadGoodsRequest()
         goodsHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="Gdsfollowup"><span class="icon-action icon-followup"></span></a>';
 
         if(CrntUserID==allItems[index].Author.ID)
-        goodsHTML+='<a href="../../SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=pg"><span class="icon-action icon-track"></span></a>';
+        goodsHTML+='<a href='+siteURL+'/SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=pg><span class="icon-action icon-track"></span></a>';
 
         goodsHTML+='</td>';
         goodsHTML+='</tr>';
@@ -1758,7 +1786,7 @@ async function LoadGoodsRequest()
         $('.StatusDropdownGDS'+i+'').val(allItems[i].RequestStatus.ID);
       }
 
-    }).catch(function(error){ErrorCallBack(error,'InsertService')});
+    }).catch(function(error){ErrorCallBack(error,'LoadGoodsRequest')});
 
       oTablegoods=$('#Goods').DataTable({
       "scrollX": true,
@@ -1790,7 +1818,7 @@ async function LoadGoodsRequest()
         if(allItems[index].AssignedTo1)
         assgnuser=allItems[index].AssignedTo1.ID;
         //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
-        if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
+        if(flgSystemAdmin||isHOD||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
         {
 
         serviceHTML+='<tr>';
@@ -1815,7 +1843,7 @@ async function LoadGoodsRequest()
         serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="servicefollowup"><span class="icon-action icon-followup"></span></a>';
 
         if(CrntUserID==allItems[index].Author.ID)
-        serviceHTML+='<a href="../../SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=sr"><span class="icon-action icon-track"></span></a>';
+        serviceHTML+='<a href='+siteURL+'/SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=sr><span class="icon-action icon-track"></span></a>';
 
         serviceHTML+='</td>';
         serviceHTML+='</tr>';
@@ -1866,7 +1894,7 @@ async function LoadGoodsRequest()
         if(allItems[index].AssignedTo1)
         assgnuser=allItems[index].AssignedTo1.ID;
         //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
-        if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
+        if(flgSystemAdmin||isHOD||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
         {
         
         serviceHTML+='<tr>';
@@ -1891,7 +1919,7 @@ async function LoadGoodsRequest()
         serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="subsidyfollowup"><span class="icon-action icon-followup"></span></a>';
         
         if(CrntUserID==allItems[index].Author.ID)
-        serviceHTML+='<a href="../../SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=ls"><span class="icon-action icon-track"></span></a>';
+        serviceHTML+='<a href='+siteURL+'/SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=ls><span class="icon-action icon-track"></span></a>';
 
         serviceHTML+='</td>';
         serviceHTML+='</tr>';
@@ -1942,7 +1970,7 @@ async function LoadGoodsRequest()
           if(allItems[index].AssignedTo1)
           assgnuser=allItems[index].AssignedTo1.ID;
           //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
-          if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
+          if(flgSystemAdmin||isHOD||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
           {
 
           serviceHTML+='<tr>';
@@ -1967,7 +1995,7 @@ async function LoadGoodsRequest()
           serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="Leasefollowup"><span class="icon-action icon-followup"></span></a>';
 
           if(CrntUserID==allItems[index].Author.ID)
-          serviceHTML+='<a href="../../SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=la"><span class="icon-action icon-track"></span></a>';
+          serviceHTML+='<a href='+siteURL+'/SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=la><span class="icon-action icon-track"></span></a>';
 
           serviceHTML+='</td>';
           serviceHTML+='</tr>';
@@ -2018,7 +2046,7 @@ async function LoadGoodsRequest()
           if(allItems[index].AssignedTo1)
           assgnuser=allItems[index].AssignedTo1.ID;
           //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
-          if(flgSystemAdmin||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
+          if(flgSystemAdmin||isHOD||flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||CrntUserID==assgnuser||CrntUserID==allItems[index].Author.ID)
           {
           
           serviceHTML+='<tr>';
@@ -2043,7 +2071,7 @@ async function LoadGoodsRequest()
           serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="idppfollowup"><span class="icon-action icon-followup"></span></a>';
 
           if(CrntUserID==allItems[index].Author.ID)
-          serviceHTML+='<a href="../../SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=idpp"><span class="icon-action icon-track"></span></a>';
+          serviceHTML+='<a href='+siteURL+'/SitePages/Vertical-Timeline.aspx?itemid='+allItems[index].ID+'&code=idpp><span class="icon-action icon-track"></span></a>';
 
           serviceHTML+='</td>';
           serviceHTML+='</tr>';
@@ -2178,7 +2206,6 @@ async function LoadGoodsRequest()
           }
         }
       }
-
       if(!flgRepUser)
         {
           $('#btnGoods').prop('disabled',true);
@@ -2242,6 +2269,9 @@ async function LoadGoodsRequest()
   async function sendfollowup(user)
   {
     
+    $('.loading-modal').addClass('active');
+    $('body').addClass('body-hidden');
+
     /*var element = document.getElementById('modalbody');
     var opt = {
       margin:       1,
@@ -2304,7 +2334,9 @@ async function LoadGoodsRequest()
   
   await sp.utility.sendEmail(emailProps).then(_ => 
   {
-      AlertMessage("Followup mail sent");
+    $('.loading-modal').removeClass('active');
+    $('body').removeClass('body-hidden');
+    AlertMessage("Followup mail sent");
         
   }).catch(function(error){ErrorCallBack(error,'sendemail')});
   }
@@ -2326,11 +2358,33 @@ function AlertMessage(strMewssageEN) {
    
    }
 
-function ErrorCallBack(error,methodname)
-{	
-  $('.loading-modal').removeClass('active');
-  alert(error);
-}
+   async function ErrorCallBack(error,methodname)
+   {	
+    try
+    {
+     
+      var errordata={
+       Error:error.message,
+       MethodName:methodname,
+       Title:"Dashboard"
+     };
+     await sp.web.lists.getByTitle("ErrorLog").items.add(errordata).then(function(data)
+      {
+        
+       $('.loading-modal').removeClass('active');
+       $('body').removeClass('body-hidden');
+       AlertMessage("Something went wrong.please contact system admin");
+      });
+    }
+    catch(e)
+    {
+     //alert(e.message);
+     $('.loading-modal').removeClass('active');
+     $('body').removeClass('body-hidden');
+     AlertMessage("Something went wrong.please contact system admin");
+    }
+    
+   };
 
 async function UploadFile(FolderUrl,files)
 {
