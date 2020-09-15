@@ -451,6 +451,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart <IERequestWeb
 </div>
 <div class="form-group" id='btnfinal'>
     <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+    <input class="btn btn-secondary" type="button" id="btnCancel" value="Cancel">
 </div>`;
 
 private readonly newdocHtml=`
@@ -606,6 +607,7 @@ private readonly ProcurementofGoodsAmendment=`
 </div>
 <div class="form-group" id='btnfinal'>
     <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+    <input class="btn btn-secondary" type="button" id="btnCancel" value="Cancel">
 </div>
 `;
 
@@ -677,6 +679,7 @@ private readonly RequestfromaFrameworkAgreement=`
 
 <div class="form-group" id='btnfinal'>
     <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+    <input class="btn btn-secondary" type="button" id="btnCancel" value="Cancel">
 </div>
 `;
  /* 
@@ -757,6 +760,7 @@ private readonly RequestfromaFrameworkAgreement=`
     
 <div class="form-group" id='btnfinal'>
     <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+    <input class="btn btn-secondary" type="button" id="btnCancel" value="Cancel">
 </div>
 
 `;
@@ -1608,7 +1612,7 @@ private readonly Htmlforterms=`
 
  <div class="col-sm-6">
   <div class="form-group">
-   <label></br>Other Attachments<span class="star">*</span></label>
+   <label>Other Attachments<span class="star">*</span></label>
    <div class="input-group">
    <div class="custom-file">
    <input type="file" id="others" value="" class="custom-file-input" multiple>
@@ -1622,6 +1626,7 @@ private readonly Htmlforterms=`
 
  <div class="form-group" id='btnfinal'>
     <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+    <input class="btn btn-secondary" type="button" id="btnCancel" value="Cancel">
 </div>
 
  `;
@@ -1714,6 +1719,7 @@ private readonly Htmlforterms=`
 
     <div class="form-group" id='btnfinal'>
     <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+    <input class="btn btn-secondary" type="button" id="btnCancel" value="Cancel">
 </div>
  `;
  /* 
@@ -1788,6 +1794,7 @@ private readonly Htmlforterms=`
    
 <div class="form-group" id='btnfinal'>
    <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+   <input class="btn btn-secondary" type="button" id="btnCancel" value="Cancel">
 </div>
 
 `;
@@ -1880,6 +1887,7 @@ private readonly LeaseAgreement=`
 </div>
 <div class="form-group" id='btnfinal'>
    <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+   <input class="btn btn-secondary" type="button" id="btnCancel" value="Cancel">
 </div>
 
 `;
@@ -2095,7 +2103,7 @@ private readonly Leaseamendment=`
 
     <div class="col-sm-6">
     <div class="form-group">
-      <label></br>Lease Agreement CoSoft Number:<span class="star">*</span></label>
+      <label>Lease Agreement CoSoft Number:<span class="star">*</span></label>
       <input class="form-control" type="number" id="cosoftnum" maxlength="8" value="">
     </div>
     </div>
@@ -2149,6 +2157,7 @@ private readonly Leaseamendment=`
 
     <div class="form-group" id='btnfinal'>
    <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+   <input class="btn btn-secondary" type="button" id="btnCancel" value="Cancel">
 </div>
 
 
@@ -2331,6 +2340,7 @@ private readonly Leaseamendment=`
  </div>
  <div class="form-group" id='btnfinal'>
  <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
+ <input class="btn btn-secondary" type="button" id="btnCancel" value="Cancel">
 </div>
  `;
     /* 
@@ -2580,6 +2590,15 @@ private readonly Leaseamendment=`
         $(this).parent().find('label').text('Choose File');
       }
     });
+
+    $(document).on('click', '.remove-contact', function () {
+      $('#btnContact').show();
+      var clsname = $(this).attr('data-class');
+      $('.' + clsname).remove();
+      if ($('.contact-details').length == 0) {
+        addContact();
+      }
+    });
    /* 
     //Summary
     New Goods Request Events End 
@@ -2730,6 +2749,11 @@ $(document).on('change','.clsAgreement',function()
         else if($('#DrpProjectName option:selected').val()=='idpp')
         createIdpp();
 
+      });
+
+      $(document).on('click', '#btnCancel', function ()
+      {
+        window.location.href=siteURL+'/SitePages/RequestDashboard.aspx';
       });
 
     $(document).on('blur','#EUR',function () 
@@ -2907,7 +2931,7 @@ function CreateGoodsRequest()
       
       ProjectName:$("#projectName option:selected").val(),
       ProjectNumber:projectNumber,
-      PNForZAS:$("#pnForZAS").val(),
+      PNForZAS:txtpnForZAS,
       NameOfAV:$("#NameofAV").val(),
       AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
       //  ,
@@ -3058,7 +3082,7 @@ function creategoodsamendment()
       
       ProjectName:$("#projectName option:selected").val(),
       ProjectNumber:projectNumber,
-      PNForZAS:$("#pnForZAS").val(),
+      PNForZAS:txtpnForZAS,
       NameOfAV:$("#NameofAV").val(),
       AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
       RepresentativeId: {
@@ -3077,6 +3101,9 @@ function creategoodsamendment()
 
     if($('#fileQuantitiesNochange')[0].files.length>0)
     arrFiles.push({'FolderName':'AmendmentSpecfications','files':$('#fileQuantitiesNochange')[0].files});
+
+    if($('#others')[0].files.length>0)
+    arrFiles.push({'FolderName':'Others','files':$('#others')[0].files});
 
     pdfdetails=[];
     pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
@@ -3128,7 +3155,7 @@ function createrequestframework()
       
       ProjectName:$("#projectName option:selected").val(),
       ProjectNumber:projectNumber,
-      PNForZAS:$("#pnForZAS").val(),
+      PNForZAS:txtpnForZAS,
       NameOfAV:$("#NameofAV").val(),
       AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
       RepresentativeId: {
@@ -3181,12 +3208,12 @@ async function InsertGoodsRequest(Servicedata,arrFiles)
 {
 
    fileslength=arrFiles.length;
-   await sp.web.lists.getByTitle("ProcurementGoods").items.add(Servicedata).then(function(data)
+   await sp.web.lists.getByTitle("ProcurementGoods").items.add(Servicedata).then(async function(data)
    {
      
      //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
      RequestID=data.data.ID;
-     createpdf(pdfdetails,"GD-"+data.data.ID);
+     await createpdf(pdfdetails,"GD-"+data.data.ID);
      if($('#Drpreqcategories option:selected').val()=='goods')
      createContact("GD-"+data.data.ID);
 
@@ -3592,7 +3619,7 @@ function LoadServices()
           {
             ProjectName:$("#projectName option:selected").val(),
             ProjectNumber:projectNumber,
-            PNForZAS:$("#pnForZAS").val(),
+            PNForZAS:txtpnForZAS,
             NameOfAV:$("#NameofAV").val(),
             AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
             //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
@@ -3682,7 +3709,7 @@ function LoadServices()
           {
             ProjectName:$("#projectName option:selected").val(),
             ProjectNumber:projectNumber,
-            PNForZAS:$("#pnForZAS").val(),
+            PNForZAS:txtpnForZAS,
             NameOfAV:$("#NameofAV").val(),
             AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
             //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
@@ -3757,7 +3784,7 @@ function LoadServices()
           {
             ProjectName:$("#projectName option:selected").val(),
             ProjectNumber:projectNumber,
-            PNForZAS:$("#pnForZAS").val(),
+            PNForZAS:txtpnForZAS,
             NameOfAV:$("#NameofAV").val(),
             AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
             //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
@@ -4073,7 +4100,7 @@ function LoadServices()
                 {
                   ProjectName:$("#projectName option:selected").val(),
                   ProjectNumber:projectNumber,
-                  PNForZAS:$("#pnForZAS").val(),
+                  PNForZAS:txtpnForZAS,
                   NameOfAV:$("#NameofAV").val(),
                   AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
                   //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
@@ -4144,7 +4171,7 @@ function LoadServices()
                 {
                   ProjectName:$("#projectName option:selected").val(),
                   ProjectNumber:projectNumber,
-                  PNForZAS:$("#pnForZAS").val(),
+                  PNForZAS:txtpnForZAS,
                   NameOfAV:$("#NameofAV").val(),
                   AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
                   RepresentativeId: {
@@ -4212,11 +4239,11 @@ async function InsertService(Servicedata,arrFiles)
 {
 
      fileslength=arrFiles.length;
-     await sp.web.lists.getByTitle("ProcurementService").items.add(Servicedata).then(function(data)
+     await sp.web.lists.getByTitle("ProcurementService").items.add(Servicedata).then(async function(data)
      {
        
        //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
-       createpdf(pdfdetails,"SR-"+data.data.ID);
+       await createpdf(pdfdetails,"SR-"+data.data.ID);
       for(var i=0;i<arrFiles.length;i++)
        {
           createFolder(arrFiles[i].FolderName,data.data.ID,arrFiles[i].files);
@@ -4936,7 +4963,7 @@ function CreateLeaseAgreement()
                 {
                   ProjectName:$("#projectName option:selected").val(),
                   ProjectNumber:projectNumber,
-                  PNForZAS:$("#pnForZAS").val(),
+                  PNForZAS:txtpnForZAS,
                   NameOfAV:$("#NameofAV").val(),
                   AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
                   //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
@@ -5009,7 +5036,7 @@ function CreateLeaseAgreement()
                 {
                   ProjectName:$("#projectName option:selected").val(),
                   ProjectNumber:projectNumber,
-                  PNForZAS:$("#pnForZAS").val(),
+                  PNForZAS:txtpnForZAS,
                   NameOfAV:$("#NameofAV").val(),
                   AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
                   //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
@@ -5113,7 +5140,7 @@ function CreateLeaseamendment()
           {
             ProjectName:$("#projectName option:selected").val(),
             ProjectNumber:projectNumber,
-            PNForZAS:$("#pnForZAS").val(),
+            PNForZAS:txtpnForZAS,
             NameOfAV:$("#NameofAV").val(),
             AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
             //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
@@ -5207,11 +5234,11 @@ async function InsertLease(Servicedata,arrFiles)
 {
 
      fileslength=arrFiles.length;
-     await sp.web.lists.getByTitle("LeaseAgreement").items.add(Servicedata).then(function(data)
+     await sp.web.lists.getByTitle("LeaseAgreement").items.add(Servicedata).then(async function(data)
      {
        
        //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
-       createpdf(pdfdetails,"LA-"+data.data.ID);
+       await createpdf(pdfdetails,"LA-"+data.data.ID);
       for(var i=0;i<arrFiles.length;i++)
        {
           createFolder(arrFiles[i].FolderName,"LA-"+data.data.ID,arrFiles[i].files);
@@ -5265,7 +5292,7 @@ function CreateSubsidy()
           {
             ProjectName:$("#projectName option:selected").val(),
             ProjectNumber:projectNumber,
-            PNForZAS:$("#pnForZAS").val(),
+            PNForZAS:txtpnForZAS,
             NameOfAV:$("#NameofAV").val(),
             AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
             //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
@@ -5387,7 +5414,7 @@ function CreateSubsidyAmendemnt()
           {
             ProjectName:$("#projectName option:selected").val(),
             ProjectNumber:projectNumber,
-            PNForZAS:$("#pnForZAS").val(),
+            PNForZAS:txtpnForZAS,
             NameOfAV:$("#NameofAV").val(),
             AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
             //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
@@ -5415,6 +5442,9 @@ function CreateSubsidyAmendemnt()
           
           if($('#Financialstatus')[0].files.length>0)
           arrFiles.push({'FolderName':'Financialstatus','files':$('#Financialstatus')[0].files});
+
+          if($('#MinisterApproval')[0].files.length>0)
+          arrFiles.push({'FolderName':'MinisterApproval','files':$('#MinisterApproval')[0].files});
 
           pdfdetails=[];
           pdfdetails.push({"Title":"Project Name","Value":$("#projectName option:selected").val()});
@@ -5456,14 +5486,14 @@ async function InsertSubsidy(Servicedata,arrFiles)
 {
 
      fileslength=arrFiles.length;
-     await sp.web.lists.getByTitle("LocalSubsidy").items.add(Servicedata).then(function(data)
+     await sp.web.lists.getByTitle("LocalSubsidy").items.add(Servicedata).then(async function(data)
      {
        
        //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
-       createpdf(pdfdetails,"LS-"+data.data.ID);
+       await createpdf(pdfdetails,"LS-"+data.data.ID);
       for(var i=0;i<arrFiles.length;i++)
        {
-          createFolder(arrFiles[i].FolderName,"SD-"+data.data.ID,arrFiles[i].files);
+          createFolder(arrFiles[i].FolderName,"LS-"+data.data.ID,arrFiles[i].files);
        }
 
        
@@ -5657,7 +5687,7 @@ function createIdpp()
       {
         ProjectName:$("#projectName option:selected").val(),
         ProjectNumber:projectNumber,
-        PNForZAS:$("#pnForZAS").val(),
+        PNForZAS:txtpnForZAS,
         NameOfAV:$("#NameofAV").val(),
         AVNameId:$('#projectName option:selected').attr('Proj-Av-id'),
         //RepresentativeId:$('#projectName option:selected').attr('Proj-Rp-id'),
@@ -5729,18 +5759,16 @@ async function InsertIdpp(Servicedata,arrFiles)
 {
 
      fileslength=arrFiles.length;
-     await sp.web.lists.getByTitle("IDPP").items.add(Servicedata).then(function(data)
+     await sp.web.lists.getByTitle("IDPP").items.add(Servicedata).then(async function(data)
      {
        
        //createFolder('EstimatedCost',data.data.ID,$('#Estimation')[0].files);
-       createpdf(pdfdetails,"idpp-"+data.data.ID);
-      for(var i=0;i<arrFiles.length;i++)
-       {
-          createFolder(arrFiles[i].FolderName,"IDP-"+data.data.ID,arrFiles[i].files);
-       }
+          await createpdf(pdfdetails,"idpp-"+data.data.ID);
+          for(var i=0;i<arrFiles.length;i++)
+          {
+            createFolder(arrFiles[i].FolderName,"IDP-"+data.data.ID,arrFiles[i].files);
+          }
 
-       
-         
      }).catch(function(error){ErrorCallBack(error,'InsertIdpp')});
 }
 
@@ -5969,18 +5997,18 @@ async function uploadpdf(result,filename)
   
   
   await sp.web.getFolderByServerRelativeUrl("NewRequests")
-  .files.add(filename+".pdf", result, true).then(function(data)
+  .files.add(filename+".pdf", result, true).then(async function(data)
   {
-    updatemetadata(data);
+    await updatemetadata(data);
 
   }).catch(function(error){ErrorCallBack(error,'uploadpdf')});
 }
 
 async function  updatemetadata(data) 
 {
-  await data.file.listItemAllFields.get().then(function(listItemAllFields)
+  await data.file.listItemAllFields.get().then(async function(listItemAllFields)
     {
-      updatepdf(listItemAllFields);
+      await updatepdf(listItemAllFields);
 
     }).catch(function(error){ErrorCallBack(error,'dataFiles')});
 }
@@ -5992,19 +6020,43 @@ async function updatepdf(listItemAllFields)
   RequestType="IDPP";
   
   var hstrydata={RequestType:RequestType,AVNameId:$('#projectName option:selected').attr('Proj-Av-id')};  
-  sp.web.lists.getByTitle("NewRequests").items.getById(listItemAllFields.Id).update(hstrydata)
-      .then(function(results)
+  await sp.web.lists.getByTitle("NewRequests").items.getById(listItemAllFields.Id).update(hstrydata)
+      .then(async function(results)
       {
-        //alert("pdf generated");
+        await console.log("pdf generated");
       }).catch(function(error){ErrorCallBack(error,'files')});  
 }
 
- function ErrorCallBack(error,methodname)
- {	
-   $('.loading-modal').removeClass('active');
-   $('body').addClass('body-hidden');
-   alert(error+"-"+methodname);
- };
+async function ErrorCallBack(error,methodname)
+{	
+ try
+ {
+  var Title=$("#Drpreqcategories option:selected").text();
+  if(!Title)
+  Title="IDPP";
+
+  var errordata={
+    Error:error.message,
+    MethodName:methodname,
+    Title:Title
+  };
+  await sp.web.lists.getByTitle("ErrorLog").items.add(errordata).then(function(data)
+   {
+     
+    $('.loading-modal').removeClass('active');
+    $('body').removeClass('body-hidden');
+    AlertMessage("Something went wrong.please contact system admin");
+   });
+ }
+ catch(e)
+ {
+  //alert(e.message);
+  $('.loading-modal').removeClass('active');
+  $('body').removeClass('body-hidden');
+  AlertMessage("Something went wrong.please contact system admin");
+ }
+ 
+};
 
  /* 
 //summary

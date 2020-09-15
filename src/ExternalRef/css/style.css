@@ -323,7 +323,7 @@ div.dataTables_filter, div.dataTables_length {
     left: 0;
 }
 .dataTables_filter {
-    right: 175px;
+    right: 250px;
 }
 .spinner-border {
     /* display: inline-block; when show */
@@ -447,24 +447,30 @@ div.dataTables_filter, div.dataTables_length {
     display: flex;
     justify-content: space-between;
     }
-    #txtProjectNum1 {
+    #txtProjectNum1,#txtpnforzas1 {
     width: 45px;
     }
-    #txtProjectNum2 {
+    #txtProjectNum2,#txtpnforzas2 {
     width: 60px;
     }
-    #txtProjectNum3 {
+    #txtProjectNum3,#txtpnforzas3 {
     width: 35px;
     }
-    #txtProjectNum4 {
+    #txtProjectNum4,#txtpnforzas4 {
     width: 55px;
     }
-    #txtProjectNum5 {
+    #txtProjectNum5,#txtpnforzas5 {
     width: 43px;
     }
 
     .clsStatus {
-        width: 40%;
+        width: 28%;
         margin: 18px 0 10px 0;
     }
+
+    .Canvas, .CanvasZone{
+        width:100% !important;
+        max-width:100% !important;
+        }
+
 
