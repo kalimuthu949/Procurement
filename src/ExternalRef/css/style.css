@@ -431,6 +431,9 @@ div.dataTables_length {
 .icon-track {
   background-image: url(../images/icon-track.png);
 }
+.icon-timeline {
+  background-image: url(../images/icon-timeline.png);
+}
 .ControlZone-control {
   min-height: 480px;
 }
@@ -510,7 +513,7 @@ div.dataTables_length {
   cursor: pointer;
 }
 td .icon-action {
-  margin-right: 5px;
+  margin: 0 5px;
 }
 .goods-details {
   margin: 5px -8px;
