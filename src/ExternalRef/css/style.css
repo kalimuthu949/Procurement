@@ -537,8 +537,36 @@ table.dataTable thead tr th {
 }
 table.dataTable tbody tr td {
   width: 165px !important;
+  padding: 8px 0 8px 0px;
+  text-align: center;
 }
 table.dataTable tbody tr td select {
-  width: 160px !important;
+  width: 135px !important;
 }
 /*! madhesh */
+/* Fixes Maasi*/
+.alertify-notifier.ajs-bottom.ajs-right .ajs-message {
+  white-space: break-spaces;
+}
+.alertify-notifier.ajs-bottom {
+  bottom: 80% !important;
+}
+/* .alertify-notifier .ajs-message {
+  width: 320px !important;
+} */
+.alertify-notifier.ajs-right {
+  right: 40% !important;
+}
+div#divkompoutput {
+  padding-top: 20px;
+}
+.ajs-message.ajs-error.ajs-visible {
+  text-align: center !important;
+}
+/* Fixes Maasi*/
+/* ! workbench size Dont Forget to comment after works done */
+#workbenchPageContent {
+  left: -30px !important;
+  max-width: 1364px !important;
+}
+/* workbench size */

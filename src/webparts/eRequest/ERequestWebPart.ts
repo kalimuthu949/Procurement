@@ -8,7 +8,11 @@ import { escape, trimEnd } from "@microsoft/sp-lodash-subset";
 import { SPComponentLoader } from "@microsoft/sp-loader";
 
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import { SPHttpClient, SPHttpClientResponse,ISPHttpClientOptions} from "@microsoft/sp-http";
+import {
+  SPHttpClient,
+  SPHttpClientResponse,
+  ISPHttpClientOptions,
+} from "@microsoft/sp-http";
 
 import styles from "./ERequestWebPart.module.scss";
 import * as strings from "ERequestWebPartStrings";
@@ -214,11 +218,11 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
       <label>Project Number:<span class="star">*</span></label>
       <div class="numbers">
       <!--<input class="form-control" type="text" id="projectNumber" value="">-->
-      <input id='txtProjectNum1' class="form-control prjctNum" type="text" readonly maxlength="2" />.
-      <input id='txtProjectNum2' class="form-control prjctNum" type="text" readonly maxlength="4" />.
-      <input id='txtProjectNum3' class="form-control prjctNum" type="text" readonly maxlength="1" />_
-      <input id='txtProjectNum4' class="form-control prjctNum" type="text"  maxlength="3" />.
-      <input id='txtProjectNum5' class="form-control prjctNum" type="text"  maxlength="2" />
+      <input id='txtProjectNum1' class="form-control prjctNum" type="text" readonly maxlength="2" placeholder="XX"/>.
+      <input id='txtProjectNum2' class="form-control prjctNum" type="text" readonly maxlength="4" placeholder="XXXX"/>.
+      <input id='txtProjectNum3' class="form-control prjctNum" type="text" readonly maxlength="1" placeholder="X"/>_
+      <input id='txtProjectNum4' class="form-control prjctNum" type="text"  maxlength="3" placeholder="XXX"/>.
+      <input id='txtProjectNum5' class="form-control prjctNum" type="text"  maxlength="2" placeholder="XX"/>
       </div>
     </div>
     </div>
@@ -231,11 +235,11 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
       <label>PN for ZAS:<span class="star">*</span></label>
       <div class="numbers">
       <!--<input class="form-control" type="text" id="pnForZAS" value="">-->
-      <input id='txtpnforzas1' class="form-control prjctpnforzas" type="text" maxlength="2" />.
-      <input id='txtpnforzas2' class="form-control prjctpnforzas" type="text" maxlength="4" />.
-      <input id='txtpnforzas3' class="form-control prjctpnforzas" type="text" maxlength="1" />_
-      <input id='txtpnforzas4' class="form-control prjctpnforzas" type="text" maxlength="3" />.
-      <input id='txtpnforzas5' class="form-control prjctpnforzas" type="text" maxlength="2" />
+      <input id='txtpnforzas1' class="form-control prjctpnforzas" type="text" maxlength="2" placeholder="XX"/>.
+      <input id='txtpnforzas2' class="form-control prjctpnforzas" type="text" maxlength="4" placeholder="XXXX"/>.
+      <input id='txtpnforzas3' class="form-control prjctpnforzas" type="text" maxlength="1" placeholder="X"/>_
+      <input id='txtpnforzas4' class="form-control prjctpnforzas" type="text" maxlength="3" /placeholder="XXX">.
+      <input id='txtpnforzas5' class="form-control prjctpnforzas" type="text" maxlength="2" placeholder="XX"/>
       </div>
     </div>
     </div>
@@ -250,26 +254,29 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     <div class="row">
     <div class="col-sm-6">
     <div class="form-group">
-      <input class="radio-stylish" type="checkbox" id="chkKomp" value="KOMP Output">
-      <span class="checkbox-element"></span>
-      <label class="stylish-label" for="chkKomp">KOMP Output</label>
+    <label>KOMP Output :</label>
+    <div>
+    <input class="radio-stylish" type="checkbox" id="chkKomp" value="KOMP Output">
+  <span class="checkbox-element"></span>
+  <label class="stylish-label" for="chkKomp">KOMP</label>
+    </div> 
     </div>
     </div>
-    <div id="divkompoutput"></div>
+    <div id="divkompoutput" class="col-sm-6"></div>
   </div>
   `;
 
   private readonly newgoodskompcheckbox = `
 
-  <div class="col-sm-2">
+  <div class="col-sm-6">
   <div class="form-group">
-  <input type="text" id="percent" class="form-control" value="">
+  <input type="text" id="percent" class="form-control" placeholder="Percentage(s)" value="">
   </div>
   </div>
   
-  <div class="col-sm-2">
+  <div class="col-sm-6">
   <div class="form-group">
-  <input type="text" id="outputnumber" class="form-control" value="">
+  <input type="text" id="outputnumber" class="form-control" placeholder=" Output number(s)" value="">
   </div>
   </div>
   
@@ -297,6 +304,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
       <label class="custom-file-label" for="fileQuantities">Choose File</label>
       </div>
       </div>
+      <div> <small class="text-primary">Note : Can add more than one file. </small> </div>
       <div id="quantityFilesContainer" class="quantityFilesContainer"></div>
     </div>
     </div>
@@ -465,7 +473,10 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 <input type="file" name="myFile" id="others" multiple class="custom-file-input">
 <label class="custom-file-label" for="others">Choose File</label>
 </div>
-</div><div class="quantityFilesContainer quantityFilesContainer-static" id="otherAttachmentFiles"></div></div></div></div>  
+</div>
+<div> <small class="text-primary">Note : Can add more than one file. </small> </div>
+<div class="quantityFilesContainer quantityFilesContainer-static" id="otherAttachmentFiles">
+</div></div></div></div>  
 <div class="row">
 <div class="col-sm-6">
 <div class="form-group" id="spanKOMP" style='display:none'>
@@ -534,7 +545,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 
   <div class="col-sm-4">
     <div class="form-group">
-    <label>Name Of Contact Person<span class="star">*</span></label>
+    <label>Name Of Contact Person :</label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
     </div>
@@ -625,6 +636,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
+  <div> <small class="text-primary">Note : Can add more than one file. </small> </div>
   <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
 </div>
 </div>
@@ -760,6 +772,16 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     </div>
     </div>
     </div>-->
+    
+    <div class="row">
+    <div class="col-sm-12">
+    <div class="form-group">
+    <label>Please Explain Briefly Why You Need to Request to Subcontract the Service
+    in Question (Rather than Implement the Service Using GIZ Staff): <span class="star">*</span></label>
+    <textarea class="form-control" id="txtExplanation" rows="5"></textarea>
+    </div>
+    </div>
+    </div>
 
     <div class="row">
     <!--<div class="col-sm-6">
@@ -784,7 +806,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 <div class="form-group" id='btnfinal'>
     <input class="btn btn-primary" type="button" id="btnSubmit" value="Submit">
     <input class="btn btn-secondary" type="button" id="btnCancel" value="Cancel">
-</div>
+</div> 
 
 `;
 
@@ -802,7 +824,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     <div class="form-group">
     <input class="radio-stylish clsfirm" id="Appariser" type="radio" name="ConsultingFirm" value="Appariser"  />
     <span class="radio-element"></span>
-    <label class="stylish-label" for="Appariser">Appariser</label>
+    <label class="stylish-label" for="Appariser">Appraiser</label>
     </div>
     </div>
 </div>
@@ -946,6 +968,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
+  <div> <small class="text-primary">Note : Can add more than one file. </small> </div>
   <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
 </div>
 </div>
@@ -1070,6 +1093,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
+  <div> <small class="text-primary">Note : Can add more than one file. </small> </div>
   <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
 </div>
 </div>
@@ -1195,6 +1219,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
+  <div> <small class="text-primary">Note : Can add more than one file. </small> </div>
   <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
 </div>
 </div>
@@ -1258,7 +1283,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 
 <div class="col-sm-3">
 <div class="form-group">
-    <label>Contact Person<span class="star">*</span></label>
+    <label>Contact Person :</label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
 </div>
@@ -1407,6 +1432,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
+  <div> <small class="text-primary">Note : Can add more than one file. </small> </div>
   <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
 </div>
 </div>
@@ -1641,6 +1667,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
    <label class="custom-file-label" for="others">Choose File</label>
    </div>
    </div>
+   <div> <small class="text-primary">Note : Can add more than one file. </small> </div>
    <div class="quantityFilesContainer" id="otherAttachmentFiles"></div>
  </div>
  </div>
@@ -2001,7 +2028,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 </div>
 </div>
 </div>
-
+  
 <div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
@@ -2012,6 +2039,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
+  <div> <small class="text-primary">Note : Can add more than one file. </small> </div>
   <div class="quantityFilesContainer quantityFilesContainer-static" id="otherAttachmentFiles"></div>
 </div>
 </div>
@@ -2111,6 +2139,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   <label class="custom-file-label" for="others">Choose File</label>
   </div>
   </div>
+  <div> <small class="text-primary">Note : Can add more than one file. </small> </div>
   <div class="quantityFilesContainer quantityFilesContainer-static" id="otherAttachmentFiles"></div>
 </div>
 </div>
@@ -2157,7 +2186,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     </div>
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Modified offer by the lessor:<span class="star">*</span></label>
+     <label>Modified offer by the lessor (signed and stamped) :<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="offer" value="" class="custom-file-input">
@@ -2378,8 +2407,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     this.domElement.innerHTML = this.requestoptions;
     siteURL = this.context.pageContext.site.absoluteUrl;
     serverURL = this.context.pageContext.site.serverRelativeUrl;
-    HttpURl=this.context.spHttpClient;
-    
+    HttpURl = this.context.spHttpClient;
 
     LoadFileTypes();
     Loadcurrency();
@@ -2397,8 +2425,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
         return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.*/
     });
 
-    $("#DrpProjectName").change(function () 
-    {
+    $("#DrpProjectName").change(function () {
       formSubmitting = true;
       var requestHtml = "";
       $("#divRequest").html("");
@@ -2412,28 +2439,22 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
         requestHtml = that.requestcategoriesforsubsidy;
       else if (projectname == "Lease")
         requestHtml = that.requestcategoriesforlease;
-      else if (projectname == "idpp") 
-      {
+      else if (projectname == "idpp") {
         requestHtml = that.commonHtml + that.iDPP;
         getLoggedInUserDetails();
         LoadProjects();
+      } else if (projectname == "Select") {
+        requestHtml = "";
       }
-      else if(projectname=="Select")
-      {
-        requestHtml='';
-      }
-      
-      if(projectname != "idpp")
-      {
+
+      if (projectname != "idpp") {
         $("#divforsubcategory").html("");
         $("#divforsubcategory").html(requestHtml);
-      }
-      else
-      {
+      } else {
         $("#divRequest").html("");
         $("#divRequest").html(requestHtml);
       }
-      
+
       if (projectname == "idpp") {
         //for the purpose of idpp option
         $("#Fromdate").datepicker({
@@ -2445,9 +2466,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
           daysOfWeekDisabled: [5, 6],
         });
       }
-      if(projectname=="idpp")
-      $(".page-heading").text("IDPP");
-
+      if (projectname == "idpp") $(".page-heading").text("IDPP");
     });
 
     $(document).on("change", "#Drpreqcategories", function () {
@@ -2717,17 +2736,17 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
       ) {
         $("#divforAgreement").html("");
         $("#divforAgreement").html(that.Htmlforfilledrequest);
-        $("#JOD").val('');
-        $("#EUR").val('');
-        $("#JOD").prop('disabled',false);
-        $("#EUR").prop('disabled',false);
+        $("#JOD").val("");
+        $("#EUR").val("");
+        $("#JOD").prop("disabled", false);
+        $("#EUR").prop("disabled", false);
       } else {
         $("#divforAgreement").html("");
         $("#divforAgreement").html(that.Htmlforterms);
-        $("#JOD").val('');
-        $("#EUR").val('');
-        $("#JOD").prop('disabled',true);
-        $("#EUR").prop('disabled',true);
+        $("#JOD").val("");
+        $("#EUR").val("");
+        $("#JOD").prop("disabled", true);
+        $("#EUR").prop("disabled", true);
       }
     });
 
@@ -2803,15 +2822,12 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
           $("#lblshortlist").text("Shortlist : (Not Selectable)");
           $("#divChkPublictender").hide();
           $("#news-span").show();
-        }  
-        else if($("#EUR").val()<=20000)
-        {
+        } else if ($("#EUR").val() <= 20000) {
           $("#fileShortlist").prop("disabled", false);
           $("#lblshortlist").text("Shortlist :");
           $("#divChkPublictender").show();
-          $("#chkPublictender").prop("checked",false);
+          $("#chkPublictender").prop("checked", false);
           $("#news-span").hide();
-          
         }
       } else if ($("#DrpProjectName option:selected").val() == "Service") {
         if (
@@ -2852,55 +2868,46 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
       }
     });
 
-    
-    $(document).on("change","#chkPublictender",function()
-    {
-        if($("#chkPublictender").prop('checked'))
-        {
-          $("#fileShortlist").val("");
-          $("#fileShortlistFileName").text("Choose File");
-          $("#fileShortlist").prop("disabled", true);
-          $("#lblshortlist").text("Shortlist : (Not Selectable)");
-        }
-        else
-        {
-          $("#fileShortlist").prop("disabled", false);
-          $("#lblshortlist").text("Shortlist :");
-          $("#divChkPublictender").show();
-          $("#chkPublictender").prop("checked",false);
-        }
+    $(document).on("change", "#chkPublictender", function () {
+      if ($("#chkPublictender").prop("checked")) {
+        $("#fileShortlist").val("");
+        $("#fileShortlistFileName").text("Choose File");
+        $("#fileShortlist").prop("disabled", true);
+        $("#lblshortlist").text("Shortlist : (Not Selectable)");
+      } else {
+        $("#fileShortlist").prop("disabled", false);
+        $("#lblshortlist").text("Shortlist :");
+        $("#divChkPublictender").show();
+        $("#chkPublictender").prop("checked", false);
+      }
     });
-    
-    $(document).on("change","#chkNoChanges",function(){
-      if($("#chkNoChanges").prop('checked'))
-      {
+
+    $(document).on("change", "#chkNoChanges", function () {
+      if ($("#chkNoChanges").prop("checked")) {
         $("#fileQuantitiesNochange").val("");
         $("#fileQuantitiesNochangeFileName").text("Choose File");
         $("#fileQuantitiesNochange").prop("disabled", true);
-        $("#lblNochange").text("Specifications and Quantities:(Not Selectable)");
-      }
-      else
-      {
+        $("#lblNochange").text(
+          "Specifications and Quantities:(Not Selectable)"
+        );
+      } else {
         $("#fileQuantitiesNochange").prop("disabled", false);
-        $("#lblNochange").html("Specifications and Quantities:<span class='star'>*</span>");
+        $("#lblNochange").html(
+          "Specifications and Quantities:<span class='star'>*</span>"
+        );
       }
+    });
 
-    });
-    
-    $(document).on("change",".clsfirm",function()
-    {
-      if($("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm")
-      {
+    $(document).on("change", ".clsfirm", function () {
+      if ($("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm") {
         $("#CntctPrsn").val("");
-        $("#CntctPrsn").prop('disabled',true);
-      }
-      else
-      {
+        $("#CntctPrsn").prop("disabled", true);
+      } else {
         $("#CntctPrsn").val("");
-        $("#CntctPrsn").prop('disabled',false);
+        $("#CntctPrsn").prop("disabled", false);
       }
     });
-    
+
     /* 
     //Summary
     Common Events End... 
@@ -3044,7 +3051,7 @@ function CreateGoodsRequest() {
       RequestItem: moreitem,
       JOD: $("#JOD").val(),
       EUR: $("#EUR").val(),
-      isPublictender:$("#chkPublictender").prop("checked"),
+      isPublictender: $("#chkPublictender").prop("checked"),
       DeliveryTime: DelivertimeTime,
       WarrantyTime: $("#requestedWarrantyTime option:selected").val(),
       FullAddress: $("#deliveryAddress").val(),
@@ -3252,7 +3259,7 @@ function creategoodsamendment() {
       kompPercent: $("#outputnumber").val(),
       ProsoftNumber: $("#prosoftnum").val(),
       DeliveryTime: DelivertimeTime,
-      isNoChange:$("#chkNoChanges").prop("checked")
+      isNoChange: $("#chkNoChanges").prop("checked"),
     };
 
     if ($("#justification")[0].files.length > 0)
@@ -3267,13 +3274,13 @@ function creategoodsamendment() {
         files: $("#fileQuantitiesNochange")[0].files,
       });
 
-      if (filesotherAttachment.length > 0) {
-        for (var i = 0; i < filesotherAttachment.length; i++) {
-          var files = [];
-          files.push(filesotherAttachment[i]);
-          arrFiles.push({ FolderName: "Others", files: files });
-        }
+    if (filesotherAttachment.length > 0) {
+      for (var i = 0; i < filesotherAttachment.length; i++) {
+        var files = [];
+        files.push(filesotherAttachment[i]);
+        arrFiles.push({ FolderName: "Others", files: files });
       }
+    }
 
     pdfdetails = [];
     pdfdetails.push({
@@ -3511,9 +3518,9 @@ function MandatoryValidation() {
     isAllValueFilled = false;
   } else if (!$.trim($("#NameofAV").val())) {
     /*else if(!$.trim($("#pnForZAS").val()))
-	{
-		alertify.error('Please Enter PN For ZAS');
-		isAllValueFilled=false;
+  {
+    alertify.error('Please Enter PN For ZAS');
+    isAllValueFilled=false;
   }*/
     alertify.error("Please Enter Name of AV");
     isAllValueFilled = false;
@@ -3573,7 +3580,8 @@ function MandatoryValidation() {
     isAllValueFilled = false;
   } else if (
     $("#EUR").val() <= 20000 &&
-    $("#fileShortlist")[0].files.length <= 0&&!$("#chkPublictender").prop('checked')
+    $("#fileShortlist")[0].files.length <= 0 &&
+    !$("#chkPublictender").prop("checked")
   ) {
     alertify.error("Please upload a file for Shortlist");
     isAllValueFilled = false;
@@ -3591,15 +3599,15 @@ function MandatoryValidation() {
     isAllValueFilled = false;
   } else {
     /*else if(filesotherAttachment.length<=0)
-	{
-		alertify.error('Please Select other Attachments');
-		isAllValueFilled=false;
+  {
+    alertify.error('Please Select other Attachments');
+    isAllValueFilled=false;
   }
 
   else if($.trim($("#KompOptPT").val())==''&&($("#projectName").val() == 'MWR II' || $("#projectName").val() == 'RWU II'))
   {
     alertify.error('Please Enter KOMP Output');
-		isAllValueFilled=false;
+    isAllValueFilled=false;
   }*/
     for (let index = 0; index < $(".contact-details").length; index++) {
       if (!$(".contactName")[index].value) {
@@ -3678,20 +3686,22 @@ function mandatoryvalidationforgoodsamendment() {
     isAllValueFilled = false;
   } else if (!$.trim($("#NameofAV").val())) {
     /*else if(!$.trim($("#pnForZAS").val()))
-	{
-		alertify.error('Please Enter PN For ZAS');
-		isAllValueFilled=false;
+  {
+    alertify.error('Please Enter PN For ZAS');
+    isAllValueFilled=false;
   }*/
     alertify.error("Please Enter Name of AV");
     isAllValueFilled = false;
   } else if (!$.trim($("#prosoftnum").val())) {
     alertify.error("Please Enter ProSoft Number");
     isAllValueFilled = false;
-  }else if ($("#justification")[0].files.length <= 0) {
+  } else if ($("#justification")[0].files.length <= 0) {
     alertify.error("Please upload a file for Justification for Amendment");
     isAllValueFilled = false;
-  } 
-  else if ($("#fileQuantitiesNochange")[0].files.length <= 0&&!$("#chkNoChanges").prop('checked')) {
+  } else if (
+    $("#fileQuantitiesNochange")[0].files.length <= 0 &&
+    !$("#chkNoChanges").prop("checked")
+  ) {
     alertify.error("Please upload a file for Specifications and Quantities");
     isAllValueFilled = false;
   } else if (!$.trim($("#requestedDeliveryTime").val())) {
@@ -3725,9 +3735,9 @@ function mandatoryvalidationforrequestframeworkagreement() {
     isAllValueFilled = false;
   } else if (!$.trim($("#NameofAV").val())) {
     /*else if(!$.trim($("#pnForZAS").val()))
-	{
-		alertify.error('Please Enter PN For ZAS');
-		isAllValueFilled=false;
+  {
+    alertify.error('Please Enter PN For ZAS');
+    isAllValueFilled=false;
   }*/
     alertify.error("Please Enter Name of AV");
     isAllValueFilled = false;
@@ -3856,8 +3866,9 @@ function CreateService() {
             results: ProjectDetails[ProjectIndex].RepId,
           },
           KOMPOuput: $("#KompOptPT").val(),
+          Explanation: $("#txtExplanation").val(),
           ConsultingFirm: $("input[name='ConsultingFirm']:checked").val(),
-          ServiceCategory:$("#Drpreqcategories option:selected").val(),
+          ServiceCategory: $("#Drpreqcategories option:selected").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
           NameOfConsultingFirm: $("#NameOfFirm").val(),
           AreaOfActivity: $("#AreaActivy").val(),
@@ -3974,10 +3985,11 @@ function CreateService() {
             results: ProjectDetails[ProjectIndex].RepId,
           },
           //KOMPOuput:$("#KompOptPT").val(),
-          ServiceCategory:$("#Drpreqcategories option:selected").val(),
+          ServiceCategory: $("#Drpreqcategories option:selected").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
           KompOutputNumber: $("#percent").val(),
           kompPercent: $("#outputnumber").val(),
+          Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
           JOD: $("#JOD").val(),
           EUR: $("#EUR").val(),
@@ -4071,9 +4083,10 @@ function CreateService() {
           },
           //KOMPOuput:$("#KompOptPT").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
-          ServiceCategory:$("#Drpreqcategories option:selected").val(),
+          ServiceCategory: $("#Drpreqcategories option:selected").val(),
           KompOutputNumber: $("#percent").val(),
           kompPercent: $("#outputnumber").val(),
+          Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
           ConsultingFirm: $("input[name='ConsultingFirm']:checked").val(),
           JOD: $("#JOD").val(),
@@ -4164,8 +4177,9 @@ function CreateService() {
           isKompOutput: $("#chkKomp").prop("checked"),
           KompOutputNumber: $("#percent").val(),
           kompPercent: $("#outputnumber").val(),
+          Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
-          ServiceCategory:$("#Drpreqcategories option:selected").val(),
+          ServiceCategory: $("#Drpreqcategories option:selected").val(),
           JOD: $("#JOD").val(),
           EUR: $("#EUR").val(),
           ShortDesc: $("#shortDescription").val(),
@@ -4244,8 +4258,9 @@ function CreateService() {
                 results: ProjectDetails[ProjectIndex].RepId,
               },
               KOMPOuput: $("#KompOptPT").val(),
+              Explanation: $("#txtExplanation").val(),
               ChoicesOfServices: $("#choicesservices option:selected").val(),
-              ServiceCategory:$("#Drpreqcategories option:selected").val(),
+              ServiceCategory: $("#Drpreqcategories option:selected").val(),
               ShortDesc: $("#shortDescription").val(),
               LessorPapers: $("input[name='LessorPapers']:checked").val(),
               LessorName: $("#LessorName").val(),
@@ -4310,7 +4325,7 @@ function CreateService() {
               },
               KOMPOuput: $("#KompOptPT").val(),
               ChoicesOfServices: $("#choicesservices option:selected").val(),
-              ServiceCategory:$("#Drpreqcategories option:selected").val(),
+              ServiceCategory: $("#Drpreqcategories option:selected").val(),
               ShortDesc: $("#shortDescription").val(),
               LessorPapers: $("input[name='LessorPapers']:checked").val(),
 
@@ -4388,8 +4403,9 @@ function CreateService() {
             results: ProjectDetails[ProjectIndex].RepId,
           },
           KOMPOuput: $("#KompOptPT").val(),
+          Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
-          ServiceCategory:$("#Drpreqcategories option:selected").val(),
+          ServiceCategory: $("#Drpreqcategories option:selected").val(),
           ShortDesc: $("#shortDescription").val(),
           DurationFrom: FromDate,
           DurationTo: Todate,
@@ -4449,9 +4465,10 @@ function CreateService() {
           },
           //KOMPOuput:$("#KompOptPT").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
-          ServiceCategory:$("#Drpreqcategories option:selected").val(),
+          ServiceCategory: $("#Drpreqcategories option:selected").val(),
           KompOutputNumber: $("#percent").val(),
           kompPercent: $("#outputnumber").val(),
+          Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
           ShortDesc: $("#shortDescription").val(),
           CostExtension: $("input[name='CstExtension']:checked").val(),
@@ -4544,10 +4561,11 @@ function CreateService() {
             results: ProjectDetails[ProjectIndex].RepId,
           },
           ChoicesOfServices: $("#choicesservices option:selected").val(),
-          ServiceCategory:$("#Drpreqcategories option:selected").val(),
+          ServiceCategory: $("#Drpreqcategories option:selected").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
           KompOutputNumber: $("#percent").val(),
           kompPercent: $("#outputnumber").val(),
+          Explanation: $("#txtExplanation").val(),
           JOD: $("#JOD").val(),
           EUR: $("#EUR").val(),
           Agreement: $("input[name='Agreement']:checked").val(),
@@ -4644,9 +4662,9 @@ function MandatoryValidationForService() {
     isAllValueFilled = false;
   } else if (!$.trim($("#NameofAV").val())) {
     /*else if(!$.trim($("#pnForZAS").val()))
-	{
-		alertify.error('Please Enter PN For ZAS');
-		isAllValueFilled=false;
+  {
+    alertify.error('Please Enter PN For ZAS');
+    isAllValueFilled=false;
   }*/
     alertify.error("Please Enter Name of AV");
     isAllValueFilled = false;
@@ -4712,9 +4730,9 @@ function mandatoryfordirectaward() {
     isAllValueFilled = false;
   } else if (!$.trim($("#JOD").val())) {
     /*else if($('#Estimation')[0].files.length<=0)
-	{
-		alertify.error('Please upload a file for Estimated Cost');
-		isAllValueFilled=false;
+  {
+    alertify.error('Please upload a file for Estimated Cost');
+    isAllValueFilled=false;
   }*/
     alertify.error("Please Enter JOD");
     isAllValueFilled = false;
@@ -5041,7 +5059,9 @@ function mandatoryforcontract() {
   } /*else if (!$.trim($("#CntctPrsn").val())) {
     alertify.error("Please Enter Contact Person");
     isAllValueFilled = false;
-  } */else if (!$.trim($("#TeleNumber").val())) {
+  } */ else if (
+    !$.trim($("#TeleNumber").val())
+  ) {
     alertify.error("Please Enter Telephone Number");
     isAllValueFilled = false;
   } else if (!$.trim($("#Email").val())) {
@@ -5055,9 +5075,9 @@ function mandatoryforcontract() {
     isAllValueFilled = false;
   } else if ($("#terms")[0].files.length <= 0) {
     /*else if(!$.trim($("#justification").val()))
-	{
-		alertify.error('Please Enter Justification for Extension');
-		isAllValueFilled=false;
+  {
+    alertify.error('Please Enter Justification for Extension');
+    isAllValueFilled=false;
   }*/
     alertify.error("Please upload a file for Modified Terms of Reference");
     isAllValueFilled = false;
@@ -5240,7 +5260,9 @@ function CreateLeaseAgreement() {
             //ChoicesOfServices:$("#choicesservices option:selected").val(),
             ShortDesc: $("#shortDescription").val(),
             LessorPapers: $("input[name='LessorPapers']:checked").val(),
-            LeaseAgreementCategory: $("#Drpreqcategories option:selected").val(),
+            LeaseAgreementCategory: $(
+              "#Drpreqcategories option:selected"
+            ).val(),
             LessorName: $("#LessorName").val(),
             EmailAddress: $("#Email").val(),
             MobileNumber: $("#MobileNumber").val(),
@@ -6405,9 +6427,7 @@ async function LoadFileTypes() {
     });
 }
 
-async function Loadcurrency()
-{
-
+async function Loadcurrency() {
   /*const url = 'https://ec.europa.eu/budg/inforeuro/api/public/monthly-rates?year=2020&month=09';
 
 const httpClientOptions: ISPHttpClientOptions  = {
@@ -6604,8 +6624,8 @@ async function ErrorCallBack(error, methodname) {
   }
 }
 
-/* 
+/*
 //summary
 common fucntionalities were written End
-//summary 
+//summary
 */
