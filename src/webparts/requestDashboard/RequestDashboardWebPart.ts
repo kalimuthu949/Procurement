@@ -400,23 +400,23 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
     // });
 
     $("#btnService").click(function () {
-      location.href = siteURL + "/SitePages/New-Request.aspx";
+      location.href = siteURL + "/SitePages/New-Request.aspx?code=Service";
     });
 
     $("#btnGoods").click(function () {
-      location.href = siteURL + "/SitePages/New-Request.aspx";
+      location.href = siteURL + "/SitePages/New-Request.aspx?code=Goods";
     });
 
     $("#btnSubsidy").click(function () {
-      location.href = siteURL + "/SitePages/New-Request.aspx";
+      location.href = siteURL + "/SitePages/New-Request.aspx?code=Subsidy";
     });
 
     $("#btnLease").click(function () {
-      location.href = siteURL + "/SitePages/New-Request.aspx";
+      location.href = siteURL + "/SitePages/New-Request.aspx?code=Lease";
     });
 
     $("#btnIdpp").click(function () {
-      location.href = siteURL + "/SitePages/New-Request.aspx";
+      location.href = siteURL + "/SitePages/New-Request.aspx?code=idpp";
     });
 
     /*Excel click functionailty*/
@@ -2872,7 +2872,7 @@ async function LoadGoodsRequest() {
               siteURL +
               "/SitePages/Vertical-Timeline.aspx?itemid=" +
               allItems[index].ID +
-              '&code=pg><span class="icon-action icon-track"></span></a>';
+              '&code=pg><span class="icon-action icon-timeline"></span></a>';
 
           goodsHTML += "</td>";
           goodsHTML += "</tr>";
@@ -2976,7 +2976,7 @@ async function LoadServiceRequest() {
           {
             if(isProcurementAdmin)
             {
-              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Goods"><span class="icon-action icon-edit"></span></a>';
+              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Service"><span class="icon-action icon-edit"></span></a>';
             }
             else
             {
@@ -3005,7 +3005,7 @@ async function LoadServiceRequest() {
               siteURL +
               "/SitePages/Vertical-Timeline.aspx?itemid=" +
               allItems[index].ID +
-              '&code=sr><span class="icon-action icon-track"></span></a>';
+              '&code=sr><span class="icon-action icon-timeline"></span></a>';
 
           serviceHTML += "</td>";
           serviceHTML += "</tr>";
@@ -3099,7 +3099,7 @@ async function LoadSubsidyRequest() {
           if (flgSystemAdmin || CrntUserID == assgnuser||isProcurementAdmin) {
             if(isProcurementAdmin)
             {
-              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Goods"><span class="icon-action icon-edit"></span></a>';
+              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Subsidy"><span class="icon-action icon-edit"></span></a>';
             }
             else
             {
@@ -3128,7 +3128,7 @@ async function LoadSubsidyRequest() {
               siteURL +
               "/SitePages/Vertical-Timeline.aspx?itemid=" +
               allItems[index].ID +
-              '&code=ls><span class="icon-action icon-track"></span></a>';
+              '&code=ls><span class="icon-action icon-timeline"></span></a>';
 
           serviceHTML += "</td>";
           serviceHTML += "</tr>";
@@ -3222,7 +3222,7 @@ async function LoadLeaseAgreement() {
           if (flgSystemAdmin || CrntUserID == assgnuser||isProcurementAdmin) {
             if(isProcurementAdmin)
             {
-              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Goods"><span class="icon-action icon-edit"></span></a>';
+              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Lease"><span class="icon-action icon-edit"></span></a>';
             }
             else
             {
@@ -3251,7 +3251,7 @@ async function LoadLeaseAgreement() {
               siteURL +
               "/SitePages/Vertical-Timeline.aspx?itemid=" +
               allItems[index].ID +
-              '&code=la><span class="icon-action icon-track"></span></a>';
+              '&code=la><span class="icon-action icon-timeline"></span></a>';
 
           serviceHTML += "</td>";
           serviceHTML += "</tr>";
@@ -3345,7 +3345,7 @@ async function Loadidpp() {
           if (flgSystemAdmin || CrntUserID == assgnuser||isProcurementAdmin) {
             if(isProcurementAdmin)
             {
-              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Goods"><span class="icon-action icon-edit"></span></a>';
+              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=idpp"><span class="icon-action icon-edit"></span></a>';
             }
             else
             {
@@ -3367,15 +3367,14 @@ async function Loadidpp() {
               assgnuser +
               " index-value=" +
               index +
-              ' class="idppfollowup"><span class="icon-action icon-followup"></span></a>';
-
+              ' class="idppfollowup"><span class="icon-action icon-followup"></span></a>'; 
           if (CrntUserID == allItems[index].Author.ID)
             serviceHTML +=
               "<a href=" +
               siteURL +
               "/SitePages/Vertical-Timeline.aspx?itemid=" +
               allItems[index].ID +
-              '&code=idpp><span class="icon-action icon-track"></span></a>';
+              '&code=idpp><span class="icon-action icon-timeline"></span></a>';
 
           serviceHTML += "</td>";
           serviceHTML += "</tr>";
@@ -3391,6 +3390,12 @@ async function Loadidpp() {
         if (allItems[i].RequestStatus)
           $(".StatusDropdownidpp" + i + "").val(allItems[i].RequestStatus.ID);
       }
+
+      $(".icon-followup").attr('title','Send Followup');
+      $(".icon-view").attr('title','View');
+      $(".icon-edit").attr('title','Edit');
+      $(".icon-timeline").attr('title','Track');
+
     })
     .catch(function (error) {
       ErrorCallBack(error, "LoadLeaseRequest");
@@ -3674,7 +3679,7 @@ async function sendfollowup(user) {
   var maildetails = {
     To: [user],
     CC: [],
-    Subject: "This email is about...",
+    Subject: "This email is about followup",
     Body: "Here is the body for folowup messaage",
   };
   await sendemail(maildetails);
