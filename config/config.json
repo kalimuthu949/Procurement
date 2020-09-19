@@ -49,6 +49,14 @@
           "manifest": "./src/webparts/eRequest/ERequestWebPart.manifest.json"
         }
       ]
+    },
+    "editrequest-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/editrequest/EditrequestWebPart.js",
+          "manifest": "./src/webparts/editrequest/EditrequestWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {
@@ -70,6 +78,7 @@
     "ProcurementOfGoodsWebPartStrings": "lib/webparts/procurementOfGoods/loc/{locale}.js",
     "GoodsRequestWebPartStrings": "lib/webparts/goodsRequest/loc/{locale}.js",
     "RequestDashboardWebPartStrings": "lib/webparts/requestDashboard/loc/{locale}.js",
-    "ERequestWebPartStrings": "lib/webparts/eRequest/loc/{locale}.js"
+    "ERequestWebPartStrings": "lib/webparts/eRequest/loc/{locale}.js",
+    "EditrequestWebPartStrings": "lib/webparts/editrequest/loc/{locale}.js"
   }
 }

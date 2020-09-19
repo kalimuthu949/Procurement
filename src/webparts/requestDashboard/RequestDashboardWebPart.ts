@@ -62,6 +62,7 @@ var oTableidpp;
 var Procurementusers = [];
 var sheetNames = [];
 var isHOD = false;
+var isProcurementAdmin=false;
 
 /* start Html for status change in popup*/
 var htmlforstatuschange = `
@@ -360,6 +361,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
     getAllFolders();
     LoadProcurementTeamMembers();
     LoadHeadofProcurementTeamMembers();
+    LoadProcurementAdmin();
     LoadStatus();
     LoadProjects();
     LoadProcurementTeam();
@@ -485,6 +487,24 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           FileURl: "N/A",
           displayName: "Nonneutral Specifications",
         });
+        arrFiles.push({
+          Name: "VSRC",
+          FileName: "N/A",
+          FileURl: "N/A",
+          displayName: "Valid Supplier’s Registration",
+        });
+        arrFiles.push({
+          Name: "VSCP",
+          FileName: "N/A",
+          FileURl: "N/A",
+          displayName: "Valid Supplier’s Company Profile",
+        });
+        arrFiles.push({
+          Name: "VSSPAC",
+          FileName: "N/A",
+          FileURl: "N/A",
+          displayName: "Sole Provider Certificate",
+        });
       } else if (GoodsRequest[index].GoodsCategory == "goodsamendment") {
         arrFiles.push({
           Name: "AmendmentSpecfications",
@@ -548,7 +568,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
                           k
                         ].ServerRelativeUrl,
                     });
-                  } else if (
+                  } 
+                  else if (
                     ProcurementServiceFiles["Folders"][i].Name == "Quantities"
                   ) {
                     Quantities.push({
@@ -562,22 +583,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
                           k
                         ].ServerRelativeUrl,
                     });
-                  } else if (
-                    ProcurementServiceFiles["Folders"][i].Name ==
-                    "NeutralSpecfication"
-                  ) {
-                    NeutralSpecfication.push({
-                      displayname: "Nonneutral Specifications",
-                      Name:
-                        ProcurementServiceFiles["Folders"][i].Folders[j].Files[
-                          k
-                        ].Name,
-                      Url:
-                        ProcurementServiceFiles["Folders"][i].Folders[j].Files[
-                          k
-                        ].ServerRelativeUrl,
-                    });
-                  } else {
+                  }else {
                     arrFiles[key].FileName =
                       ProcurementServiceFiles["Folders"][i].Folders[j].Files[
                         k
@@ -2796,7 +2802,7 @@ async function LoadGoodsRequest() {
         //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
         if (
           flgSystemAdmin ||
-          isHOD ||
+          isHOD ||isProcurementAdmin||
           flgProcurementTeam ||
           allItems[index].AVName.ID == CrntUserID ||
           CrntUserID == assgnuser ||
@@ -2833,14 +2839,21 @@ async function LoadGoodsRequest() {
             '<a href="#" req-id="' +
             allItems[index].ID +
             '" class="GdsdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></span></a>';
-          if (flgSystemAdmin || CrntUserID == assgnuser) {
-            goodsHTML +=
+          if (flgSystemAdmin || CrntUserID == assgnuser||isProcurementAdmin) {
+            if(isProcurementAdmin)
+            {
+              goodsHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Goods"><span class="icon-action icon-edit"></span></a>';
+            }
+            else
+            {
+              goodsHTML +=
               '<a href="#" index-value=' +
               index +
               ' req-id="' +
               allItems[index].ID +
               '" class="GdsEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></span></a>';
             //goodsHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="GdsSave"><span class="icon-action icon-save"></span></a>';
+            }           
           }
 
           if (assgnuser != "select" && CrntUserID == allItems[index].Author.ID)
@@ -2924,7 +2937,7 @@ async function LoadServiceRequest() {
         //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
         if (
           flgSystemAdmin ||
-          isHOD ||
+          isHOD ||isProcurementAdmin||
           flgProcurementTeam ||
           allItems[index].AVName.ID == CrntUserID ||
           CrntUserID == assgnuser ||
@@ -2959,14 +2972,22 @@ async function LoadServiceRequest() {
             '<a href="#" req-id="' +
             allItems[index].ID +
             '" class="serdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
-          if (flgSystemAdmin || CrntUserID == assgnuser) {
-            serviceHTML +=
+          if (flgSystemAdmin || CrntUserID == assgnuser||isProcurementAdmin) 
+          {
+            if(isProcurementAdmin)
+            {
+              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Goods"><span class="icon-action icon-edit"></span></a>';
+            }
+            else
+            {
+              serviceHTML +=
               '<a href="#" index-value=' +
               index +
               ' req-id="' +
               allItems[index].ID +
               '" class="SerEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
             //serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SerSave"><span class="icon-action icon-save"></a>';
+            }       
           }
           if (assgnuser != "select" && CrntUserID == allItems[index].Author.ID)
             serviceHTML +=
@@ -3040,7 +3061,7 @@ async function LoadSubsidyRequest() {
         //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
         if (
           flgSystemAdmin ||
-          isHOD ||
+          isHOD ||isProcurementAdmin||
           flgProcurementTeam ||
           allItems[index].AVName.ID == CrntUserID ||
           CrntUserID == assgnuser ||
@@ -3075,14 +3096,21 @@ async function LoadSubsidyRequest() {
             '<a href="#" req-id="' +
             allItems[index].ID +
             '" class="subdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
-          if (flgSystemAdmin || CrntUserID == assgnuser) {
-            serviceHTML +=
+          if (flgSystemAdmin || CrntUserID == assgnuser||isProcurementAdmin) {
+            if(isProcurementAdmin)
+            {
+              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Goods"><span class="icon-action icon-edit"></span></a>';
+            }
+            else
+            {
+              serviceHTML +=
               '<a href="#" index-value=' +
               index +
               ' req-id="' +
               allItems[index].ID +
               '" class="SubEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
             //serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="SubSave"><span class="icon-action icon-save"></a>';
+            }
           }
           if (assgnuser != "select" && CrntUserID == allItems[index].Author.ID)
             serviceHTML +=
@@ -3156,7 +3184,7 @@ async function LoadLeaseAgreement() {
         //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
         if (
           flgSystemAdmin ||
-          isHOD ||
+          isHOD ||isProcurementAdmin||
           flgProcurementTeam ||
           allItems[index].AVName.ID == CrntUserID ||
           CrntUserID == assgnuser ||
@@ -3191,14 +3219,21 @@ async function LoadLeaseAgreement() {
             '<a href="#" req-id="' +
             allItems[index].ID +
             '" class="LeasedetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
-          if (flgSystemAdmin || CrntUserID == assgnuser) {
-            serviceHTML +=
+          if (flgSystemAdmin || CrntUserID == assgnuser||isProcurementAdmin) {
+            if(isProcurementAdmin)
+            {
+              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Goods"><span class="icon-action icon-edit"></span></a>';
+            }
+            else
+            {
+              serviceHTML +=
               '<a href="#" index-value=' +
               index +
               ' req-id="' +
               allItems[index].ID +
               '" class="LeaseEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
             //serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="LeaseSave"><span class="icon-action icon-save"></a>';
+            }
           }
           if (assgnuser != "select" && CrntUserID == allItems[index].Author.ID)
             serviceHTML +=
@@ -3272,7 +3307,7 @@ async function Loadidpp() {
         //if(flgProcurementTeam||allItems[index].AVName.ID==CrntUserID||allItems[index].Representative.ID==CrntUserID)
         if (
           flgSystemAdmin ||
-          isHOD ||
+          isHOD ||isProcurementAdmin||
           flgProcurementTeam ||
           allItems[index].AVName.ID == CrntUserID ||
           CrntUserID == assgnuser ||
@@ -3307,14 +3342,22 @@ async function Loadidpp() {
             '<a href="#" req-id="' +
             allItems[index].ID +
             '" class="idppdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
-          if (flgSystemAdmin || CrntUserID == assgnuser) {
-            serviceHTML +=
+          if (flgSystemAdmin || CrntUserID == assgnuser||isProcurementAdmin) {
+            if(isProcurementAdmin)
+            {
+              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Goods"><span class="icon-action icon-edit"></span></a>';
+            }
+            else
+            {
+              serviceHTML +=
               '<a href="#" index-value=' +
               index +
               ' req-id="' +
               allItems[index].ID +
               '" class="idppEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
             //serviceHTML+='<a href="#" req-id="'+allItems[index].ID+'" AssignedUser='+assgnuser+' index-value='+index+' class="idppSave"><span class="icon-action icon-save"></a>';
+            }
+            
           }
           if (assgnuser != "select" && CrntUserID == allItems[index].Author.ID)
             serviceHTML +=
@@ -3447,6 +3490,23 @@ async function LoadHeadofProcurementTeamMembers() {
     });
 }
 
+async function LoadProcurementAdmin() {
+  await sp.web.siteGroups
+    .getByName("ProcurementAdmin")
+    .users.get()
+    .then((allItems: any[]) => {
+      if (allItems.length > 0) {
+        for (var i = 0; i < allItems.length; i++) {
+          if (allItems[i].Id == CrntUserID)
+          isProcurementAdmin = true;
+        }
+      }
+    })
+    .catch(function (error) {
+      ErrorCallBack(error, "LoadProcurementAdmin");
+    });
+}
+
 async function LoadStatus() {
   await sp.web.lists
     .getByTitle("Status")
@@ -3542,7 +3602,7 @@ async function getAllFolders() {
     .getFolderByServerRelativeUrl("ProcurementServices")
     .expand("Files,Folders/Folders/Files")
     .get()
-    .then((allItems: any[]) => {
+    .then(async (allItems: any[]) => {
       console.log(allItems);
       if (allItems) {
         ProcurementServiceFiles = allItems;
