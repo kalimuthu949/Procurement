@@ -197,6 +197,9 @@ table.dataTable thead td {
   background-color: #dd4b39;
   color: #fff;
 }
+table.dataTable thead th {
+  text-align: center;
+}
 table.dataTable tbody tr.even {
   background-color: rgba(217, 31, 31, 0.2);
 }
@@ -323,7 +326,7 @@ div.dataTables_length {
   left: 0;
 }
 .dataTables_filter {
-  right: 250px;
+  right: 45%;
 }
 .spinner-border {
   /* display: inline-block; when show */
@@ -408,6 +411,10 @@ div.dataTables_length {
 .modal-footer {
   margin-top: 10px;
 }
+.modal-footer button {
+  border: 1px solid #b1b1b1 !important;
+  box-shadow: 1px 0 3px -1px #ccc;
+}
 .icon-action {
   width: 20px;
   height: 20px;
@@ -488,6 +495,10 @@ div.dataTables_length {
 }
 
 /*! madhesh */
+.nav.nav-tabs a {
+  font-weight: bold;
+}
+
 .btn[type="button"] {
   border: none;
   box-shadow: 1px 0px 3px -1px #ccc;
@@ -519,7 +530,7 @@ div.dataTables_length {
   cursor: pointer;
 }
 td .icon-action {
-  margin: 0 3px;
+  margin: 0 4px;
 }
 .goods-details {
   margin: 5px -8px;
@@ -528,7 +539,7 @@ td .icon-action {
 .goodsresult {
   margin: 0;
   width: 100%;
-  line-break: anywhere;
+  /* line-break: anywhere; */
 }
 .ajs-message.ajs-error.ajs-visible {
   white-space: break-spaces;
@@ -575,10 +586,14 @@ div#divkompoutput {
 
 td:last-child {
   text-align: left !important;
-  padding-left: 30px !important;
 }
-th{
-text-align:left;
+
+.form-control-datepicker,
+.custom-file-label {
+  cursor: pointer;
+}
+div#Goods_filter {
+  top: -44px !important;
 }
 /* Fixes Maasi*/
 /* ! workbench size Dont Forget to comment after works done */
