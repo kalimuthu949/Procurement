@@ -434,6 +434,12 @@ div.dataTables_length {
 .icon-timeline {
   background-image: url(../images/icon-timeline.png);
 }
+.icon-admin-edit {
+  background-image: url(../images/icon-admin-edit.png);
+}
+.icon-mail {
+  background-image: url(../images/icon-mail.png);
+}
 .ControlZone-control {
   min-height: 480px;
 }
@@ -513,7 +519,7 @@ div.dataTables_length {
   cursor: pointer;
 }
 td .icon-action {
-  margin: 0 5px;
+  margin: 0 3px;
 }
 .goods-details {
   margin: 5px -8px;
@@ -565,6 +571,14 @@ div#divkompoutput {
 }
 .ajs-message.ajs-error.ajs-visible {
   text-align: center !important;
+}
+
+td:last-child {
+  text-align: left !important;
+  padding-left: 30px !important;
+}
+th{
+text-align:left;
 }
 /* Fixes Maasi*/
 /* ! workbench size Dont Forget to comment after works done */

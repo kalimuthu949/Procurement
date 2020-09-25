@@ -7,13 +7,6 @@ import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
 import { escape, trimEnd } from "@microsoft/sp-lodash-subset";
 import { SPComponentLoader } from "@microsoft/sp-loader";
 
-import { WebPartContext } from "@microsoft/sp-webpart-base";
-import {
-  SPHttpClient,
-  SPHttpClientResponse,
-  ISPHttpClientOptions,
-} from "@microsoft/sp-http";
-
 import styles from "./ERequestWebPart.module.scss";
 import * as strings from "ERequestWebPartStrings";
 
@@ -32,6 +25,8 @@ import * as html2pdf from "html2pdf.js";
 SPComponentLoader.loadCss(
   "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 );
+
+
 declare var $;
 
 var filesuploaded = 0;
@@ -52,6 +47,8 @@ var filename = "";
 var RequestID = "";
 var pdfdetails = [];
 var code="";
+var flgSystemAdmin=false;
+var LoggedUserEmail="";
 
 var ChoicesServices = [
   "Direct Award",
@@ -61,22 +58,22 @@ var ChoicesServices = [
   "Request from a Framework Agreement",
 ];
 
+
 export interface IERequestWebPartProps {
   description: string;
 }
 
-export interface IMyCustomComponent {
-  context: WebPartContext;
-}
 
 export default class ERequestWebPart extends BaseClientSideWebPart<
   IERequestWebPartProps
 > {
+
   public onInit(): Promise<void> {
     return super.onInit().then((_) => {
       sp.setup({
         spfxContext: this.context,
       });
+       
     });
   }
 
@@ -582,7 +579,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     <div class="col-sm-6">
     <div class="form-group">
       <label>ProSoft Number:<span class="star">*</span></label>
-      <input class="form-control" type="number" id="prosoftnum" maxlength="8" value="">
+      <input class="form-control" type="text" id="prosoftnum" placeholder="X X X X X X X X" maxlength="8" value="">
     </div>
     </div>
     <div class="col-sm-6">
@@ -817,7 +814,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     <div class="form-group">
     <input class="radio-stylish clsfirm" id="ConsultingFirm" type="radio" name="ConsultingFirm" value="ConsultingFirm" />
     <span class="radio-element"></span>
-    <label class="stylish-label" for="ConsultingFirm">ConsultingFirm</label>
+    <label class="stylish-label" for="ConsultingFirm">Consulting Firm</label>
     </div>
     </div>
 
@@ -864,14 +861,14 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 <div class='row'>
 <div class="col-sm-6">
     <div class="form-group">
-    <label>Contract Person from the Firm<span class="star">*</span></label>
+    <label>Contract Person from the Firm<span class="star"></span></label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
     </div>
 
     <div class="col-sm-6">
     <div class="form-group">
-    <label>Telephone Number<span class="star">*</span></label>
+    <label>Telephone Number<span class="star"></span></label>
     <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div>
@@ -933,9 +930,9 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   </div>
 </div>
 
-<div class="col-sm-6" id="divForMarketSheet">
+<div class="col-sm-6" id="divForMarketSheet" style="display:none">
 <div class="form-group">
-  <label>Market Survey Sheet (showing unique characteristics) :<span class="star"></span></label>
+  <label>Market Survey Sheet (showing unique characteristics) :<span class="star">*</span></label>
   <input class="form-control" type="text" id="MarketSurvey" value="">
   </div>
 </div>
@@ -1116,15 +1113,15 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 <div class='row'>
 <div class="col-sm-3">
     <div class="form-group">
-    <input class="radio-stylish" id="ConsultingFirm" type="radio" name="ConsultingFirm" value="ConsultingFirm" />
+    <input class="radio-stylish clsfirm" id="ConsultingFirm" type="radio" name="ConsultingFirm" value="ConsultingFirm" />
     <span class="radio-element"></span>
-    <label class="stylish-label" for="ConsultingFirm">ConsultingFirm</label>
+    <label class="stylish-label" for="ConsultingFirm">Consulting Firm</label>
     </div>
     </div>
 
     <div class="col-sm-3">
     <div class="form-group">
-    <input class="radio-stylish" id="Appariser" type="radio" name="ConsultingFirm" value="Appariser"  />
+    <input class="radio-stylish clsfirm" id="Appariser" type="radio" name="ConsultingFirm" value="Appariser"  />
     <span class="radio-element"></span>
     <label class="stylish-label" for="Appariser">Appariser</label>
     </div>
@@ -1140,7 +1137,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-      <label>Grid for Assessing the Eligibility of Consulting Firms:<span class="star">*</span></label>
+      <label id="lblgridforassess">Grid for Assessing the Eligibility of Consulting Firms:<span class="star">*</span></label>
       <input class="form-control" id="gridforassess">
   </div>
   </div>
@@ -1307,7 +1304,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 </div>
 <div class="col-sm-3">
     <div class="form-group">
-    <label>Telephone Number<span class="star">*</span></label>
+    <label>Telephone Number<span class="star"></span></label>
     <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div> 
@@ -1704,7 +1701,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     <div class="col-sm-6">
     <div class="form-group">
       <label>Local Subsidy CoSoft Number:<span class="star">*</span></label>
-      <input class="form-control" type="number" id="cosoftnum" maxlength="8" value="">
+      <input class="form-control" type="text" id="cosoftnum" placeholder="X X X X X X X X" maxlength="8" value="">
     </div>
     </div>
 
@@ -1724,7 +1721,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     <div class="row">
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Justification for Amendment:<span class="star">*</span></label>
+     <label>Signed Justification by the Project AV:<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="justification" value="" class="custom-file-input">
@@ -2172,7 +2169,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     <div class="col-sm-6">
     <div class="form-group">
       <label>Lease Agreement CoSoft Number:<span class="star">*</span></label>
-      <input class="form-control" type="number" id="cosoftnum" maxlength="8" value="">
+      <input class="form-control" type="text" id="cosoftnum" placeholder="X X X X X X X X" maxlength="8" value="">
     </div>
     </div>
 
@@ -2423,14 +2420,13 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     $(".pageHeader").hide();
     var that = this;
     this.domElement.innerHTML = this.requestoptions;
+    LoggedUserEmail = this.context.pageContext.user.email;
     siteURL = this.context.pageContext.site.absoluteUrl;
     serverURL = this.context.pageContext.site.serverRelativeUrl;
-    HttpURl = this.context.spHttpClient;
 
     code = getUrlParameter("code");
-
     LoadFileTypes();
-    Loadcurrency();
+    LoadAdminTeam();
 
     window.addEventListener("beforeunload", function (e) {
       /*if (!formSubmitting)
@@ -2856,7 +2852,18 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
           $("#choicesservices option:selected").val() == "Shortlisted tender"
         ) {
           $("#divforJustification").show();
-        } else {
+        }
+        else if ($(this).val() >=8000 &&$("#choicesservices option:selected").val() == "Direct Award") 
+        {
+          $("#divForMarketSheet").show();
+          $("#MarketSurvey").val('');
+        }
+        else if ($(this).val() <8000 &&$("#choicesservices option:selected").val() == "Direct Award") 
+        {
+          $("#divForMarketSheet").hide();
+          $("#MarketSurvey").val('');
+        }
+        else {
           $("#divforJustification").hide();
           $("#justification").val("");
           $("#justification").text("Choose File");
@@ -2919,14 +2926,31 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
       }
     });
 
-    $(document).on("change", ".clsfirm", function () {
-      if ($("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm") {
-        $("#CntctPrsn").val("");
-        $("#CntctPrsn").prop("disabled", true);
-      } else {
-        $("#CntctPrsn").val("");
-        $("#CntctPrsn").prop("disabled", false);
+    $(document).on("change", ".clsfirm", function () 
+    {
+      if($("#choicesservices option:selected").val()=="Public tender")
+      {
+        if ($("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm")
+        {
+            $("#lblgridforassess").html("Grid for Assessing the Eligibility of Consulting Firms:<span class=star>*</span>");
+        }
+        else
+        {
+          $("#lblgridforassess").html("Grid for Assessing the Eligibility of Consulting Firms:<span class=star></span>");
+        }
       }
+      else
+      {
+        if ($("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm") 
+        {
+          $("#CntctPrsn").val("");
+          $("#CntctPrsn").prop("disabled", true);
+        } 
+        else {
+          $("#CntctPrsn").val("");
+          $("#CntctPrsn").prop("disabled", false);
+        }
+      } 
     });
 
     
@@ -4810,7 +4834,7 @@ function mandatoryfordirectaward() {
   ) {
     alertify.error("Please Enter Contact Person");
     isAllValueFilled = false;
-  } else if (!$.trim($("#TeleNumber").val())) {
+  } else if (!$.trim($("#TeleNumber").val())&&$("input[name='ConsultingFirm']:checked").val() == "ConsultingFirm") {
     alertify.error("Please Enter Telephone Number");
     isAllValueFilled = false;
   } else if (!$.trim($("#Email").val())) {
@@ -5174,12 +5198,12 @@ function mandatoryforcontract() {
   } /*else if (!$.trim($("#CntctPrsn").val())) {
     alertify.error("Please Enter Contact Person");
     isAllValueFilled = false;
-  } */ else if (
+  }  else if (
     !$.trim($("#TeleNumber").val())
   ) {
     alertify.error("Please Enter Telephone Number");
     isAllValueFilled = false;
-  } else if (!$.trim($("#Email").val())) {
+  } */else if (!$.trim($("#Email").val())) {
     alertify.error("Please Enter Valid Email");
     isAllValueFilled = false;
   } else if (!isEmail($.trim($("#Email").val()))) {
@@ -6190,7 +6214,7 @@ function mandatoryforsubsidyamendment() {
     );
     isAllValueFilled = false;
   } else if ($("#justification")[0].files.length <= 0) {
-    alertify.error("Please upload a file for Justification for Amendment");
+    alertify.error("Please upload a file for Signed Justification by the Project AV");
     isAllValueFilled = false;
   } else if ($("#Budget")[0].files.length <= 0) {
     alertify.error(
@@ -6479,13 +6503,14 @@ async function LoadProjects() {
     .then(async (allItems: any[]) => {
       for (var index = 0; index < allItems.length; index++) {
         var element = allItems[index];
-
-        for (
-          var indexForRep = 0;
-          indexForRep < allItems[index].Representative.length;
-          indexForRep++
-        ) {
-          if (CrntUserID == allItems[index].Representative[indexForRep].ID) {
+        if(element.ProjectAV.ID==CrntUserID)
+        {
+          flgRepUser = true;
+        }
+        for (var indexForRep = 0;indexForRep < allItems[index].Representative.length;indexForRep++) 
+        {
+          if (CrntUserID == allItems[index].Representative[indexForRep].ID) 
+          {
             flgRepUser = true;
             $("#projectName").append(
               '<option Proj-Num="' +
@@ -6517,14 +6542,28 @@ async function LoadProjects() {
           }
         }
       }
-
-      if (!flgRepUser) {
-        await AlertMessage("Access Denied");
+      if (!flgRepUser&&!flgSystemAdmin) 
+      {
+        AlertMessage("Access Denied");
       }
-
     });
 
   console.log(siteURL);
+}
+
+async function LoadAdminTeam() {
+  await sp.web.siteGroups
+    .getByName("SystemAdmin")
+    .users.filter("Email eq '" + LoggedUserEmail + "'")
+    .get()
+    .then(async (allItems: any[]) => {
+      if (allItems.length > 0) {
+        flgSystemAdmin = true;
+      }
+    })
+    .catch(function (error) {
+      ErrorCallBack(error, "LoadAdminTeam");
+    });
 }
 
 async function LoadFileTypes() {
@@ -6541,24 +6580,6 @@ async function LoadFileTypes() {
     .catch(function (error) {
       ErrorCallBack(error, "LoadFileTypes");
     });
-}
-
-async function Loadcurrency() {
-  /*const url = 'https://ec.europa.eu/budg/inforeuro/api/public/monthly-rates?year=2020&month=09';
-
-const httpClientOptions: ISPHttpClientOptions  = {
-  headers: {'Access-Control-Allow-Origin': '*'},
-
-  method: "GET",
-  mode: "no-cors"
-};
-
-  await HttpURl
-    .get(url, SPHttpClient.configurations.v1, httpClientOptions)
-    .then(response => {
-        console.log(response);
-        return response.json();
-    });*/
 }
 
 function AlertMessage(strMewssageEN) {
