@@ -26,7 +26,6 @@ SPComponentLoader.loadCss(
   "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 );
 
-
 declare var $;
 
 var filesuploaded = 0;
@@ -46,9 +45,9 @@ var _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png", ".xlsx"];
 var filename = "";
 var RequestID = "";
 var pdfdetails = [];
-var code="";
-var flgSystemAdmin=false;
-var LoggedUserEmail="";
+var code = "";
+var flgSystemAdmin = false;
+var LoggedUserEmail = "";
 
 var ChoicesServices = [
   "Direct Award",
@@ -58,22 +57,18 @@ var ChoicesServices = [
   "Request from a Framework Agreement",
 ];
 
-
 export interface IERequestWebPartProps {
   description: string;
 }
 
-
 export default class ERequestWebPart extends BaseClientSideWebPart<
   IERequestWebPartProps
 > {
-
   public onInit(): Promise<void> {
     return super.onInit().then((_) => {
       sp.setup({
         spfxContext: this.context,
       });
-       
     });
   }
 
@@ -2483,7 +2478,6 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
         });
       }
       if (projectname == "idpp") $(".page-heading").text("IDPP");
-
     });
 
     $(document).on("change", "#Drpreqcategories", function () {
@@ -2852,18 +2846,19 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
           $("#choicesservices option:selected").val() == "Shortlisted tender"
         ) {
           $("#divforJustification").show();
-        }
-        else if ($(this).val() >=8000 &&$("#choicesservices option:selected").val() == "Direct Award") 
-        {
+        } else if (
+          $(this).val() >= 8000 &&
+          $("#choicesservices option:selected").val() == "Direct Award"
+        ) {
           $("#divForMarketSheet").show();
-          $("#MarketSurvey").val('');
-        }
-        else if ($(this).val() <8000 &&$("#choicesservices option:selected").val() == "Direct Award") 
-        {
+          $("#MarketSurvey").val("");
+        } else if (
+          $(this).val() < 8000 &&
+          $("#choicesservices option:selected").val() == "Direct Award"
+        ) {
           $("#divForMarketSheet").hide();
-          $("#MarketSurvey").val('');
-        }
-        else {
+          $("#MarketSurvey").val("");
+        } else {
           $("#divforJustification").hide();
           $("#justification").val("");
           $("#justification").text("Choose File");
@@ -2926,94 +2921,75 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
       }
     });
 
-    $(document).on("change", ".clsfirm", function () 
-    {
-      if($("#choicesservices option:selected").val()=="Public tender")
-      {
-        if ($("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm")
-        {
-            $("#lblgridforassess").html("Grid for Assessing the Eligibility of Consulting Firms:<span class=star>*</span>");
+    $(document).on("change", ".clsfirm", function () {
+      if ($("#choicesservices option:selected").val() == "Public tender") {
+        if (
+          $("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm"
+        ) {
+          $("#lblgridforassess").html(
+            "Grid for Assessing the Eligibility of Consulting Firms:<span class=star>*</span>"
+          );
+        } else {
+          $("#lblgridforassess").html(
+            "Grid for Assessing the Eligibility of Consulting Firms:<span class=star></span>"
+          );
         }
-        else
-        {
-          $("#lblgridforassess").html("Grid for Assessing the Eligibility of Consulting Firms:<span class=star></span>");
-        }
-      }
-      else
-      {
-        if ($("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm") 
-        {
+      } else {
+        if (
+          $("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm"
+        ) {
           $("#CntctPrsn").val("");
           $("#CntctPrsn").prop("disabled", true);
-        } 
-        else {
+        } else {
           $("#CntctPrsn").val("");
           $("#CntctPrsn").prop("disabled", false);
         }
-      } 
+      }
     });
 
-    
-    if(code)
-    {
+    if (code) {
+      if (code.toLowerCase() == "goods") {
+        $("#DrpProjectName").val("Goods");
+        $("#DrpProjectName").trigger("change");
 
-    
-    if (code.toLowerCase() == "goods")
-    {
-      $("#DrpProjectName").val("Goods");
-      $("#DrpProjectName").trigger("change");
+        $("#Drpreqcategories").val("goods");
+        $("#Drpreqcategories").trigger("change");
+      } else if (code.toLowerCase() == "service") {
+        $("#DrpProjectName").val("Service");
+        $("#DrpProjectName").trigger("change");
 
-      $("#Drpreqcategories").val("goods");
-      $("#Drpreqcategories").trigger("change");
-      
-    }
-    else if (code.toLowerCase() == "service")
-    {
-      $("#DrpProjectName").val("Service");
-      $("#DrpProjectName").trigger("change");
+        $("#Drpreqcategories").val("service");
+        $("#Drpreqcategories").trigger("change");
+      } else if (code.toLowerCase() == "subsidy") {
+        $("#DrpProjectName").val("Subsidy");
+        $("#DrpProjectName").trigger("change");
 
-      $("#Drpreqcategories").val("service");
-      $("#Drpreqcategories").trigger("change");
-    }
-    else if (code.toLowerCase() == "subsidy")
-    {
-      $("#DrpProjectName").val("Subsidy");
-      $("#DrpProjectName").trigger("change");
+        $("#Drpreqcategories").val("Subsidy");
+        $("#Drpreqcategories").trigger("change");
+      } else if (code.toLowerCase() == "lease") {
+        $("#DrpProjectName").val("Lease");
+        $("#DrpProjectName").trigger("change");
 
-      $("#Drpreqcategories").val("Subsidy");
-      $("#Drpreqcategories").trigger("change");
-    }
-    else if (code.toLowerCase() == "lease")
-    {
-      $("#DrpProjectName").val("Lease");
-      $("#DrpProjectName").trigger("change");
+        $("#Drpreqcategories").val("Lease");
+        $("#Drpreqcategories").trigger("change");
+      } else if (code.toLowerCase() == "idpp") {
+        $("#DrpProjectName").val("idpp");
+        $("#DrpProjectName").trigger("change");
+      } else {
+        $("#DrpProjectName").val("Goods");
+        $("#DrpProjectName").trigger("change");
 
-      $("#Drpreqcategories").val("Lease");
-      $("#Drpreqcategories").trigger("change");
-    }
-    else if (code.toLowerCase() == "idpp")
-    {
-      $("#DrpProjectName").val("idpp");
-      $("#DrpProjectName").trigger("change");
-    }
-    else
-    {
+        $("#Drpreqcategories").val("goods");
+        $("#Drpreqcategories").trigger("change");
+      }
+    } else {
       $("#DrpProjectName").val("Goods");
       $("#DrpProjectName").trigger("change");
 
       $("#Drpreqcategories").val("goods");
       $("#Drpreqcategories").trigger("change");
     }
-  }
-  else
-  {
-    $("#DrpProjectName").val("Goods");
-      $("#DrpProjectName").trigger("change");
 
-      $("#Drpreqcategories").val("goods");
-      $("#Drpreqcategories").trigger("change");
-  }
-    
     /* 
     //Summary
     Common Events End... 
@@ -3165,7 +3141,7 @@ function CreateGoodsRequest() {
       PersonEmail: $("#Email").val(),
       PersonMobile: $("#MobileNumber").val(),
       isKompOutput: $("#chkKomp").prop("checked"),
-      KompOutputNumber:$("#outputnumber").val(),
+      KompOutputNumber: $("#outputnumber").val(),
       kompPercent: $("#percent").val(),
     };
 
@@ -3672,24 +3648,35 @@ function MandatoryValidation() {
       "Please Select Valid Supplier’s Sole Provider Authorization Certificate"
     );
     isAllValueFilled = false;
-  }else if ($("input[name='Specifications']:checked").val() ==
-  "Nonneutral Specifications" &&!$.trim($("#CntctPrsn").val())) {
+  } else if (
+    $("input[name='Specifications']:checked").val() ==
+      "Nonneutral Specifications" &&
+    !$.trim($("#CntctPrsn").val())
+  ) {
     alertify.error("Please Enter Name Of Contact Person");
     isAllValueFilled = false;
-  } else if ($("input[name='Specifications']:checked").val() ==
-  "Nonneutral Specifications" &&!$.trim($("#Email").val())) {
+  } else if (
+    $("input[name='Specifications']:checked").val() ==
+      "Nonneutral Specifications" &&
+    !$.trim($("#Email").val())
+  ) {
     alertify.error("Please Enter Valid Email");
     isAllValueFilled = false;
-  } else if ($("input[name='Specifications']:checked").val() ==
-  "Nonneutral Specifications" &&!isEmail($.trim($("#Email").val()))) {
+  } else if (
+    $("input[name='Specifications']:checked").val() ==
+      "Nonneutral Specifications" &&
+    !isEmail($.trim($("#Email").val()))
+  ) {
     alertify.error("Please Enter Valid Email");
     isAllValueFilled = false;
-  } else if ($("input[name='Specifications']:checked").val() ==
-  "Nonneutral Specifications" &&!$.trim($("#MobileNumber").val())) {
+  } else if (
+    $("input[name='Specifications']:checked").val() ==
+      "Nonneutral Specifications" &&
+    !$.trim($("#MobileNumber").val())
+  ) {
     alertify.error("Please Enter Mobile Number");
     isAllValueFilled = false;
-  } 
-  else if (
+  } else if (
     $("#chkMoreItem").prop("checked") &&
     $("#costFile")[0].files.length <= 0
   ) {
@@ -4005,7 +3992,7 @@ function CreateService() {
           DurationTo: Todate,
           JOD: $("#JOD").val(),
           EUR: $("#EUR").val(),
-          MarketSurvey:$("#MarketSurvey").val(),
+          MarketSurvey: $("#MarketSurvey").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
           kompPercent: $("#percent").val(),
           KompOutputNumber: $("#outputnumber").val(),
@@ -4216,7 +4203,7 @@ function CreateService() {
           JOD: $("#JOD").val(),
           EUR: $("#EUR").val(),
           ShortDesc: $("#shortDescription").val(),
-          Assessgrid:$("#gridforassess").val(),
+          Assessgrid: $("#gridforassess").val(),
           DurationFrom: FromDate,
           DurationTo: Todate,
         };
@@ -4793,15 +4780,19 @@ function MandatoryValidationForService() {
   }*/
     alertify.error("Please Enter Name of AV");
     isAllValueFilled = false;
-  }else if (!$.trim($("#txtExplanation").val())&&$("#DrpProjectName option:selected").val()=="Service") {
-    alertify.error("Please Enter Request to Subcontract the Service in Question");
+  } else if (
+    !$.trim($("#txtExplanation").val()) &&
+    $("#DrpProjectName option:selected").val() == "Service"
+  ) {
+    alertify.error(
+      "Please Enter Request to Subcontract the Service in Question"
+    );
     isAllValueFilled = false;
-  } 
-  else if ($("#choicesservices option:selected").val() == "Select") {
+  } else if ($("#choicesservices option:selected").val() == "Select") {
     alertify.error("Please Choose Contracting Procedure");
     isAllValueFilled = false;
   }
-  
+
   return isAllValueFilled;
 }
 
@@ -4834,7 +4825,10 @@ function mandatoryfordirectaward() {
   ) {
     alertify.error("Please Enter Contact Person");
     isAllValueFilled = false;
-  } else if (!$.trim($("#TeleNumber").val())&&$("input[name='ConsultingFirm']:checked").val() == "ConsultingFirm") {
+  } else if (
+    !$.trim($("#TeleNumber").val()) &&
+    $("input[name='ConsultingFirm']:checked").val() == "ConsultingFirm"
+  ) {
     alertify.error("Please Enter Telephone Number");
     isAllValueFilled = false;
   } else if (!$.trim($("#Email").val())) {
@@ -4869,12 +4863,10 @@ function mandatoryfordirectaward() {
   } else if (!$.trim($("#EUR").val())) {
     alertify.error("Please Enter EUR");
     isAllValueFilled = false;
-  }
-  else if ($("#EUR").val()>8000 && !$("#MarketSurvey").val()) {
+  } else if ($("#EUR").val() > 8000 && !$("#MarketSurvey").val()) {
     alertify.error("Please Enter Market Survey Sheet");
     isAllValueFilled = false;
-  }
-  else if ($("#justification")[0].files.length <= 0) {
+  } else if ($("#justification")[0].files.length <= 0) {
     alertify.error("Please upload a file for Justification for direct award");
     isAllValueFilled = false;
   } else if ($("#terms")[0].files.length <= 0) {
@@ -4954,11 +4946,15 @@ function mandatoryforpublictender() {
   } else if (!$.trim($("#shortDescription").val())) {
     alertify.error("Please Enter Short Description");
     isAllValueFilled = false;
-  }else if (!$.trim($("#gridforassess").val())&&$("input[id='ConsultingFirm']").prop("checked")) {
-    alertify.error("Please Enter Grid for Assessing the Eligibility of Consulting Firms");
+  } else if (
+    !$.trim($("#gridforassess").val()) &&
+    $("input[id='ConsultingFirm']").prop("checked")
+  ) {
+    alertify.error(
+      "Please Enter Grid for Assessing the Eligibility of Consulting Firms"
+    );
     isAllValueFilled = false;
-  }
-  else if ($("#Estimation")[0].files.length <= 0) {
+  } else if ($("#Estimation")[0].files.length <= 0) {
     alertify.error("Please upload a file for Estimated Cost");
     isAllValueFilled = false;
   } else if (!$.trim($("#JOD").val())) {
@@ -5203,7 +5199,9 @@ function mandatoryforcontract() {
   ) {
     alertify.error("Please Enter Telephone Number");
     isAllValueFilled = false;
-  } */else if (!$.trim($("#Email").val())) {
+  } */ else if (
+    !$.trim($("#Email").val())
+  ) {
     alertify.error("Please Enter Valid Email");
     isAllValueFilled = false;
   } else if (!isEmail($.trim($("#Email").val()))) {
@@ -5717,9 +5715,7 @@ function mandatoryforleaseamendment() {
     alertify.error("Please Enter Lease Agreement CoSoft Number");
     isAllValueFilled = false;
   } else if ($("#justification")[0].files.length <= 0) {
-    alertify.error(
-      "Please upload a file for Justification for amendment"
-    );
+    alertify.error("Please upload a file for Justification for amendment");
     isAllValueFilled = false;
   } else if ($("#offer")[0].files.length <= 0) {
     alertify.error("Please upload a file for Modified offer by the lessor");
@@ -6214,7 +6210,9 @@ function mandatoryforsubsidyamendment() {
     );
     isAllValueFilled = false;
   } else if ($("#justification")[0].files.length <= 0) {
-    alertify.error("Please upload a file for Signed Justification by the Project AV");
+    alertify.error(
+      "Please upload a file for Signed Justification by the Project AV"
+    );
     isAllValueFilled = false;
   } else if ($("#Budget")[0].files.length <= 0) {
     alertify.error(
@@ -6503,14 +6501,15 @@ async function LoadProjects() {
     .then(async (allItems: any[]) => {
       for (var index = 0; index < allItems.length; index++) {
         var element = allItems[index];
-        if(element.ProjectAV.ID==CrntUserID)
-        {
+        if (element.ProjectAV.ID == CrntUserID) {
           flgRepUser = true;
         }
-        for (var indexForRep = 0;indexForRep < allItems[index].Representative.length;indexForRep++) 
-        {
-          if (CrntUserID == allItems[index].Representative[indexForRep].ID) 
-          {
+        for (
+          var indexForRep = 0;
+          indexForRep < allItems[index].Representative.length;
+          indexForRep++
+        ) {
+          if (CrntUserID == allItems[index].Representative[indexForRep].ID) {
             flgRepUser = true;
             $("#projectName").append(
               '<option Proj-Num="' +
@@ -6542,8 +6541,7 @@ async function LoadProjects() {
           }
         }
       }
-      if (!flgRepUser&&!flgSystemAdmin) 
-      {
+      if (!flgRepUser && !flgSystemAdmin) {
         AlertMessage("Access Denied");
       }
     });
