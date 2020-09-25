@@ -352,8 +352,6 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
     
   </div>
 </div>
-
-
     `;
     //$('#GoodsTable').hide();
     //Loadcurrency();
