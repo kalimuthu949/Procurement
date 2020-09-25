@@ -45,6 +45,8 @@ var RequestID = "";
 var pdfdetails = [];
 var ProcurementServiceFiles = [];
 var arrAbtToDel = [];
+var flgSystemAdmin=false;
+var LoggedUserEmail="";
 
 var itemid;
 var code;
@@ -573,7 +575,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     <div class="col-sm-6">
     <div class="form-group">
       <label>ProSoft Number:<span class="star">*</span></label>
-      <input class="form-control" type="number" id="prosoftnum" maxlength="8" value="">
+      <input class="form-control" type="text" id="prosoftnum" placeholder="X X X X X X X X" maxlength="8" value="">
     </div>
     </div>
     <div class="col-sm-6">
@@ -808,7 +810,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     <div class="form-group">
     <input class="radio-stylish clsfirm" id="ConsultingFirm" type="radio" name="ConsultingFirm" value="ConsultingFirm" />
     <span class="radio-element"></span>
-    <label class="stylish-label" for="ConsultingFirm">ConsultingFirm</label>
+    <label class="stylish-label" for="ConsultingFirm">Consulting Firm</label>
     </div>
     </div>
 
@@ -855,14 +857,14 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 <div class='row'>
 <div class="col-sm-6">
     <div class="form-group">
-    <label>Contract Person from the Firm<span class="star">*</span></label>
+    <label>Contract Person from the Firm<span class="star"></span></label>
     <input class="form-control" type="text" id="CntctPrsn" value="">
   </div>
     </div>
 
     <div class="col-sm-6">
     <div class="form-group">
-    <label>Telephone Number<span class="star">*</span></label>
+    <label>Telephone Number<span class="star"></span></label>
     <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div>
@@ -1105,15 +1107,15 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 <div class='row'>
 <div class="col-sm-3">
     <div class="form-group">
-    <input class="radio-stylish" id="ConsultingFirm" type="radio" name="ConsultingFirm" value="ConsultingFirm" />
+    <input class="radio-stylish clsfirm" id="ConsultingFirm" type="radio" name="ConsultingFirm" value="ConsultingFirm" />
     <span class="radio-element"></span>
-    <label class="stylish-label" for="ConsultingFirm">ConsultingFirm</label>
+    <label class="stylish-label" for="ConsultingFirm">Consulting Firm</label>
     </div>
     </div>
 
     <div class="col-sm-3">
     <div class="form-group">
-    <input class="radio-stylish" id="Appariser" type="radio" name="ConsultingFirm" value="Appariser"  />
+    <input class="radio-stylish clsfirm" id="Appariser" type="radio" name="ConsultingFirm" value="Appariser"  />
     <span class="radio-element"></span>
     <label class="stylish-label" for="Appariser">Appariser</label>
     </div>
@@ -1129,7 +1131,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
   </div>
   <div class="col-sm-6">
   <div class="form-group">
-    <label>Grid for Assessing the Eligibility of Consulting Firms:<span class="star">*</span></label>
+    <label id="lblgridforassess">Grid for Assessing the Eligibility of Consulting Firms:<span class="star">*</span></label>
     <input class="form-control" id="gridforassess">
 </div>
 </div>
@@ -1296,7 +1298,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 </div>
 <div class="col-sm-3">
     <div class="form-group">
-    <label>Telephone Number<span class="star">*</span></label>
+    <label>Telephone Number<span class="star"></span></label>
     <input class="form-control" type="Number" id="TeleNumber" value="">
   </div>
   </div> 
@@ -1693,7 +1695,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     <div class="col-sm-6">
     <div class="form-group">
       <label>Local Subsidy CoSoft Number:<span class="star">*</span></label>
-      <input class="form-control" type="number" id="cosoftnum" maxlength="8" value="">
+      <input class="form-control" type="text" id="cosoftnum" placeholder="X X X X X X X X" maxlength="8" value="">
     </div>
     </div>
 
@@ -1713,7 +1715,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     <div class="row">
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Justification for Amendment:<span class="star">*</span></label>
+     <label>Signed Justification by the Project AV:<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="justification" value="" class="custom-file-input">
@@ -2161,7 +2163,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     <div class="col-sm-6">
     <div class="form-group">
       <label>Lease Agreement CoSoft Number:<span class="star">*</span></label>
-      <input class="form-control" type="number" id="cosoftnum" maxlength="8" value="">
+      <input class="form-control" type="text" id="cosoftnum" placeholder="X X X X X X X X" maxlength="8" value="">
     </div>
     </div>
 
@@ -2413,11 +2415,13 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     this.domElement.innerHTML = this.requestoptions;
     siteURL = this.context.pageContext.site.absoluteUrl;
     serverURL = this.context.pageContext.site.serverRelativeUrl;
+    LoggedUserEmail = this.context.pageContext.user.email;
 
     itemid = getUrlParameter("itemid");
     code = getUrlParameter("code");
 
     LoadFileTypes();
+    LoadAdminTeam();
     window.addEventListener("beforeunload", function (e) {
       /*if (!formSubmitting)
         {
@@ -2920,13 +2924,28 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
       }
     });
 
-    $(document).on("change", ".clsfirm", function () {
-      if ($("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm") {
-        $("#CntctPrsn").val("");
-        $("#CntctPrsn").prop("disabled", true);
-      } else {
-        $("#CntctPrsn").val("");
-        $("#CntctPrsn").prop("disabled", false);
+    $(document).on("change", ".clsfirm", function () 
+    {
+      if($("#choicesservices option:selected").val()=="Public tender")
+      {
+        if ($("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm")
+        {
+            $("#lblgridforassess").html("Grid for Assessing the Eligibility of Consulting Firms:<span class=star>*</span>");
+        }
+        else
+        {
+          $("#lblgridforassess").html("Grid for Assessing the Eligibility of Consulting Firms:<span class=star></span>");
+        }
+      }
+      else
+      {
+        if ($("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm") {
+          $("#CntctPrsn").val("");
+          $("#CntctPrsn").prop("disabled", true);
+        } else {
+          $("#CntctPrsn").val("");
+          $("#CntctPrsn").prop("disabled", false);
+        }
       }
     });
     /* 
@@ -4879,7 +4898,7 @@ function mandatoryfordirectaward() {
   ) {
     alertify.error("Please Enter Contact Person");
     isAllValueFilled = false;
-  } else if (!$.trim($("#TeleNumber").val())) {
+  } else if (!$.trim($("#TeleNumber").val())&&$("input[name='ConsultingFirm']:checked").val() == "ConsultingFirm") {
     alertify.error("Please Enter Telephone Number");
     isAllValueFilled = false;
   } else if (!$.trim($("#Email").val())) {
@@ -5330,12 +5349,12 @@ function mandatoryforcontract() {
   } /*else if (!$.trim($("#CntctPrsn").val())) {
     alertify.error("Please Enter Contact Person");
     isAllValueFilled = false;
-  } */ else if (
+  }  else if (
     !$.trim($("#TeleNumber").val())
   ) {
     alertify.error("Please Enter Telephone Number");
     isAllValueFilled = false;
-  } else if (!$.trim($("#Email").val())) {
+  }*/else if (!$.trim($("#Email").val())) {
     alertify.error("Please Enter Valid Email");
     isAllValueFilled = false;
   } else if (!isEmail($.trim($("#Email").val()))) {
@@ -6474,7 +6493,7 @@ function mandatoryforsubsidyamendment() {
     $("#justification")[0].files.length <= 0 &&
     $("label[for='justification']").text() == "Choose File"
   ) {
-    alertify.error("Please upload a file for Justification for Amendment");
+    alertify.error("Please upload a file for Signed Justification by the Project AV");
     isAllValueFilled = false;
   } else if (
     $("#Budget")[0].files.length <= 0 &&
@@ -6845,9 +6864,26 @@ async function LoadProjects() {
         }
       }
 
-      if (!flgRepUser) {
-        await AlertMessage("Access Denied");
+    });
+}
+
+async function LoadAdminTeam() {
+  await sp.web.siteGroups
+    .getByName("SystemAdmin")
+    .users.filter("Email eq '" + LoggedUserEmail + "'")
+    .get()
+    .then(async (allItems: any[]) => {
+      if (allItems.length > 0) {
+        flgSystemAdmin = true;
       }
+
+      if (!flgSystemAdmin) {
+        AlertMessage("Access Denied");
+      }
+      
+    })
+    .catch(function (error) {
+      ErrorCallBack(error, "LoadAdminTeam");
     });
 }
 
@@ -7781,7 +7817,7 @@ function getfiles(category, gdsID) {
       Name: "Justification",
       FileName: "N/A",
       FileURl: "N/A",
-      displayname: "Justification for Amendment",
+      displayname: "Signed Justification by the Project AV",
       ID: "justification",
       FileID: "N/A",
     });
