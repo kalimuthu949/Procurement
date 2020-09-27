@@ -599,28 +599,28 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       let HTMLGoods = "";
 
       HTMLGoods +=
-        '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         GoodsRequest[index].ProjectName +
         "</p></div></div>";
       HTMLGoods +=
-        '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         GoodsRequest[index].ID +
         "</p></div></div>";
       HTMLGoods +=
-        '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         GoodsRequest[index].NameOfAV +
         "</p></div></div>";
       HTMLGoods +=
-        '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         GoodsRequest[index].PNForZAS +
         "</p></div></div>";
       HTMLGoods +=
-        '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Project Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         GoodsRequest[index].ProjectNumber +
         "</p></div></div>";
       if (GoodsRequest[index].isKompOutput == "Yes")
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           GoodsRequest[index].KompOutputNumber +
           " - " +
           GoodsRequest[index].kompPercent +
@@ -629,44 +629,44 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       //goods request popup
       if (GoodsRequest[index].GoodsCategory == "goods") {
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           GoodsRequest[index].ShortDesc +
           "</p></div></div>";
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Specification</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Specification</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           GoodsRequest[index].Specifications +
           "</p></div></div>";
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           GoodsRequest[index].JOD +
           "</p></div></div>";
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           GoodsRequest[index].EUR +
           "</p></div></div>";
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Warranty Time</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Warranty Time</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           GoodsRequest[index].WarrantyTime +
           "</p></div></div>";
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Delivery Time</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Delivery Time</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           moment(GoodsRequest[index].DeliveryTime).format("MM/DD/YYYY") +
           "</p></div></div>";
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Delivery Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Delivery Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           GoodsRequest[index].FullAddress +
           "</p></div></div>";
         if (GoodsRequest[index].Specifications == "Nonneutral Specifications") {
           HTMLGoods +=
-            '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Name Of Contact Person</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of Contact Person</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             GoodsRequest[index].ContactPersonName +
             "</p></div></div>";
           HTMLGoods +=
-            '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             GoodsRequest[index].PersonEmail +
             "</p></div></div>";
           HTMLGoods +=
-            '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             GoodsRequest[index].PersonMobile +
             "</p></div></div>";
         }
@@ -674,26 +674,26 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       //above codefor goods amendment popup
       else if (GoodsRequest[index].GoodsCategory == "goodsamendment") {
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">ProSoft Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">ProSoft Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           GoodsRequest[index].ProsoftNumber +
           "</p></div></div>";
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Delivery Time</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Delivery Time</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           moment(GoodsRequest[index].DeliveryTime).format("MM/DD/YYYY") +
           "</p></div></div>";
       }
       //for goods framework popup
       else if (GoodsRequest[index].GoodsCategory == "framework") {
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">Framework Agreement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Framework Agreement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           GoodsRequest[index].Agreement +
           "</p></div></div>";
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           GoodsRequest[index].JOD +
           "</p></div></div>";
         HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           GoodsRequest[index].EUR +
           "</p></div></div>";
       }
@@ -701,7 +701,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       for (var i = 0; i < arrFiles.length; i++) {
         if (arrFiles[i].FileURl != "N/A") {
           HTMLGoods +=
-            '<div class="row goods-details"><div class="col-sm-4"><h5 class="goods-label">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">' +
             arrFiles[i].displayName +
             ' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href=' +
             encodeURI(arrFiles[i].FileURl) +
@@ -716,7 +716,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           if (idxOther == 0) {
             HTMLGoods += '<div class="row goods-details">';
             HTMLGoods +=
-              '<div class="col-sm-4"><h5 class="goods-label">' +
+              '<div class="col-sm-5"><h5 class="goods-label">' +
               otherFiles[0].displayname +
               "</h5></div>";
             HTMLGoods +=
@@ -729,7 +729,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           } else {
             HTMLGoods += '<div class="row goods-details">';
             HTMLGoods +=
-              '<div class="col-sm-4"><h5 class="goods-label"> </h5></div>';
+              '<div class="col-sm-5"><h5 class="goods-label"> </h5></div>';
             HTMLGoods +=
               '<div class="col-sm-1 text-center"> </div><div class="col-sm-6"><p class="goodsresult"><a href=' +
               encodeURI(otherFiles[idxOther].Url) +
@@ -749,7 +749,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           if (idxquantity == 0) {
             HTMLGoods += '<div class="row goods-details">';
             HTMLGoods +=
-              '<div class="col-sm-4"><h5 class="goods-label">' +
+              '<div class="col-sm-5"><h5 class="goods-label">' +
               Quantities[0].displayname +
               "</h5></div>";
             HTMLGoods +=
@@ -762,7 +762,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           } else {
             HTMLGoods += '<div class="row goods-details">';
             HTMLGoods +=
-              '<div class="col-sm-4"><h5 class="goods-label"> </h5></div>';
+              '<div class="col-sm-5"><h5 class="goods-label"> </h5></div>';
             HTMLGoods +=
               '<div class="col-sm-1 text-center"> </div><div class="col-sm-6"><p class="goodsresult"><a href=' +
               encodeURI(Quantities[idxquantity].Url) +
@@ -775,7 +775,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       }
       $("#ProjectDetails").html("");
       $("#ProjectDetails").html(
-        "Goods Request Details for " + GoodsRequest[index].ProjectName
+        //"Goods Request Details for " + GoodsRequest[index].ProjectName
+        "Goods Request Details"
       );
       $("#modalbody").html("");
       $("#modalbody").append(HTMLGoods);
@@ -1001,24 +1002,24 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
 
       let HTMLservice = "";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         ServiceRequest[index].ProjectName +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         ServiceRequest[index].ID +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         ServiceRequest[index].NameOfAV +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         ServiceRequest[index].PNForZAS +
         "</p></div></div>";
       if (ServiceRequest[index].isKompOutput == "Yes")
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].KompOutputNumber +
           " - " +
           ServiceRequest[index].kompPercent +
@@ -1026,129 +1027,129 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
 
       if (ServiceRequest[index].ChoicesOfServices == "Direct Award") {
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">ConsultingFirm/Appariser</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">ConsultingFirm/Appariser</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].ConsultingFirm +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Consulting Firm/Appariser</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of Consulting Firm/Appariser</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].NameOfConsultingFirm +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Area Of Activity</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Area Of Activity</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].AreaOfActivity +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].ShortDesc +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].FullAddress +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Contract Person from the Firm</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Contract Person from the Firm</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].ContactPerson +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Telephone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Telephone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].TelephoneNumber +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].EmailAddress +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].MobileNumber +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].DurationFrom +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].DurationTo +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].JOD +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].EUR +
           "</p></div></div>";
       }
       if (ServiceRequest[index].ChoicesOfServices == "Shortlisted tender") {
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].ShortDesc +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           moment(ServiceRequest[index].DurationFrom).format("MM/DD/YYYY") +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           moment(ServiceRequest[index].DurationTo).format("MM/DD/YYYY") +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].JOD +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].EUR +
           "</p></div></div>";
       }
       if (ServiceRequest[index].ChoicesOfServices == "Public tender") {
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].ShortDesc +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           moment(ServiceRequest[index].DurationFrom).format("MM/DD/YYYY") +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           moment(ServiceRequest[index].DurationTo).format("MM/DD/YYYY") +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].JOD +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].EUR +
           "</p></div></div>";
       }
       if (ServiceRequest[index].ChoicesOfServices == "Contract Amendment") {
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].ShortDesc +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].FullAddress +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Consulting Firm/Appariser</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of Consulting Firm/Appariser</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].NameOfConsultingFirm +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Contract Person from the Firm</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Contract Person from the Firm</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].ContactPerson +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Telephone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Telephone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].TelephoneNumber +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].EmailAddress +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].MobileNumber +
           "</p></div></div>";
       }
@@ -1157,15 +1158,15 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         "Request from a Framework Agreement"
       ) {
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Agreement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Agreement</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].Agreement +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].JOD +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].EUR +
           "</p></div></div>";
       }
@@ -1173,7 +1174,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       for (var i = 0; i < arrFiles.length; i++) {
         if (arrFiles[i].FileURl != "N/A") {
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">' +
             arrFiles[i].displayname +
             ' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href=' +
             encodeURI(arrFiles[i].FileURl) +
@@ -1188,7 +1189,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           if (idxOther == 0) {
             HTMLservice += '<div class="row goods-details">';
             HTMLservice +=
-              '<div class="col-sm-3"><h5 class="goods-label">' +
+              '<div class="col-sm-5"><h5 class="goods-label">' +
               otherFiles[0].displayname +
               "</h5></div>";
             HTMLservice +=
@@ -1201,7 +1202,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           } else {
             HTMLservice += '<div class="row goods-details">';
             HTMLservice +=
-              '<div class="col-sm-3"><h5 class="goods-label"> </h5></div>';
+              '<div class="col-sm-5"><h5 class="goods-label"> </h5></div>';
             HTMLservice +=
               '<div class="col-sm-1 text-center"> </div><div class="col-sm-6"><p class="goodsresult"><a href=' +
               encodeURI(otherFiles[idxOther].Url) +
@@ -1215,7 +1216,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
 
       $("#ProjectDetails").html("");
       $("#ProjectDetails").html(
-        "Service Request Details for " + ServiceRequest[index].ProjectName
+        //"Service Request Details for " + ServiceRequest[index].ProjectName
+        "Service Request Details"
       );
       $("#modalbody").html("");
       $("#modalbody").append(HTMLservice);
@@ -1384,24 +1386,24 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
 
       let HTMLservice = "";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         LocalSubsidyItems[index].ProjectName +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         LocalSubsidyItems[index].ID +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         LocalSubsidyItems[index].NameOfAV +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         LocalSubsidyItems[index].PNForZAS +
         "</p></div></div>";
       if (LocalSubsidyItems[index].isKompOutput == "Yes")
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].KompOutputNumber +
           " - " +
           LocalSubsidyItems[index].kompPercent +
@@ -1409,54 +1411,54 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
 
       if (LocalSubsidyItems[index].SubsidyCategory == "Subsidy") {
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description of the Requested Local Subsidy</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Short Description of the Requested Local Subsidy</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].ShortDesc +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Beneficiary</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of Beneficiary</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].NameOfBeneficiary +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].FullAddress +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Telephone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Telephone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].TelephoneNumber +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Contact Person</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of Contact Person</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].ContactPerson +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].EmailAddress +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].TelephoneNumber +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].DurationFrom +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].DurationTo +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].JOD +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].EUR +
           "</p></div></div>";
       } else if (
         LocalSubsidyItems[index].SubsidyCategory == "Subsidyamendment"
       ) {
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Local Subsidy CoSoft Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Local Subsidy CoSoft Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LocalSubsidyItems[index].CoSoftNumber +
           "</p></div></div>";
       }
@@ -1464,7 +1466,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       for (var i = 0; i < arrFiles.length; i++) {
         if (arrFiles[i].FileURl != "N/A") {
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">' +
             arrFiles[i].Name +
             ' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href=' +
             encodeURI(arrFiles[i].FileURl) +
@@ -1479,7 +1481,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           if (idxOther == 0) {
             HTMLservice += '<div class="row goods-details">';
             HTMLservice +=
-              '<div class="col-sm-3"><h5 class="goods-label">' +
+              '<div class="col-sm-5"><h5 class="goods-label">' +
               otherFiles[0].displayname +
               "</h5></div>";
             HTMLservice +=
@@ -1492,7 +1494,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           } else {
             HTMLservice += '<div class="row goods-details">';
             HTMLservice +=
-              '<div class="col-sm-3"><h5 class="goods-label"> </h5></div>';
+              '<div class="col-sm-5"><h5 class="goods-label"> </h5></div>';
             HTMLservice +=
               '<div class="col-sm-1 text-center"> </div><div class="col-sm-6"><p class="goodsresult"><a href=' +
               encodeURI(otherFiles[idxOther].Url) +
@@ -1506,7 +1508,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
 
       $("#ProjectDetails").html("");
       $("#ProjectDetails").html(
-        "Service Request Details for " + LocalSubsidyItems[index].ProjectName
+        //"Service Request Details for " + LocalSubsidyItems[index].ProjectName
+        "Local Subsidy Request Details"
       );
       $("#modalbody").html("");
       $("#modalbody").append(HTMLservice);
@@ -1656,24 +1659,24 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
 
       let HTMLservice = "";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         LeaseAgreementItems[index].ProjectName +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         LeaseAgreementItems[index].ID +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         LeaseAgreementItems[index].NameOfAV +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         LeaseAgreementItems[index].PNForZAS +
         "</p></div></div>";
       if (LeaseAgreementItems[index].isKompOutput == "Yes")
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LeaseAgreementItems[index].KompOutputNumber +
           " - " +
           LeaseAgreementItems[index].kompPercent +
@@ -1681,15 +1684,15 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
 
       if (LeaseAgreementItems[index].LeaseAgreementCategory == "Lease") {
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description of the Requested Local Subsidy</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Short Description of the Requested Local Subsidy</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LeaseAgreementItems[index].ShortDesc +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">From date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LeaseAgreementItems[index].DurationFrom +
           "</p></div></div>";
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">To date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LeaseAgreementItems[index].DurationTo +
           "</p></div></div>";
 
@@ -1697,48 +1700,48 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           LeaseAgreementItems[index].LessorPapers == "Lessor is an Individual"
         ) {
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Lessor Name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Lessor Name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             LeaseAgreementItems[index].LessorName +
             "</p></div></div>";
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             LeaseAgreementItems[index].FullAddress +
             "</p></div></div>";
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Phone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Phone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             LeaseAgreementItems[index].TelephoneNumber +
             "</p></div></div>";
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             LeaseAgreementItems[index].EmailAddress +
             "</p></div></div>";
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             LeaseAgreementItems[index].MobileNumber +
             "</p></div></div>";
         } else {
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Firm</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of Firm</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             LeaseAgreementItems[index].NameOfConsultingFirm +
             "</p></div></div>";
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Full Address</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             LeaseAgreementItems[index].FullAddress +
             "</p></div></div>";
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Phone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Phone Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             LeaseAgreementItems[index].TelephoneNumber +
             "</p></div></div>";
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of Contact Person</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of Contact Person</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             LeaseAgreementItems[index].ContactPerson +
             "</p></div></div>";
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Email</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             LeaseAgreementItems[index].EmailAddress +
             "</p></div></div>";
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
             LeaseAgreementItems[index].MobileNumber +
             "</p></div></div>";
         }
@@ -1746,7 +1749,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         LeaseAgreementItems[index].LeaseAgreementCategory == "Leaseamendment"
       ) {
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Local Subsidy CoSoft Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Local Subsidy CoSoft Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           LeaseAgreementItems[index].CoSoftNumber +
           "</p></div></div>";
       }
@@ -1754,7 +1757,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       for (var i = 0; i < arrFiles.length; i++) {
         if (arrFiles[i].FileURl != "N/A") {
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">' +
             arrFiles[i].displayname +
             ' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href=' +
             encodeURI(arrFiles[i].FileURl) +
@@ -1768,7 +1771,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           if (idxOther == 0) {
             HTMLservice += '<div class="row goods-details">';
             HTMLservice +=
-              '<div class="col-sm-3"><h5 class="goods-label">' +
+              '<div class="col-sm-5"><h5 class="goods-label">' +
               otherFiles[0].displayname +
               "</h5></div>";
             HTMLservice +=
@@ -1781,7 +1784,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           } else {
             HTMLservice += '<div class="row goods-details">';
             HTMLservice +=
-              '<div class="col-sm-3"><h5 class="goods-label"> </h5></div>';
+              '<div class="col-sm-5"><h5 class="goods-label"> </h5></div>';
             HTMLservice +=
               '<div class="col-sm-1 text-center"> </div><div class="col-sm-6"><p class="goodsresult"><a href=' +
               encodeURI(otherFiles[idxOther].Url) +
@@ -1795,7 +1798,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
 
       $("#ProjectDetails").html("");
       $("#ProjectDetails").html(
-        "Service Request Details for " + LeaseAgreementItems[index].ProjectName
+        //"Service Request Details for " + LeaseAgreementItems[index].ProjectName
+        "Lease Agreement Request Details"
       );
       $("#modalbody").html("");
       $("#modalbody").append(HTMLservice);
@@ -1910,46 +1914,46 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
 
       let HTMLservice = "";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project name</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         IdppItems[index].ProjectName +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project ID</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         IdppItems[index].ID +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Name Of AV</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         IdppItems[index].NameOfAV +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         IdppItems[index].PNForZAS +
         "</p></div></div>";
       if (LeaseAgreementItems[index].isKompOutput == "Yes")
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           IdppItems[index].KompOutputNumber +
           " - " +
           IdppItems[index].kompPercent +
           "</p></div></div>";
 
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         IdppItems[index].ShortDesc +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         moment(IdppItems[index].DurationFrom).format("MM/DD/YYYY") +
         "</p></div></div>";
       HTMLservice +=
-        '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         moment(IdppItems[index].DurationTo).format("MM/DD/YYYY") +
         "</p></div></div>";
 
       for (var i = 0; i < arrFiles.length; i++) {
         if (arrFiles[i].FileURl != "N/A") {
           HTMLservice +=
-            '<div class="row goods-details"><div class="col-sm-3"><h5 class="goods-label">' +
+            '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">' +
             arrFiles[i].Name +
             ' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href=' +
             encodeURI(arrFiles[i].FileURl) +
@@ -1961,7 +1965,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
 
       $("#ProjectDetails").html("");
       $("#ProjectDetails").html(
-        "Service Request Details for " + LeaseAgreementItems[index].ProjectName
+        //"Service Request Details for " + LeaseAgreementItems[index].ProjectName
+        "Idpp Request Details"
       );
       $("#modalbody").html("");
       $("#modalbody").append(HTMLservice);
@@ -1972,6 +1977,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
     $(document).on("click", ".SerEdit", function () {
       var indexofEdit = $(this).attr("index-value");
       var itemid = $(this).attr("req-id");
+      var ProjectAVName = $(this).attr("data-av");
       var AssignedTo = $(
         ".UserDropdownSER" + indexofEdit + " option:selected"
       ).val();
@@ -2022,7 +2028,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         AssignedTo +
         '" index-value="' +
         indexofEdit +
-        '" type="button" class="btn btn-default" id="serbtnUpdate">Update</button>';
+        '" type="button" Prjt-av="'+ProjectAVName+'" class="btn btn-default" id="serbtnUpdate">Update</button>';
       htmlbutton +=
         '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
@@ -2030,7 +2036,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       if (flgSystemAdmin)
         $(".UserDropdownSERPopup" + indexofEdit + "").attr("disabled", false);
 
-      if (CrntUserID == AssignedTo)
+      if (CrntUserID == AssignedTo||flgSystemAdmin)
         $(".StatusDropdownSERPopup" + indexofEdit + "").attr("disabled", false);
       //alert($(".UserDropdownSER"+indexofEdit+" option:selected").val());
     });
@@ -2038,6 +2044,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
     $(document).on("click", ".GdsEdit", function () {
       var indexofEdit = $(this).attr("index-value");
       var itemid = $(this).attr("req-id");
+      var ProjectAVName = $(this).attr("data-av");
       var AssignedTo = $(
         ".UserDropdownGDS" + indexofEdit + " option:selected"
       ).val();
@@ -2088,7 +2095,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         AssignedTo +
         '" index-value="' +
         indexofEdit +
-        '" type="button" class="btn btn-default" id="GdsbtnUpdate">Update</button>';
+        '" type="button" Prjt-av="'+ProjectAVName+'" class="btn btn-default" id="GdsbtnUpdate">Update</button>';
       htmlbutton +=
         '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
@@ -2096,13 +2103,14 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       if (flgSystemAdmin)
         $(".UserDropdownGDSPopup" + indexofEdit + "").attr("disabled", false);
 
-      if (CrntUserID == AssignedTo)
+      if (CrntUserID == AssignedTo||flgSystemAdmin)
         $(".StatusDropdownGDSPopup" + indexofEdit + "").attr("disabled", false);
     });
 
     $(document).on("click", ".SubEdit", function () {
       var indexofEdit = $(this).attr("index-value");
       var itemid = $(this).attr("req-id");
+      var ProjectAVName = $(this).attr("data-av");
       var AssignedTo = $(
         ".UserDropdownSub" + indexofEdit + " option:selected"
       ).val();
@@ -2152,7 +2160,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         AssignedTo +
         '" index-value="' +
         indexofEdit +
-        '" type="button" class="btn btn-default" id="SubbtnUpdate">Update</button>';
+        '" type="button" Prjt-av="'+ProjectAVName+'" class="btn btn-default" id="SubbtnUpdate">Update</button>';
       htmlbutton +=
         '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
@@ -2160,13 +2168,14 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       if (flgSystemAdmin)
         $(".UserDropdownSubPopup" + indexofEdit + "").attr("disabled", false);
 
-      if (CrntUserID == AssignedTo)
+      if (CrntUserID == AssignedTo||flgSystemAdmin)
         $(".StatusDropdownSubPopup" + indexofEdit + "").attr("disabled", false);
     });
 
     $(document).on("click", ".LeaseEdit", function () {
       var indexofEdit = $(this).attr("index-value");
       var itemid = $(this).attr("req-id");
+      var ProjectAVName = $(this).attr("data-av");
       var AssignedTo = $(
         ".UserDropdownLease" + indexofEdit + " option:selected"
       ).val();
@@ -2216,7 +2225,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         AssignedTo +
         '" index-value="' +
         indexofEdit +
-        '" type="button" class="btn btn-default"  id="LeasebtnUpdate">Update</button>';
+        '" type="button" Prjt-av="'+ProjectAVName+'" class="btn btn-default"  id="LeasebtnUpdate">Update</button>';
       htmlbutton +=
         '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
@@ -2224,7 +2233,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       if (flgSystemAdmin)
         $(".UserDropdownLeasePopup" + indexofEdit + "").attr("disabled", false);
 
-      if (CrntUserID == AssignedTo)
+      if (CrntUserID == AssignedTo||flgSystemAdmin)
         $(".StatusDropdownLeasePopup" + indexofEdit + "").attr(
           "disabled",
           false
@@ -2234,6 +2243,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
     $(document).on("click", ".idppEdit", function () {
       var indexofEdit = $(this).attr("index-value");
       var itemid = $(this).attr("req-id");
+      var ProjectAVName = $(this).attr("data-av");
       var AssignedTo = $(
         ".UserDropdownidpp" + indexofEdit + " option:selected"
       ).val();
@@ -2283,7 +2293,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         AssignedTo +
         '" index-value="' +
         indexofEdit +
-        '" type="button" class="btn btn-default"  id="idppbtnUpdate">Update</button>';
+        '" type="button" Prjt-av="'+ProjectAVName+'" class="btn btn-default"  id="idppbtnUpdate">Update</button>';
       htmlbutton +=
         '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
@@ -2291,7 +2301,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       if (flgSystemAdmin)
         $(".UserDropdownidppPopup" + indexofEdit + "").attr("disabled", false);
 
-      if (CrntUserID == AssignedTo)
+      if (CrntUserID == AssignedTo||flgSystemAdmin)
         $(".StatusDropdownidppPopup" + indexofEdit + "").attr(
           "disabled",
           false
@@ -2334,8 +2344,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
             "," +
             moment($("#requestedDate").val(), "MM/DD/YYYY").format(
               "DD/MM/YYYY"
-            ) +
-            ";";
+            ) +",Comments-" +$("#txtNotes").val()+";vert-time";
           if ($("#requestedDate").val()) {
             statuschange = true;
             let requestedDate = new Date(
@@ -2358,11 +2367,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         }
 
         if (statuschange)
-          sendmailforstatuschange(
-            $(".UserDropdownSERPopup" + indexofEdit + " option:selected").attr(
-              "user-email"
-            )
-          );
+        sendmailforstatuschange(ServiceRequest[indexofEdit],$(".StatusDropdownSERPopup" + indexofEdit + " option:selected").text());
+          //sendmailforstatuschange($(".UserDropdownSERPopup" + indexofEdit + " option:selected").attr("user-email"),$(this).attr("Prjt-av"));
 
         updaterequest(itemid, data, "ProcurementService", true);
       } else {
@@ -2403,8 +2409,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
             "," +
             moment($("#requestedDate").val(), "MM/DD/YYYY").format(
               "DD/MM/YYYY"
-            ) +
-            ";";
+            ) +",Comments-" +$("#txtNotes").val()+";vert-time";
           if ($("#requestedDate").val()) {
             statuschange = true;
             let requestedDate = new Date(
@@ -2426,11 +2431,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           }
         }
         if (statuschange)
-          sendmailforstatuschange(
-            $(".UserDropdownGDSPopup" + indexofEdit + " option:selected").attr(
-              "user-email"
-            )
-          );
+        sendmailforstatuschange(GoodsRequest[indexofEdit],$(".StatusDropdownGDSPopup" + indexofEdit + " option:selected").text());
+          //sendmailforstatuschange($(".UserDropdownGDSPopup" + indexofEdit + " option:selected").attr("user-email"),$(this).attr("Prjt-av"));
         updaterequest(itemid, data, "ProcurementGoods", true);
       } else {
         alertify.error("Please Select Assignee");
@@ -2470,8 +2472,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
             "," +
             moment($("#requestedDate").val(), "MM/DD/YYYY").format(
               "DD/MM/YYYY"
-            ) +
-            ";";
+            ) +",Comments-" +$("#txtNotes").val()+";vert-time";
           if ($("#requestedDate").val()) {
             statuschange = true;
             let requestedDate = new Date(
@@ -2493,11 +2494,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           }
         }
         if (statuschange)
-          sendmailforstatuschange(
-            $(".UserDropdownSubPopup" + indexofEdit + " option:selected").attr(
-              "user-email"
-            )
-          );
+        sendmailforstatuschange(LocalSubsidyItems[indexofEdit],$(".StatusDropdownSubPopup" + indexofEdit + " option:selected").text());
+          //sendmailforstatuschange($(".UserDropdownSubPopup" + indexofEdit + " option:selected").attr("user-email"),$(this).attr("Prjt-av"));
         updaterequest(itemid, data, "LocalSubsidy", true);
       } else {
         alertify.error("Please Select Assignee");
@@ -2537,8 +2535,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
             "," +
             moment($("#requestedDate").val(), "MM/DD/YYYY").format(
               "DD/MM/YYYY"
-            ) +
-            ";";
+            ) +",Comments-" +$("#txtNotes").val()+";vert-time";
           if ($("#requestedDate").val()) {
             statuschange = true;
             let requestedDate = new Date(
@@ -2560,11 +2557,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           }
         }
         if (statuschange)
-          sendmailforstatuschange(
-            $(
-              ".UserDropdownLeasePopup" + indexofEdit + " option:selected"
-            ).attr("user-email")
-          );
+        sendmailforstatuschange(LeaseAgreementItems[indexofEdit],$(".StatusDropdownLeasePopup" + indexofEdit + " option:selected").text());
+          //sendmailforstatuschange($(".UserDropdownLeasePopup" + indexofEdit + " option:selected").attr("user-email"),$(this).attr("Prjt-av"));
         updaterequest(itemid, data, "LeaseAgreement", true);
       } else {
         alertify.error("Please Select Assignee");
@@ -2604,8 +2598,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
             "," +
             moment($("#requestedDate").val(), "MM/DD/YYYY").format(
               "DD/MM/YYYY"
-            ) +
-            ";";
+            ) +",Comments-" +$("#txtNotes").val()+";vert-time";
           if ($("#requestedDate").val()) {
             statuschange = true;
             let requestedDate = new Date(
@@ -2627,11 +2620,8 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           }
         }
         if (statuschange)
-          sendmailforstatuschange(
-            $(".UserDropdownidppPopup" + indexofEdit + " option:selected").attr(
-              "user-email"
-            )
-          );
+        sendmailforstatuschange(IdppItems[indexofEdit],$(".StatusDropdownidppPopup" + indexofEdit + " option:selected").text());
+          //sendmailforstatuschange($(".UserDropdownidppPopup" + indexofEdit + " option:selected").attr("user-email"),$(this).attr("Prjt-av"));
         updaterequest(itemid, data, "IDPP", true);
       } else {
         alertify.error("Please Select Assignee");
@@ -2641,43 +2631,30 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
     /*Followup funtionality*/
     $(document).on("click", ".Gdsfollowup", function () {
       var indexofEdit = $(this).attr("index-value");
-      sendfollowup(
-        $(".UserDropdownGDS" + indexofEdit + " option:selected").attr(
-          "user-email"
-        )
-      );
+      //sendfollowup($(".UserDropdownGDS" + indexofEdit + " option:selected").attr("user-email"),GoodsRequest[indexofEdit].Author.EMail);
+      sendfollowup(GoodsRequest[indexofEdit]);
     });
     $(document).on("click", ".servicefollowup", function () {
       var indexofEdit = $(this).attr("index-value");
-      sendfollowup(
-        $(".UserDropdownSER" + indexofEdit + " option:selected").attr(
-          "user-email"
-        )
-      );
+      //sendfollowup($(".UserDropdownSER" + indexofEdit + " option:selected").attr("user-email"),ServiceRequest[indexofEdit].Author.EMail);
+      sendfollowup(ServiceRequest[indexofEdit]);
     });
     $(document).on("click", ".subsidyfollowup", function () {
       var indexofEdit = $(this).attr("index-value");
-      sendfollowup(
-        $(".UserDropdownSub" + indexofEdit + " option:selected").attr(
-          "user-email"
-        )
-      );
+      //sendfollowup($(".UserDropdownSub" + indexofEdit + " option:selected").attr("user-email"),LocalSubsidyItems[indexofEdit].Author.EMail);
+      
+      sendfollowup(LocalSubsidyItems[indexofEdit]);
     });
     $(document).on("click", ".Leasefollowup", function () {
       var indexofEdit = $(this).attr("index-value");
-      sendfollowup(
-        $(".UserDropdownLease" + indexofEdit + " option:selected").attr(
-          "user-email"
-        )
-      );
+      //sendfollowup($(".UserDropdownLease" + indexofEdit + " option:selected").attr("user-email"),LeaseAgreementItems[indexofEdit].Author.EMail);
+
+      sendfollowup(LeaseAgreementItems[indexofEdit]);
     });
     $(document).on("click", ".idppfollowup", function () {
       var indexofEdit = $(this).attr("index-value");
-      sendfollowup(
-        $(".UserDropdownidpp" + indexofEdit + " option:selected").attr(
-          "user-email"
-        )
-      );
+      //sendfollowup($(".UserDropdownidpp" + indexofEdit + " option:selected").attr("user-email"),IdppItems[indexofEdit].Author.EMail);
+      sendfollowup(IdppItems[indexofEdit]);
     });
 
     /*datatable search*/
@@ -2785,7 +2762,7 @@ async function LoadGoodsRequest() {
   await sp.web.lists
     .getByTitle("ProcurementGoods")
     .items.select(
-      "ProjectName,ProjectNumber,ID,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,RequestStatus/ID,RequestStatus/Title,Author/Title,Author/ID,Created,Modified,KompOutputNumber,kompPercent,isKompOutput,Specifications,ShortDesc,RequestItem,JOD,EUR,DeliveryTime,WarrantyTime,FullAddress,ContactPersonName,PersonEmail,PersonMobile,ProsoftNumber,Agreement,GoodsCategory,StatusSummary"
+      "ProjectName,ProjectNumber,ID,RequestType,AVName/EMail,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,AssignedTo1/EMail,RequestStatus/ID,RequestStatus/Title,Author/Title,Author/ID,Author/EMail,Created,Modified,KompOutputNumber,kompPercent,isKompOutput,Specifications,ShortDesc,RequestItem,JOD,EUR,DeliveryTime,WarrantyTime,FullAddress,ContactPersonName,PersonEmail,PersonMobile,ProsoftNumber,Agreement,GoodsCategory,StatusSummary"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -2835,7 +2812,7 @@ async function LoadGoodsRequest() {
             '" class="GdsdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></span></a>';
           if (flgSystemAdmin || CrntUserID == assgnuser) 
           {
-            goodsHTML +='<a href="#" index-value=' +index +' req-id="' +allItems[index].ID +'" class="GdsEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></span></a>';
+            goodsHTML +='<a href="#" data-av="'+allItems[index].AVName.EMail+'" index-value='+index +' req-id="' +allItems[index].ID +'" class="GdsEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></span></a>';
 
             if(flgSystemAdmin)
             {
@@ -2899,7 +2876,7 @@ async function LoadServiceRequest() {
   await sp.web.lists
     .getByTitle("ProcurementService")
     .items.select(
-      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus,StatusSummary,Agreement"
+      "ProjectName,ProjectNumber,ID,RequestType,Author/Title,Author/ID,Author/EMail,AVName/EMail,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus,StatusSummary,Agreement"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -2950,7 +2927,7 @@ async function LoadServiceRequest() {
           if (flgSystemAdmin || CrntUserID == assgnuser) 
           {
             
-            serviceHTML +='<a href="#" index-value=' +index +' req-id="' +allItems[index].ID +'" class="SerEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
+            serviceHTML +='<a href="#" data-av="'+allItems[index].AVName.EMail+'" index-value=' +index +' req-id="' +allItems[index].ID +'" class="SerEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
             
             if(flgSystemAdmin)
             {
@@ -3013,7 +2990,7 @@ async function LoadSubsidyRequest() {
   await sp.web.lists
     .getByTitle("LocalSubsidy")
     .items.select(
-      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,SubsidyCategory,isKompOutput,KompOutputNumber,kompPercent,JOD,EUR,ShortDesc,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,NameOfBeneficiary,DurationFrom,DurationTo,CoSoftNumber,PaymentStatus,CoSoftNumber,StatusSummary"
+      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,SubsidyCategory,isKompOutput,KompOutputNumber,kompPercent,JOD,EUR,ShortDesc,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,NameOfBeneficiary,DurationFrom,DurationTo,CoSoftNumber,PaymentStatus,CoSoftNumber,StatusSummary"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -3064,7 +3041,7 @@ async function LoadSubsidyRequest() {
             '" class="subdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
           if (flgSystemAdmin || CrntUserID == assgnuser) 
           {
-            serviceHTML +='<a href="#" index-value=' +index +' req-id="' +allItems[index].ID +'" class="SubEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
+            serviceHTML +='<a href="#" data-av="'+allItems[index].AVName.EMail+'" index-value=' +index +' req-id="' +allItems[index].ID +'" class="SubEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
 
             if(flgSystemAdmin)
             {
@@ -3127,7 +3104,7 @@ async function LoadLeaseAgreement() {
   await sp.web.lists
     .getByTitle("LeaseAgreement")
     .items.select(
-      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,LessorPapers,LessorName,EmailAddress,MobileNumber,FullAddress,TelephoneNumber,DurationFrom,DurationTo,NameOfConsultingFirm,ContactPerson,CoSoftNumber,LeaseAgreementCategory,StatusSummary"
+      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,LessorPapers,LessorName,EmailAddress,MobileNumber,FullAddress,TelephoneNumber,DurationFrom,DurationTo,NameOfConsultingFirm,ContactPerson,CoSoftNumber,LeaseAgreementCategory,StatusSummary"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -3175,7 +3152,7 @@ async function LoadLeaseAgreement() {
             '" class="LeasedetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
           if (flgSystemAdmin || CrntUserID == assgnuser) 
           {
-            serviceHTML +='<a href="#" index-value=' +index +' req-id="' +allItems[index].ID +'" class="LeaseEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
+            serviceHTML +='<a href="#" data-av="'+allItems[index].AVName.EMail+'" index-value=' +index +' req-id="' +allItems[index].ID +'" class="LeaseEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
 
             if(flgSystemAdmin)
             {
@@ -3238,7 +3215,7 @@ async function Loadidpp() {
   await sp.web.lists
     .getByTitle("idpp")
     .items.select(
-      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,DurationFrom,DurationTo,StatusSummary"
+      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,DurationFrom,DurationTo,StatusSummary"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -3288,7 +3265,7 @@ async function Loadidpp() {
             '" class="idppdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
           if (flgSystemAdmin || CrntUserID == assgnuser) 
           {
-            serviceHTML +='<a href="#" index-value=' +index +' req-id="' +allItems[index].ID +'" class="idppEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
+            serviceHTML +='<a href="#" data-av="'+allItems[index].AVName.EMail+'" index-value=' +index +' req-id="' +allItems[index].ID +'" class="idppEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
 
             if(flgSystemAdmin)
             {
@@ -3363,9 +3340,11 @@ async function LoadAdminTeam() {
     .users.filter("Email eq '" + LoggedUserEmail + "'")
     .get()
     .then(async (allItems: any[]) => {
-      if (allItems.length > 0) {
+      if (allItems.length > 0) 
+      {
         flgSystemAdmin = true;
-        if (flgSystemAdmin)
+      }
+      if (flgSystemAdmin)
         {
           $(".btnHODExcel").show();
         }
@@ -3373,7 +3352,6 @@ async function LoadAdminTeam() {
         {
           $(".btnHODExcel").hide();
         }
-      }
 
       getAllFolders();
     })
@@ -3389,6 +3367,7 @@ async function LoadProcurementTeamMembers() {
     .then((allItems: any[]) => {
       Procurementusers = allItems;
       if (allItems.length > 0) {
+        Users="";
         Users += '<option value="Select">Select</option>';
         for (var i = 0; i < allItems.length; i++) {
           //Users+='<select class="UserDropdown">';
@@ -3419,6 +3398,7 @@ async function LoadStatus() {
     .items.get()
     .then(async (allItems: any[]) => {
       if (allItems.length > 0) {
+        statusHtml="";
         statusHtml += '<option value="Select">Select</option>';
         for (var i = 0; i < allItems.length; i++) {
           //Users+='<select class="UserDropdown">';
@@ -3431,6 +3411,7 @@ async function LoadStatus() {
           //Users+='</select>';
         }
       }
+
       $(
         "#drpStatusforgoods,#drpStatusforservice,#drpStatusforsubsidy,#drpStatusforlease,#drpStatusforidpp"
       ).html("");
@@ -3555,7 +3536,7 @@ async function updaterequest(itemid, data, listname, close) {
     });
 }
 
-async function sendfollowup(user) {
+async function sendfollowup(arrmaildetails) {
   $(".loading-modal").addClass("active");
   $("body").addClass("body-hidden");
 
@@ -3593,23 +3574,45 @@ async function sendfollowup(user) {
           
           });*/
 
+  var Touser=arrmaildetails.AssignedTo1.EMail;
+  var ccUser=arrmaildetails.Author.EMail;
   var maildetails = {
-    To: [user],
-    CC: [],
-    Subject: "This email is about followup",
-    Body: "Here is the body for folowup messaage",
+    To: [Touser],
+    CC: [ccUser],
+    Subject: "Follow-up Request ["+arrmaildetails.ProjectName+"-"+arrmaildetails.ID+"]",
+    Body: "<p>Hi "+arrmaildetails.AssignedTo1.Title+",<br><br>This is a follow up mail for my '"+arrmaildetails.RequestType+"' request. Kindly take care of  this request.<br><br>Thanks<br>"+arrmaildetails.AssignedTo1.Title+"</p>",
   };
   await sendemail(maildetails);
 }
 
-async function sendmailforstatuschange(user) {
+
+async function sendmailforstatuschange(arrmaildetails,Newstatus) 
+{
+  var ccUser=arrmaildetails.AssignedTo1.EMail;
+  var Touser=arrmaildetails.Author.EMail;
+
   var maildetails = {
-    To: [user],
-    CC: [],
-    Subject: "This email is about...",
-    Body: "Here is the body for status messaage",
+    To: [Touser],
+    CC: [ccUser],
+    Subject: "'"+arrmaildetails.RequestType+"' Request ["+arrmaildetails.ProjectName+"-"+arrmaildetails.ID+"]",
+    Body: "<p>Hi "+arrmaildetails.Author.Title+",<br><br>Your status has been updated to '"+Newstatus+"'.<a href='"+siteURL + "/SitePages/RequestDashboard.aspx'>Please visit the dashboard to get more details</a>.<br><br>Thanks<br>"+arrmaildetails.AssignedTo1.Title+"</p>",
   };
-  await sendemail(maildetails);
+  await sendemailforstatus(maildetails);
+}
+
+async function sendemailforstatus(maildetails) {
+  let emailProps: EmailProperties = maildetails;
+
+  await sp.utility
+    .sendEmail(emailProps)
+    .then(async (_) => {
+      $(".loading-modal").removeClass("active");
+      $("body").removeClass("body-hidden");
+      //AlertMessage("Followup mail sent");
+    })
+    .catch(function (error) {
+      ErrorCallBack(error, "sendemail");
+    });
 }
 
 async function sendemail(maildetails) {
@@ -3723,33 +3726,42 @@ function generateExcel() {
     else if (excelSheetArray[i].name == "LeaseAgreement")
       var loopArray = LeaseAgreementItems;
 
-    loopArray.forEach(function (item, index) {
-      var AssignedToValue = "";
-      var status = "";
+    loopArray.forEach(function (item, index) 
+    {
+      
+      if(item.AssignedTo1||flgSystemAdmin)
+      {
+        if(item.AssignedTo1.ID==CrntUserID||flgSystemAdmin)
+        {
+          var AssignedToValue = "";
+          var status = "";
+    
+          if (item.Representative) {
+            var repValue: any = [];
+            item.Representative.map((rep, i) => {
+              repValue.push(rep.Title);
+            });
+          }
+          if (item.AssignedTo1) {
+            AssignedToValue = item.AssignedTo1.Title;
+          }
+    
+          if (item.RequestStatus != undefined) {
+            status = item.RequestStatus.Title;
+          }
+    
+          excelSheetArray[i].addRow({
+            ProjectName: item.ProjectName,
+            ProjectNumber: item.ProjectNumber,
+            NameOfAV: item.NameOfAV,
+            //AVName: item.AVName.Title,
+            PNForZAS: item.PNForZAS,
+            AssignedToValue: AssignedToValue,
+            RequestStatus: status,
+          });
 
-      if (item.Representative) {
-        var repValue: any = [];
-        item.Representative.map((rep, i) => {
-          repValue.push(rep.Title);
-        });
+        }
       }
-      if (item.AssignedTo1) {
-        AssignedToValue = item.AssignedTo1.Title;
-      }
-
-      if (item.RequestStatus != undefined) {
-        status = item.RequestStatus.Title;
-      }
-
-      excelSheetArray[i].addRow({
-        ProjectName: item.ProjectName,
-        ProjectNumber: item.ProjectNumber,
-        NameOfAV: item.NameOfAV,
-        //AVName: item.AVName.Title,
-        PNForZAS: item.PNForZAS,
-        AssignedToValue: AssignedToValue,
-        RequestStatus: status,
-      });
     });
 
     ["A1", "B1", "C1", "D1", "E1", "F1"].map((key) => {
@@ -3770,11 +3782,13 @@ function generateExcel() {
       });
     });
   }
+var filename=`${Date.now()}_Requests.xlsx`;
+filename=`My_Assigned_Requests.xlsx`;
 
   workbook.xlsx
     .writeBuffer()
     .then(async(buffer) =>
-    await FileSaver.saveAs(new Blob([buffer]), `${Date.now()}_Requests.xlsx`)
+    await FileSaver.saveAs(new Blob([buffer]),filename)
     )
     .catch((err) => console.log("Error writing excel export", err));
 }
@@ -3850,10 +3864,13 @@ function generateHODExcel(array) {
     });
   });
 
+  var filename=`${Date.now()}_Requests.xlsx`;
+  filename=`All_Users_Requests.xlsx`;
+
   HODworkbook.xlsx
     .writeBuffer()
     .then(async (buffer) =>
-      await FileSaver.saveAs(new Blob([buffer]), `${Date.now()}Users.xlsx`)
+      await FileSaver.saveAs(new Blob([buffer]), filename)
     )
     .catch((err) => console.log("Error writing excel export", err));
 }
@@ -3861,18 +3878,16 @@ function generateHODExcel(array) {
 async function Loadcurrency()
     {
   
-      const url = "https://ec.europa.eu/budg/inforeuro/api/public/monthly-rates?year=2015&month=12&lang=EN";
+      const url = "https://api.tiraforit.com/ConvertToEUR?value=1&from=JOD";
 
       const requestHeaders: Headers = new Headers();   
-      requestHeaders.append('Content-type', 'application/x-www-form-urlencoded'); 
-      requestHeaders.append('Access-Control-Allow-Origin','*');
-      requestHeaders.append('Access-Control-Allow-Methods','GET');
-      requestHeaders.append('Authentication', '3e8e53be-a48f-4147-adf8-7e90a6e46b57');  
+      requestHeaders.append('Content-type', 'application/json'); 
+      requestHeaders.append("authorization", "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkpVVTltWmZ6Y1JuTUFLNkFEakVnZyJ9.eyJpc3MiOiJodHRwczovL2Rldi1sMGxoa3hmcy5ldS5hdXRoMC5jb20vIiwic3ViIjoiSVB1a0hPNDJIZWxQMU5sUDMzaHZvOEhJYkJyOWU0dDhAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi9hcGkudGlyYWZvcml0LmNvbSIsImlhdCI6MTYwMTA4NTEzOCwiZXhwIjoxNjAxMTcxNTM4LCJhenAiOiJJUHVrSE80MkhlbFAxTmxQMzNodm84SEliQnI5ZTR0OCIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.nNDaip_rAHfCGYIhepx1BcPKzI5DfApMWKuGZ8ADWCtfOsjGFWU_FwkLYrelA7S1BHhVAeV9CqS2HZOJcaW9oQoYk2KV83ElGZ5vj0TM2Iupk42jV4bQA9QabJpp91Xf4L-kxI3VO9BsRXYit0hmfSSwdRIyZ14q258krOqsuDRGvgdn8C5YiGmHPj1ggm9d_LS9xgJNCjNOVDbNCI2-JfApsUbzN5rJvkdG-QfOpfAFNb6v6BgCRb0HRq2d4idzocDDmJpkp6nAOdwOrLYNX-lum6WQWHxSIeDQ2awYKRa5sWngo-JRnVHsHDvkImVKOW6XkbwF44vq5DLSOgxAdw"); 
 
       const httpClientOptions: IHttpClientOptions = {  
           headers: requestHeaders,  
-          method:'GET',
-          mode:'cors'
+          //method:'GET',
+          //mode:'cors'
         }; 
 
       await htppurl

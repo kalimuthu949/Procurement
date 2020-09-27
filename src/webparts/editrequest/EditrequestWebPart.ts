@@ -9,6 +9,7 @@ import { escape } from "@microsoft/sp-lodash-subset";
 import styles from "./EditrequestWebPart.module.scss";
 import * as strings from "EditrequestWebPartStrings";
 import { SPComponentLoader } from "@microsoft/sp-loader";
+import { HttpClient, IHttpClientOptions, HttpClientResponse } from '@microsoft/sp-http';
 
 import "jquery";
 import * as moment from "moment";
@@ -59,6 +60,10 @@ var ChoicesServices = [
   "Request from a Framework Agreement",
 ];
 
+var TodayEURValue=0;
+
+var htppurl;
+
 export interface IEditrequestWebPartProps {
   description: string;
 }
@@ -71,6 +76,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
       sp.setup({
         spfxContext: this.context,
       });
+      htppurl=this.context.httpClient;
     });
   }
 
@@ -2420,8 +2426,12 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     itemid = getUrlParameter("itemid");
     code = getUrlParameter("code");
 
+    if(code)
+    code=code.replace("#",'');
+    
     LoadFileTypes();
     LoadAdminTeam();
+    //Loadcurrency();
     window.addEventListener("beforeunload", function (e) {
       /*if (!formSubmitting)
         {
@@ -2839,6 +2849,14 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
       window.location.href = siteURL + "/SitePages/RequestDashboard.aspx";
     });
 
+    $(document).on("keyup", "#JOD", function () 
+    {
+        var EUR=TodayEURValue*($("#JOD").val());
+        $("#EUR").val(EUR);
+        $("#EUR").trigger('blur');
+
+    });
+
     $(document).on("blur", "#EUR", function () {
       if ($("#DrpProjectName option:selected").val() == "Goods") {
         if ($("#EUR").val() > 20000) {
@@ -3124,6 +3142,7 @@ function CreateGoodsRequest() {
       isKompOutput: $("#chkKomp").prop("checked"),
       kompPercent: $("#percent").val(),
       KompOutputNumber: $("#outputnumber").val(),
+      RequestType :$("#Drpreqcategories option:selected").text()
     };
 
     if ($("#chkMoreItem").prop("checked")) {
@@ -3329,6 +3348,7 @@ function creategoodsamendment() {
       GoodsCategory: $("#Drpreqcategories option:selected").val(),
       kompPercent: $("#percent").val(),
       KompOutputNumber: $("#outputnumber").val(),
+      RequestType :$("#Drpreqcategories option:selected").text(),
       ProsoftNumber: $("#prosoftnum").val(),
       DeliveryTime: DelivertimeTime,
       isNoChange: $("#chkNoChanges").prop("checked"),
@@ -3451,6 +3471,7 @@ function createrequestframework() {
       GoodsCategory: $("#Drpreqcategories option:selected").val(),
       kompPercent: $("#percent").val(),
       KompOutputNumber: $("#outputnumber").val(),
+      RequestType :$("#Drpreqcategories option:selected").text(),
       JOD: $("#JOD").val(),
       EUR: $("#EUR").val(),
       Agreement: $("input[name='Agreement']:checked").val(),
@@ -4015,6 +4036,7 @@ function CreateService() {
           MarketSurvey:$("#MarketSurvey").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
           kompPercent: $("#percent").val(),
+          RequestType :$("#Drpreqcategories option:selected").text(),
           KompOutputNumber: $("#outputnumber").val(),
         };
         if ($("#justification")[0].files.length > 0) {
@@ -4128,6 +4150,7 @@ function CreateService() {
           isKompOutput: $("#chkKomp").prop("checked"),
           kompPercent: $("#percent").val(),
           KompOutputNumber: $("#outputnumber").val(),
+          RequestType :$("#Drpreqcategories option:selected").text(),
           Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
           ServiceCategory: $("#Drpreqcategories option:selected").val(),
@@ -4231,6 +4254,7 @@ function CreateService() {
           isKompOutput: $("#chkKomp").prop("checked"),
           kompPercent: $("#percent").val(),
           KompOutputNumber: $("#outputnumber").val(),
+          RequestType :$("#Drpreqcategories option:selected").text(),
           Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
           ServiceCategory: $("#Drpreqcategories option:selected").val(),
@@ -4333,6 +4357,7 @@ function CreateService() {
           isKompOutput: $("#chkKomp").prop("checked"),
           kompPercent: $("#percent").val(),
           KompOutputNumber: $("#outputnumber").val(),
+          RequestType :$("#Drpreqcategories option:selected").text(),
           Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
           ServiceCategory: $("#Drpreqcategories option:selected").val(),
@@ -4623,6 +4648,7 @@ function CreateService() {
           isKompOutput: $("#chkKomp").prop("checked"),
           kompPercent: $("#percent").val(),
           KompOutputNumber: $("#outputnumber").val(),
+          RequestType :$("#Drpreqcategories option:selected").text(),
           Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
           ServiceCategory: $("#Drpreqcategories option:selected").val(),
@@ -4732,6 +4758,7 @@ function CreateService() {
           isKompOutput: $("#chkKomp").prop("checked"),
           kompPercent: $("#percent").val(),
           KompOutputNumber: $("#outputnumber").val(),
+          RequestType :$("#Drpreqcategories option:selected").text(),
           Explanation: $("#txtExplanation").val(),
           JOD: $("#JOD").val(),
           EUR: $("#EUR").val(),
@@ -5828,6 +5855,7 @@ function CreateLeaseamendment() {
         isKompOutput: $("#chkKomp").prop("checked"),
         kompPercent: $("#percent").val(),
         KompOutputNumber: $("#outputnumber").val(),
+        RequestType :$("#Drpreqcategories option:selected").text(),
         CoSoftNumber: $("#cosoftnum").val(),
         PaymentStatus: $("#chkfinstatus").prop("checked"),
       };
@@ -6047,6 +6075,7 @@ function CreateSubsidy() {
         SubsidyCategory: $("#Drpreqcategories option:selected").val(),
         kompPercent: $("#percent").val(),
         KompOutputNumber: $("#outputnumber").val(),
+        RequestType :$("#Drpreqcategories option:selected").text(),
         JOD: $("#JOD").val(),
         EUR: $("#EUR").val(),
         ShortDesc: $("#shortDescription").val(),
@@ -6242,6 +6271,7 @@ function CreateSubsidyAmendemnt() {
         isKompOutput: $("#chkKomp").prop("checked"),
         kompPercent: $("#percent").val(),
         KompOutputNumber: $("#outputnumber").val(),
+        RequestType :$("#Drpreqcategories option:selected").text(),
         CoSoftNumber: $("#cosoftnum").val(),
         PaymentStatus: $("#chkfinstatus").prop("checked"),
       };
@@ -6585,6 +6615,7 @@ function createIdpp() {
         isKompOutput: $("#chkKomp").prop("checked"),
         kompPercent: $("#percent").val(),
         KompOutputNumber: $("#outputnumber").val(),
+        RequestType :$("#DrpProjectName option:selected").text(),
         ShortDesc: $("#shortDescription").val(),
         DurationFrom: FromDate,
         DurationTo: Todate,
@@ -6818,11 +6849,13 @@ async function LoadProjects() {
   await sp.web.lists
     .getByTitle("Projects")
     .items.select(
-      "Title,Id,ProjectNumber,ProjectAV/Title,ProjectAV/ID,ProjectAV/EMail,Representative/ID,HeadOfProcurement/ID,HeadOfProcurement/EMail"
+      "Title,Id,ProjectNumber,ProjectAV/Title,ProjectAV/ID,ProjectAV/EMail,Representative/ID"
     )
-    .expand("ProjectAV,Representative,HeadOfProcurement")
+    .expand("ProjectAV,Representative")
     .get()
     .then(async function (allItems) {
+      $("#projectName").html('');
+      $("#projectName").append("<option value='Select'>Select</option>");
       for (var index = 0; index < allItems.length; index++) {
         var element = allItems[index];
 
@@ -6831,7 +6864,7 @@ async function LoadProjects() {
           indexForRep < allItems[index].Representative.length;
           indexForRep++
         ) {
-          if (CrntUserID == allItems[index].Representative[indexForRep].ID) {
+          if (CrntUserID == allItems[index].Representative[indexForRep].ID||flgSystemAdmin) {
             flgRepUser = true;
             $("#projectName").append(
               '<option Proj-Num="' +
@@ -6840,8 +6873,6 @@ async function LoadProjects() {
                 element.ProjectAV.EMail +
                 '" Proj-Av-id="' +
                 element.ProjectAV.ID +
-                '" Proj-HOP-email="' +
-                element.HeadOfProcurement.EMail +
                 '" Proj-Av="' +
                 element.ProjectAV.Title +
                 '"  proj-id="' +
@@ -7109,6 +7140,39 @@ function getUrlParameter(param) {
     }
   }
 }
+
+async function Loadcurrency()
+    {
+  
+      const url = "https://api.tiraforit.com/ConvertToEUR?value=1&from=JOD&decimalPlaces=2";
+
+      const requestHeaders: Headers = new Headers();   
+      requestHeaders.append('Content-type', 'application/json'); 
+      requestHeaders.append("authorization", "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkpVVTltWmZ6Y1JuTUFLNkFEakVnZyJ9.eyJpc3MiOiJodHRwczovL2Rldi1sMGxoa3hmcy5ldS5hdXRoMC5jb20vIiwic3ViIjoiSVB1a0hPNDJIZWxQMU5sUDMzaHZvOEhJYkJyOWU0dDhAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi9hcGkudGlyYWZvcml0LmNvbSIsImlhdCI6MTYwMTE5NzM4NiwiZXhwIjoxNjAzNzg5MzgwLCJhenAiOiJJUHVrSE80MkhlbFAxTmxQMzNodm84SEliQnI5ZTR0OCIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.pOLsQ7vcQsF3uK75e_L7R3c84gCu5jGOWyKWqI9jOh6ReRrbzvGnIjcBAg9tfR5wRh-FvUunc7zgUsHppdoznB6w-w7EBGk78eH0Qp-aapMKuJr_WAIC8antH1baTpVj82M7OpTMP1klylBfwsg81iFouybySVmIrpIxZCC3f7sI8PcWMDuJmnXRZom7EfsqDp5jRJ18keQTVcsqqdvhT-e67jEAXK_FJH8Y4e2dg7kq0ZcQry5cOqxArkxsCJLghJ0V2zdOKXuXpbnp3bxZdRzJyawnpqub2al1a3-PiJPWTjVW0WplRnu1NmUHJBjRv330X_YMEt7XPE-0T2uRxw");
+
+      const httpClientOptions: IHttpClientOptions = {  
+          headers: requestHeaders,  
+          //method:'GET',
+          //mode:'cors'
+        }; 
+
+      await htppurl
+        .get(url, HttpClient.configurations.v1,httpClientOptions)
+        .then((res: HttpClientResponse): Promise<any> => 
+        {
+          return res.json();
+        })
+        .then((response: any): void => 
+        {
+          console.log(response);
+          if(response)
+          TodayEURValue=response;
+          else
+          TodayEURValue=0;
+        }).catch(function (error) {
+          ErrorCallBack(error, "Loadcurrency");
+        });
+    }
 
 /* 
 //summary
