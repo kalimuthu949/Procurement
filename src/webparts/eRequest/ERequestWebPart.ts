@@ -2431,7 +2431,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 
     LoadFileTypes();
     LoadAdminTeam();
-    //Loadcurrency();
+    Loadcurrency();
 
     window.addEventListener("beforeunload", function (e) {
       /*if (!formSubmitting)
@@ -6563,38 +6563,47 @@ async function LoadProjects() {
       $("#projectName").append("<option value='Select'>Select</option>");
       for (var index = 0; index < allItems.length; index++) {
         var element = allItems[index];
-        if (element.ProjectAV.ID == CrntUserID) {
+
+        for (var indexForRep = 0;indexForRep < allItems[index].Representative.length;indexForRep++) 
+        {
+          if (CrntUserID == allItems[index].Representative[indexForRep].ID) 
+          {
+            flgRepUser = true;
+          }
+        }
+        
+        if (element.ProjectAV.ID == CrntUserID||flgSystemAdmin) 
+        {
           flgRepUser = true;
         }
-        for (var indexForRep = 0;indexForRep < allItems[index].Representative.length;indexForRep++) {
-          if (CrntUserID == allItems[index].Representative[indexForRep].ID||flgSystemAdmin) {
-            flgRepUser = true;
+      
+        if(flgRepUser)
+        {
             $("#projectName").append(
-              '<option Proj-Num="' +
-                element.ProjectNumber +
-                '" Proj-Av-email="' +
-                element.ProjectAV.EMail +
-                '" Proj-Av-id="' +
-                element.ProjectAV.ID +
-                '" Proj-Av="' +
-                element.ProjectAV.Title +
-                '"  proj-id="' +
-                element.Id +
-                '" value="' +
-                element.Title +
-                '">' +
-                element.Title +
-                "</option>"
-            );
-            var arrRepUsers = [];
-            for (var i = 0; i < allItems[index].Representative.length; i++) {
-              arrRepUsers.push(allItems[index].Representative[i].ID);
-            }
-            ProjectDetails.push({
-              PrjtcNum: element.Title,
-              RepId: arrRepUsers,
-            });
+            '<option Proj-Num="' +
+              element.ProjectNumber +
+              '" Proj-Av-email="' +
+              element.ProjectAV.EMail +
+              '" Proj-Av-id="' +
+              element.ProjectAV.ID +
+              '" Proj-Av="' +
+              element.ProjectAV.Title +
+              '"  proj-id="' +
+              element.Id +
+              '" value="' +
+              element.Title +
+              '">' +
+              element.Title +
+              "</option>"
+          );
+          var arrRepUsers = [];
+          for (var i = 0; i < allItems[index].Representative.length; i++) {
+            arrRepUsers.push(allItems[index].Representative[i].ID);
           }
+          ProjectDetails.push({
+            PrjtcNum: element.Title,
+            RepId: arrRepUsers,
+          });
         }
       }
       if (!flgRepUser && !flgSystemAdmin) {
@@ -6805,7 +6814,10 @@ async function ErrorCallBack(error, methodname) {
       .then(function (data) {
         $(".loading-modal").removeClass("active");
         $("body").removeClass("body-hidden");
+
+        if(methodname!="Loadcurrency")
         AlertMessage("Something went wrong.please contact system admin");
+
       });
   } catch (e) {
     //alert(e.message);
