@@ -447,6 +447,27 @@ div.dataTables_length {
 .icon-mail {
   background-image: url(../images/icon-mail.png);
 }
+.icon-add {
+  background-image: url(../images/icon-add.png);
+}
+.icon-add-new {
+  background-image: url(../images/icon-add-new.png);
+}
+.icon-delete {
+  background-image: url(../images/icon-delete.png);
+}
+.icon-grant-permission {
+  background-image: url(../images/icon-grant-permission.png);
+}
+.icon-permission {
+  background-image: url(../images/icon-permission.png);
+}
+.icon-revoke {
+  background-image: url(../images/icon-revoke.png);
+}
+.icon-add-circle {
+  background-image: url(../images/icon-add-circle.png);
+}
 .ControlZone-control {
   min-height: 480px;
 }
@@ -579,6 +600,10 @@ table.dataTable tbody tr td select {
 }
 div#divkompoutput {
   padding-top: 20px;
+  padding-left: 0px;
+}
+.clskomp.col-sm-6 {
+  padding-left: 0;
 }
 .ajs-message.ajs-error.ajs-visible {
   text-align: center !important;
@@ -592,7 +617,7 @@ td:last-child {
 .custom-file-label {
   cursor: pointer;
 }
-div#Goods_filter {
+div#Goods_filter, #Service_filter, #Subsidy_filter, #Lease_filter, #idpp_filter {
   top: -44px !important;
 }
 /* Fixes Maasi*/
