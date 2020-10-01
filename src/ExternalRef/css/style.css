@@ -617,7 +617,11 @@ td:last-child {
 .custom-file-label {
   cursor: pointer;
 }
-div#Goods_filter, #Service_filter, #Subsidy_filter, #Lease_filter, #idpp_filter {
+div#Goods_filter,
+#Service_filter,
+#Subsidy_filter,
+#Lease_filter,
+#idpp_filter {
   top: -44px !important;
 }
 /* Fixes Maasi*/
@@ -625,5 +629,8 @@ div#Goods_filter, #Service_filter, #Subsidy_filter, #Lease_filter, #idpp_filter 
 #workbenchPageContent {
   left: -30px !important;
   max-width: 1364px !important;
+}
+.statuspopup {
+  width: 350px;
 }
 /* workbench size */
