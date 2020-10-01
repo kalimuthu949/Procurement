@@ -47,6 +47,7 @@ var pdfdetails = [];
 var ProcurementServiceFiles = [];
 var arrAbtToDel = [];
 var flgSystemAdmin=false;
+var flgHOD=false;
 var LoggedUserEmail="";
 
 var itemid;
@@ -265,19 +266,26 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     </div>
     <div id="divkompoutput" class="col-sm-6"></div>
   </div>
+  <div id="NewKompCheckfields"></div>
   `;
 
   private readonly newgoodskompcheckbox = `
 
-  <div class="col-sm-6">
+  <div class="col-sm-4">
   <div class="form-group">
-  <input type="text" id="percent" class="form-control" placeholder="Percentage(s)" value="">
+  <input type="text" id="percent" class="form-control clspercent clsindexforpercent0" placeholder="Percentage(s)" value="">
   </div>
   </div>
   
-  <div class="col-sm-6">
+  <div class="col-sm-4">
   <div class="form-group">
-  <input type="text" id="outputnumber" class="form-control" placeholder=" Output number(s)" value="">
+  <input type="text" id="outputnumber" class="form-control clsoutputnumber clsindexforoutputnumber0" placeholder=" Output number(s)" value="">
+  </div>
+  </div>
+
+  <div class="col-sm-4">
+  <div class="form-group" style="margin-top:7px;">
+  <a href="#" class="clsaddkompoutput"><span class="icon-action icon-add-circle"></span></a>
   </div>
   </div>
   
@@ -2429,9 +2437,9 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     if(code)
     code=code.replace("#",'');
     
+    
     LoadFileTypes();
     LoadAdminTeam();
-    //Loadcurrency();
     window.addEventListener("beforeunload", function (e) {
       /*if (!formSubmitting)
         {
@@ -2623,6 +2631,22 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 
     $(document).on("click", "#btnContact", function () {
       addContact();
+    });
+
+    $(document).on("click", ".clsaddkompoutput", function () {
+      addkompoutput();
+    });
+
+    $(document).on("click", ".clsdeletekompoutput", function () {
+      $(this).closest('.row').remove();
+      if($("#NewKompCheckfields")[0].childNodes.length<2)
+        {
+          $('.clsaddkompoutput').show();
+        }
+        else
+        {
+          $('.clsaddkompoutput').hide();
+        }
     });
 
     $(document).on("click", ".clsRemove", function () {
@@ -2851,8 +2875,11 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 
     $(document).on("keyup", "#JOD", function () 
     {
-        var EUR=TodayEURValue*($("#JOD").val());
+        /*var EUR=TodayEURValue*($("#JOD").val());
         $("#EUR").val(EUR);
+        $("#EUR").trigger('blur');*/
+
+        Loadcurrency("https://api.tiraforit.com/ConvertToEUR?value="+$("#JOD").val()+"&from=JOD&decimalPlaces=2");
         $("#EUR").trigger('blur');
 
     });
@@ -2909,6 +2936,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
         $("#divkompoutput").html(that.newgoodskompcheckbox);
       } else {
         $("#divkompoutput").html("");
+        $("#NewKompCheckfields").html("");
       }
     });
 
@@ -3046,6 +3074,52 @@ function addContact() {
   }
 }
 
+function addkompoutput()
+{
+  var komphtml="";
+  var length=($("#NewKompCheckfields")[0].childNodes.length);
+  if($("#NewKompCheckfields")[0].childNodes.length<2)
+  {
+    
+    length=length+1;
+    komphtml+='<div class="row">';
+    komphtml+='<div class="col-sm-6"><div class="form-group"></div></div>';
+    komphtml+='<div class="clskomp col-sm-6"><div class="form-group">';
+    komphtml+='<div class="col-sm-4">';
+    komphtml+='<div class="form-group">';
+    komphtml+='<input type="text" id="percent" class="form-control clspercent clsindexforpercent'+length+'" placeholder="Percentage(s)" value="">';
+    komphtml+='</div>';
+    komphtml+=' </div>';
+    
+    komphtml+='<div class="col-sm-4">';
+    komphtml+='<div class="form-group">';
+    komphtml+='<input type="text" id="outputnumber" class="form-control clsoutputnumber clsindexforoutputnumber'+length+'" placeholder=" Output number(s)" value="">';
+    komphtml+='</div>';
+    komphtml+=' </div>';
+ 
+    komphtml+='<div class="col-sm-4">';
+    komphtml+='<div class="form-group" style="margin-top:6px;">';
+    //komphtml+='<a href="#" class="clsaddkompoutput"><span class="icon-action icon-add"></span></a>';
+    komphtml+='<a href="#" class="clsdeletekompoutput"><span class="icon-action icon-delete"></span></a>';
+    komphtml+='</div>';
+    komphtml+='</div>';
+    komphtml+='</div></div>';
+    komphtml+='</div>';
+
+  }
+  
+  $("#NewKompCheckfields").append(komphtml);
+
+    if($("#NewKompCheckfields")[0].childNodes.length>=2)
+    {
+      $('.clsaddkompoutput').hide();
+    }
+    else
+    {
+      $('.clsaddkompoutput').show();
+    }
+}
+
 function removeQuantityfile(filename) {
   for (var i = 0; i < filesQuantity.length; i++) {
     if (filesQuantity[i].name == filename) {
@@ -3115,6 +3189,8 @@ function CreateGoodsRequest() {
         break;
       }
     }
+    var KompOutputNumber=getkompoutput();
+    var kompPercent=getKompValue();
     let Servicedata = {
       ProjectName: $("#projectName option:selected").val(),
       ProjectNumber: projectNumber,
@@ -3140,8 +3216,8 @@ function CreateGoodsRequest() {
       PersonEmail: $("#Email").val(),
       PersonMobile: $("#MobileNumber").val(),
       isKompOutput: $("#chkKomp").prop("checked"),
-      kompPercent: $("#percent").val(),
-      KompOutputNumber: $("#outputnumber").val(),
+      kompPercent: kompPercent,
+      KompOutputNumber: KompOutputNumber,
       RequestType :$("#Drpreqcategories option:selected").text()
     };
 
@@ -3334,7 +3410,8 @@ function creategoodsamendment() {
     if ($("#chkKomp").prop("checked")) {
       kompoutput = "Yes";
     }
-
+    var KompOutputNumber=getkompoutput();
+    var kompPercent=getKompValue();
     let Servicedata = {
       ProjectName: $("#projectName option:selected").val(),
       ProjectNumber: projectNumber,
@@ -3346,8 +3423,8 @@ function creategoodsamendment() {
       },
       isKompOutput: $("#chkKomp").prop("checked"),
       GoodsCategory: $("#Drpreqcategories option:selected").val(),
-      kompPercent: $("#percent").val(),
-      KompOutputNumber: $("#outputnumber").val(),
+      kompPercent: kompPercent,
+      KompOutputNumber: KompOutputNumber,
       RequestType :$("#Drpreqcategories option:selected").text(),
       ProsoftNumber: $("#prosoftnum").val(),
       DeliveryTime: DelivertimeTime,
@@ -3458,6 +3535,8 @@ function createrequestframework() {
         break;
       }
     }
+    var KompOutputNumber=getkompoutput();
+    var kompPercent=getKompValue();
     let Servicedata = {
       ProjectName: $("#projectName option:selected").val(),
       ProjectNumber: projectNumber,
@@ -3469,8 +3548,8 @@ function createrequestframework() {
       },
       isKompOutput: $("#chkKomp").prop("checked"),
       GoodsCategory: $("#Drpreqcategories option:selected").val(),
-      kompPercent: $("#percent").val(),
-      KompOutputNumber: $("#outputnumber").val(),
+      kompPercent: kompPercent,
+      KompOutputNumber: KompOutputNumber,
       RequestType :$("#Drpreqcategories option:selected").text(),
       JOD: $("#JOD").val(),
       EUR: $("#EUR").val(),
@@ -3552,6 +3631,17 @@ async function InsertGoodsRequest(Servicedata, arrFiles) {
       }
       arrFiles = updatedfiles;
       fileslength = arrFiles.length;
+
+      var filesgoingtoonlydelete=[];
+      $('.custom-file-label').each(function()
+      {
+          if($(this).text()=="Choose File"&&$(this).attr("previousfileid")!=""&&$(this).attr("previousfileid")!="N/A"&&$(this).attr("previousfileid"))
+          {
+            filesgoingtoonlydelete.push({previousfileid: $(this).attr("previousfileid")});
+          }
+      });
+
+      await deletefile(filesgoingtoonlydelete);
 
       if (arrFiles.length <= 0) Showpopup();
 
@@ -4006,6 +4096,8 @@ function CreateService() {
           )
         ).toISOString();
 
+        var KompOutputNumber=getkompoutput();
+        var kompPercent=getKompValue();
         let Servicedata = {
           ProjectName: $("#projectName option:selected").val(),
           ProjectNumber: projectNumber,
@@ -4035,9 +4127,9 @@ function CreateService() {
           EUR: $("#EUR").val(),
           MarketSurvey:$("#MarketSurvey").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
-          kompPercent: $("#percent").val(),
+          kompPercent: kompPercent,
           RequestType :$("#Drpreqcategories option:selected").text(),
-          KompOutputNumber: $("#outputnumber").val(),
+          KompOutputNumber: KompOutputNumber,
         };
         if ($("#justification")[0].files.length > 0) {
           arrFiles.push({
@@ -4136,6 +4228,8 @@ function CreateService() {
           )
         ).toISOString();
 
+        var KompOutputNumber=getkompoutput();
+        var kompPercent=getKompValue();
         let Servicedata = {
           ProjectName: $("#projectName option:selected").val(),
           ProjectNumber: projectNumber,
@@ -4148,8 +4242,8 @@ function CreateService() {
           },
           //KOMPOuput:$("#KompOptPT").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
-          kompPercent: $("#percent").val(),
-          KompOutputNumber: $("#outputnumber").val(),
+          kompPercent: kompPercent,
+          KompOutputNumber: KompOutputNumber,
           RequestType :$("#Drpreqcategories option:selected").text(),
           Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
@@ -4240,6 +4334,8 @@ function CreateService() {
           )
         ).toISOString();
 
+        var KompOutputNumber=getkompoutput();
+        var kompPercent=getKompValue();
         let Servicedata = {
           ProjectName: $("#projectName option:selected").val(),
           ProjectNumber: projectNumber,
@@ -4252,8 +4348,8 @@ function CreateService() {
           },
           //KOMPOuput:$("#KompOptPT").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
-          kompPercent: $("#percent").val(),
-          KompOutputNumber: $("#outputnumber").val(),
+          kompPercent: kompPercent,
+          KompOutputNumber:KompOutputNumber,
           RequestType :$("#Drpreqcategories option:selected").text(),
           Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
@@ -4343,6 +4439,8 @@ function CreateService() {
           )
         ).toISOString();
 
+        var KompOutputNumber=getkompoutput();
+        var kompPercent=getKompValue();
         let Servicedata = {
           ProjectName: $("#projectName option:selected").val(),
           ProjectNumber: projectNumber,
@@ -4355,8 +4453,8 @@ function CreateService() {
           },
           //KOMPOuput:$("#KompOptPT").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
-          kompPercent: $("#percent").val(),
-          KompOutputNumber: $("#outputnumber").val(),
+          kompPercent: kompPercent,
+          KompOutputNumber: KompOutputNumber,
           RequestType :$("#Drpreqcategories option:selected").text(),
           Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
@@ -4428,6 +4526,8 @@ function CreateService() {
             $(".loading-modal").addClass("active");
             $("body").addClass("body-hidden");
 
+            var KompOutputNumber=getkompoutput();
+            var kompPercent=getKompValue();
             let Servicedata = {
               ProjectName: $("#projectName option:selected").val(),
               ProjectNumber: projectNumber,
@@ -4493,7 +4593,8 @@ function CreateService() {
           if (mandatoryforcompany()) {
             $(".loading-modal").addClass("active");
             $("body").addClass("body-hidden");
-
+            var KompOutputNumber=getkompoutput();
+            var kompPercent=getKompValue();
             let Servicedata = {
               ProjectName: $("#projectName option:selected").val(),
               ProjectNumber: projectNumber,
@@ -4573,6 +4674,8 @@ function CreateService() {
           )
         ).toISOString();
 
+        var KompOutputNumber=getkompoutput();
+        var kompPercent=getKompValue();
         let Servicedata = {
           ProjectName: $("#projectName option:selected").val(),
           ProjectNumber: projectNumber,
@@ -4634,6 +4737,8 @@ function CreateService() {
       if (mandatoryforcontract()) {
         $(".loading-modal").addClass("active");
         $("body").addClass("body-hidden");
+        var KompOutputNumber=getkompoutput();
+        var kompPercent=getKompValue();
         let Servicedata = {
           ProjectName: $("#projectName option:selected").val(),
           ProjectNumber: projectNumber,
@@ -4646,8 +4751,8 @@ function CreateService() {
           },
           //KOMPOuput:$("#KompOptPT").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
-          kompPercent: $("#percent").val(),
-          KompOutputNumber: $("#outputnumber").val(),
+          kompPercent: kompPercent,
+          KompOutputNumber: KompOutputNumber,
           RequestType :$("#Drpreqcategories option:selected").text(),
           Explanation: $("#txtExplanation").val(),
           ChoicesOfServices: $("#choicesservices option:selected").val(),
@@ -4744,6 +4849,8 @@ function CreateService() {
       if (mandatoryvalidationforservicerequestframeworkagreement()) {
         $(".loading-modal").addClass("active");
         $("body").addClass("body-hidden");
+        var KompOutputNumber=getkompoutput();
+        var kompPercent=getKompValue();
         let Servicedata = {
           ProjectName: $("#projectName option:selected").val(),
           ProjectNumber: projectNumber,
@@ -4756,8 +4863,8 @@ function CreateService() {
           ChoicesOfServices: $("#choicesservices option:selected").val(),
           ServiceCategory: $("#Drpreqcategories option:selected").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
-          kompPercent: $("#percent").val(),
-          KompOutputNumber: $("#outputnumber").val(),
+          kompPercent: kompPercent,
+          KompOutputNumber: KompOutputNumber,
           RequestType :$("#Drpreqcategories option:selected").text(),
           Explanation: $("#txtExplanation").val(),
           JOD: $("#JOD").val(),
@@ -4840,6 +4947,17 @@ async function InsertService(Servicedata, arrFiles) {
       }
       arrFiles = updatedfiles;
       fileslength = arrFiles.length;
+
+      var filesgoingtoonlydelete=[];
+      $('.custom-file-label').each(function()
+      {
+          if($(this).text()=="Choose File"&&$(this).attr("previousfileid")!=""&&$(this).attr("previousfileid")!="N/A"&&$(this).attr("previousfileid"))
+          {
+            filesgoingtoonlydelete.push({previousfileid: $(this).attr("previousfileid")});
+          }
+      });
+
+      await deletefile(filesgoingtoonlydelete);
 
       if (arrFiles.length <= 0) Showpopup();
 
@@ -5573,7 +5691,8 @@ function CreateLeaseAgreement() {
         if (mandatoryforindivual()) {
           $(".loading-modal").addClass("active");
           $("body").addClass("body-hidden");
-
+          var KompOutputNumber=getkompoutput();
+          var kompPercent=getKompValue();
           let Servicedata = {
             ProjectName: $("#projectName option:selected").val(),
             ProjectNumber: projectNumber,
@@ -5683,7 +5802,8 @@ function CreateLeaseAgreement() {
         if (mandatoryforcompany()) {
           $(".loading-modal").addClass("active");
           $("body").addClass("body-hidden");
-
+          var KompOutputNumber=getkompoutput();
+          var kompPercent=getKompValue();
           let Servicedata = {
             ProjectName: $("#projectName option:selected").val(),
             ProjectNumber: projectNumber,
@@ -5838,7 +5958,8 @@ function CreateLeaseamendment() {
     if (mandatoryforleaseamendment()) {
       $(".loading-modal").addClass("active");
       $("body").addClass("body-hidden");
-
+      var KompOutputNumber=getkompoutput();
+      var kompPercent=getKompValue();
       let Servicedata = {
         ProjectName: $("#projectName option:selected").val(),
         ProjectNumber: projectNumber,
@@ -5853,8 +5974,8 @@ function CreateLeaseamendment() {
         //ChoicesOfServices:$("#choicesservices option:selected").val(),
         LeaseAgreementCategory: $("#Drpreqcategories option:selected").val(),
         isKompOutput: $("#chkKomp").prop("checked"),
-        kompPercent: $("#percent").val(),
-        KompOutputNumber: $("#outputnumber").val(),
+        kompPercent: kompPercent,
+        KompOutputNumber: KompOutputNumber,
         RequestType :$("#Drpreqcategories option:selected").text(),
         CoSoftNumber: $("#cosoftnum").val(),
         PaymentStatus: $("#chkfinstatus").prop("checked"),
@@ -5985,6 +6106,17 @@ async function InsertLease(Servicedata, arrFiles) {
       arrFiles = updatedfiles;
       fileslength = arrFiles.length;
 
+      var filesgoingtoonlydelete=[];
+      $('.custom-file-label').each(function()
+      {
+          if($(this).text()=="Choose File"&&$(this).attr("previousfileid")!=""&&$(this).attr("previousfileid")!="N/A"&&$(this).attr("previousfileid"))
+          {
+            filesgoingtoonlydelete.push({previousfileid: $(this).attr("previousfileid")});
+          }
+      });
+
+      await deletefile(filesgoingtoonlydelete);
+
       if (arrFiles.length <= 0) Showpopup();
 
       await deletefile(arrFiles);
@@ -6058,7 +6190,8 @@ function CreateSubsidy() {
           moment($("#Todate").val(), "MM/DD/YYYY").format("YYYY-MM-DD")
         )
       ).toISOString();
-
+      var KompOutputNumber=getkompoutput();
+      var kompPercent=getKompValue();
       let Servicedata = {
         ProjectName: $("#projectName option:selected").val(),
         ProjectNumber: projectNumber,
@@ -6073,8 +6206,8 @@ function CreateSubsidy() {
         //ChoicesOfServices:$("#choicesservices option:selected").val(),
         isKompOutput: $("#chkKomp").prop("checked"),
         SubsidyCategory: $("#Drpreqcategories option:selected").val(),
-        kompPercent: $("#percent").val(),
-        KompOutputNumber: $("#outputnumber").val(),
+        kompPercent: kompPercent,
+        KompOutputNumber: KompOutputNumber,
         RequestType :$("#Drpreqcategories option:selected").text(),
         JOD: $("#JOD").val(),
         EUR: $("#EUR").val(),
@@ -6255,6 +6388,8 @@ function CreateSubsidyAmendemnt() {
     if (mandatoryforsubsidyamendment()) {
       $(".loading-modal").addClass("active");
       $("body").addClass("body-hidden");
+      var KompOutputNumber=getkompoutput();
+      var kompPercent=getKompValue();
       let Servicedata = {
         ProjectName: $("#projectName option:selected").val(),
         ProjectNumber: projectNumber,
@@ -6269,8 +6404,8 @@ function CreateSubsidyAmendemnt() {
         //ChoicesOfServices:$("#choicesservices option:selected").val(),
         SubsidyCategory: $("#Drpreqcategories option:selected").val(),
         isKompOutput: $("#chkKomp").prop("checked"),
-        kompPercent: $("#percent").val(),
-        KompOutputNumber: $("#outputnumber").val(),
+        kompPercent: kompPercent,
+        KompOutputNumber: KompOutputNumber,
         RequestType :$("#Drpreqcategories option:selected").text(),
         CoSoftNumber: $("#cosoftnum").val(),
         PaymentStatus: $("#chkfinstatus").prop("checked"),
@@ -6381,6 +6516,17 @@ async function InsertSubsidy(Servicedata, arrFiles) {
       }
       arrFiles = updatedfiles;
       fileslength = arrFiles.length;
+
+      var filesgoingtoonlydelete=[];
+      $('.custom-file-label').each(function()
+      {
+          if($(this).text()=="Choose File"&&$(this).attr("previousfileid")!=""&&$(this).attr("previousfileid")!="N/A"&&$(this).attr("previousfileid"))
+          {
+            filesgoingtoonlydelete.push({previousfileid: $(this).attr("previousfileid")});
+          }
+      });
+
+      await deletefile(filesgoingtoonlydelete);
 
       if (arrFiles.length <= 0) Showpopup();
 
@@ -6599,7 +6745,8 @@ function createIdpp() {
           moment($("#Todate").val(), "MM/DD/YYYY").format("YYYY-MM-DD")
         )
       ).toISOString();
-
+      var KompOutputNumber=getkompoutput();
+      var kompPercent=getKompValue();
       let Servicedata = {
         ProjectName: $("#projectName option:selected").val(),
         ProjectNumber: projectNumber,
@@ -6613,8 +6760,8 @@ function createIdpp() {
         //KOMPOuput:$("#KompOptPT").val(),
         //ChoicesOfServices:$("#choicesservices option:selected").val(),
         isKompOutput: $("#chkKomp").prop("checked"),
-        kompPercent: $("#percent").val(),
-        KompOutputNumber: $("#outputnumber").val(),
+        kompPercent: kompPercent,
+        KompOutputNumber: KompOutputNumber,
         RequestType :$("#DrpProjectName option:selected").text(),
         ShortDesc: $("#shortDescription").val(),
         DurationFrom: FromDate,
@@ -6748,6 +6895,17 @@ async function InsertIdpp(Servicedata, arrFiles) {
       arrFiles = updatedfiles;
       fileslength = arrFiles.length;
 
+      var filesgoingtoonlydelete=[];
+      $('.custom-file-label').each(function()
+      {
+          if($(this).text()=="Choose File"&&$(this).attr("previousfileid")!=""&&$(this).attr("previousfileid")!="N/A"&&$(this).attr("previousfileid"))
+          {
+            filesgoingtoonlydelete.push({previousfileid: $(this).attr("previousfileid")});
+          }
+      });
+
+      await deletefile(filesgoingtoonlydelete);
+
       if (arrFiles.length <= 0) Showpopup();
 
       await deletefile(arrFiles);
@@ -6771,6 +6929,29 @@ async function InsertIdpp(Servicedata, arrFiles) {
 common fucntionalities were written start
 //summary 
 */
+function getKompValue()
+{
+  var komppercentages="";
+  
+  $('.clspercent').each(function()
+  {
+      //if($(this).val())    
+      komppercentages=komppercentages+$(this).val()+";";
+  });
+
+  return komppercentages;
+}
+
+function getkompoutput()
+{
+  var kompoutputnumbers="";
+  $('.clsoutputnumber').each(function()
+  {
+      //if($(this).val())    
+      kompoutputnumbers=kompoutputnumbers+$(this).val()+";";
+  });
+  return kompoutputnumbers;
+}
 
 async function createFolder(FolderName, ListID, files) {
   await sp.web
@@ -6833,16 +7014,19 @@ function removeOthersfile(filename) {
 }
 
 async function getLoggedInUserDetails() {
-  await sp.web.currentUser
+  var itemsdata = await sp.web.currentUser
     .get()
     .then(async (allItems: any) => {
       if (allItems) {
          CrntUserID = allItems.Id;
       }
+      return await allItems;
     })
     .catch(function (error) {
       ErrorCallBack(error, "getLoggedInUserDetails");
     });
+
+    return await itemsdata;
 }
 
 async function LoadProjects() {
@@ -6856,42 +7040,45 @@ async function LoadProjects() {
     .then(async function (allItems) {
       $("#projectName").html('');
       $("#projectName").append("<option value='Select'>Select</option>");
-      for (var index = 0; index < allItems.length; index++) {
+      for (var index = 0; index < allItems.length; index++) 
+      {
         var element = allItems[index];
 
-        for (
-          var indexForRep = 0;
-          indexForRep < allItems[index].Representative.length;
-          indexForRep++
-        ) {
-          if (CrntUserID == allItems[index].Representative[indexForRep].ID||flgSystemAdmin) {
+        for ( var indexForRep = 0;indexForRep < allItems[index].Representative.length;indexForRep++) 
+        {
+          if (CrntUserID == allItems[index].Representative[indexForRep].ID) 
+          {
             flgRepUser = true;
-            $("#projectName").append(
-              '<option Proj-Num="' +
-                element.ProjectNumber +
-                '" Proj-Av-email="' +
-                element.ProjectAV.EMail +
-                '" Proj-Av-id="' +
-                element.ProjectAV.ID +
-                '" Proj-Av="' +
-                element.ProjectAV.Title +
-                '"  proj-id="' +
-                element.Id +
-                '" value="' +
-                element.Title +
-                '">' +
-                element.Title +
-                "</option>"
-            );
-            var arrRepUsers = [];
-            for (var i = 0; i < allItems[index].Representative.length; i++) {
-              arrRepUsers.push(allItems[index].Representative[i].ID);
-            }
-            await ProjectDetails.push({
-              PrjtcNum: element.Title,
-              RepId: arrRepUsers,
-            });
           }
+        }
+
+        if(element.ProjectAV.ID == CrntUserID||flgSystemAdmin||flgHOD||flgRepUser)
+        {
+          $("#projectName").append(
+            '<option Proj-Num="' +
+              element.ProjectNumber +
+              '" Proj-Av-email="' +
+              element.ProjectAV.EMail +
+              '" Proj-Av-id="' +
+              element.ProjectAV.ID +
+              '" Proj-Av="' +
+              element.ProjectAV.Title +
+              '"  proj-id="' +
+              element.Id +
+              '" value="' +
+              element.Title +
+              '">' +
+              element.Title +
+              "</option>"
+          );
+          var arrRepUsers = [];
+          for (var i = 0; i < allItems[index].Representative.length; i++) {
+            arrRepUsers.push(allItems[index].Representative[i].ID);
+          }
+          await ProjectDetails.push({
+            PrjtcNum: element.Title,
+            RepId: arrRepUsers,
+          });
         }
       }
 
@@ -6908,13 +7095,33 @@ async function LoadAdminTeam() {
         flgSystemAdmin = true;
       }
 
-      if (!flgSystemAdmin) {
+      /*if (!flgSystemAdmin) {
         AlertMessage("Access Denied");
-      }
+      }*/
+      LoadHODTeam();
       
     })
     .catch(function (error) {
       ErrorCallBack(error, "LoadAdminTeam");
+    });
+}
+
+async function LoadHODTeam() {
+  await sp.web.siteGroups
+    .getByName("HeadOfProcurement")
+    .users.filter("Email eq '" + LoggedUserEmail + "'")
+    .get()
+    .then(async (allItems: any[]) => {
+      if (allItems.length > 0) {
+        flgHOD = true;
+      }
+
+      /*if (!flgHOD&&!flgSystemAdmin) {
+        AlertErrorMessage("Access Denied");
+      }*/
+    })
+    .catch(function (error) {
+      ErrorCallBack(error, "LoadHODTeam");
     });
 }
 
@@ -6964,6 +7171,22 @@ function AlertMessage(strMewssageEN) {
     })
     .show()
     .setHeader("<em>Confirmation</em> ")
+    .set("closable", false);
+}
+function AlertErrorMessage(strMewssageEN) {
+  alertify
+    .alert()
+    .setting({
+      label: "OK",
+
+      message: strMewssageEN,
+
+      onok: function () {
+        window.location.href = "#";
+      },
+    })
+    .show()
+    .setHeader("<em>Error</em> ")
     .set("closable", false);
 }
 async function sendnewrequestmail(touser, ccuser) {
@@ -7119,13 +7342,15 @@ async function ErrorCallBack(error, methodname) {
       .then(async function (data) {
         $(".loading-modal").removeClass("active");
         $("body").removeClass("body-hidden");
-        AlertMessage("Something went wrong.please contact system admin");
+        
+        if(methodname!="Loadcurrency")
+        AlertErrorMessage("Something went wrong.please contact system admin");
       });
   } catch (e) {
     //alert(e.message);
     $(".loading-modal").removeClass("active");
     $("body").removeClass("body-hidden");
-    AlertMessage("Something went wrong.please contact system admin");
+    AlertErrorMessage("Something went wrong.please contact system admin");
   }
 }
 
@@ -7141,10 +7366,10 @@ function getUrlParameter(param) {
   }
 }
 
-async function Loadcurrency()
+async function Loadcurrency(url)
     {
   
-      const url = "https://api.tiraforit.com/ConvertToEUR?value=1&from=JOD&decimalPlaces=2";
+      //const url = "https://api.tiraforit.com/ConvertToEUR?value=1&from=JOD&decimalPlaces=2";
 
       const requestHeaders: Headers = new Headers();   
       requestHeaders.append('Content-type', 'application/json'); 
@@ -7169,7 +7394,12 @@ async function Loadcurrency()
           TodayEURValue=response;
           else
           TodayEURValue=0;
+
+          $("#EUR").val(response);
+          $("#EUR").trigger('blur');
+
         }).catch(function (error) {
+          $("#EUR").trigger('blur');
           ErrorCallBack(error, "Loadcurrency");
         });
     }
@@ -7231,7 +7461,7 @@ async function FetchGoodsDetails() {
   $(".loading-modal").addClass("active");
   $("body").addClass("body-hidden");
 
-
+  var getuservalues=await getLoggedInUserDetails();
   var goodsdetails = [];
   goodsdetails.push(await FetchListitems(listname, columns, lookup, ID));
 
@@ -7276,7 +7506,8 @@ async function FetchGoodsDetails() {
       $("#divChkPublictender").hide();
       $("#news-span").show();
     }
-    $(goodsdetails[0].isPublictender);
+
+    if(goodsdetails[0].isPublictender)
     {
       $("#chkPublictender").prop("checked", true);
       $("#fileShortlist").val("");
@@ -7333,7 +7564,7 @@ async function FetchserviceDetails() {
   var listname = "ProcurementService";
   $(".loading-modal").addClass("active");
   $("body").addClass("body-hidden");
-
+  var getuservalues=await getLoggedInUserDetails();
   var servicedetails = [];
   servicedetails.push(await FetchListitems(listname, columns, lookup, ID));
 
@@ -7456,7 +7687,7 @@ async function FetchLocalSubsidy() {
 
   $(".loading-modal").addClass("active");
   $("body").addClass("body-hidden");
-
+  var getuservalues=await getLoggedInUserDetails();
   var subsidydetails = [];
   subsidydetails.push(await FetchListitems(listname, columns, lookup, ID));
 
@@ -7507,6 +7738,7 @@ async function FetchLeaseAgreement() {
   var listname = "LeaseAgreement";
   $(".loading-modal").addClass("active");
   $("body").addClass("body-hidden");
+  var getuservalues=await getLoggedInUserDetails();
   var Leasedetails = [];
   Leasedetails.push(await FetchListitems(listname, columns, lookup, ID));
 
@@ -7558,6 +7790,7 @@ async function Fetchidpp() {
   var listname = "idpp";
   $(".loading-modal").addClass("active");
   $("body").addClass("body-hidden");
+  var getuservalues=await getLoggedInUserDetails();
   var idppdetails = [];
   idppdetails.push(await FetchListitems(listname, columns, lookup, ID));
 
@@ -8204,7 +8437,8 @@ async function deletefile(files) {
   }
 }
 
-async function BindCommonvalues(requestdetails) {
+async function BindCommonvalues(requestdetails) 
+{
   if (requestdetails[0].ProjectNumber) {
     var PrjctNum = requestdetails[0].ProjectNumber;
     var PrjctNum1 = PrjctNum.split("-");
@@ -8228,9 +8462,76 @@ async function BindCommonvalues(requestdetails) {
     $("#txtpnforzas5").val(PNForZAS3[1]);
   }
   $("#NameofAV").val(requestdetails[0].NameOfAV);
+
+  var assgnuser = "select";
+  if (requestdetails[0].AssignedTo1Id)
+    assgnuser = requestdetails[0].AssignedTo1Id;
+
+          var Representative=false;
+          
+            for (var indexForRep = 0;indexForRep < requestdetails[0].RepresentativeId.length;indexForRep++) 
+            {
+              if (CrntUserID == requestdetails[0].RepresentativeId[indexForRep]) 
+              {
+                Representative = true;
+              }
+            } 
+
+          var projectav=false;
+
+          if(requestdetails[0].AVNameId)
+          {
+            if(requestdetails[0].AVNameId == CrntUserID)
+            projectav=true;
+          }
+
+
+  if (!flgHOD&&!flgSystemAdmin&&!(assgnuser == "select"&&(projectav||Representative))) 
+  {
+    //AlertErrorMessage("Access Denied");
+  }
+
   if (requestdetails[0].isKompOutput == true) {
     $("#chkKomp").trigger("click");
-    $("#outputnumber").val(requestdetails[0].KompOutputNumber);
-    $("#percent").val(requestdetails[0].kompPercent);
+    //$("#outputnumber").val(requestdetails[0].KompOutputNumber);
+    //$("#percent").val(requestdetails[0].kompPercent);
+    /*  Starts for kompoutput fields*/
+    var arrKompOutputNumber=[];
+    var arrkompPercent=[];
+    if(requestdetails[0].KompOutputNumber)
+    {
+      arrKompOutputNumber=requestdetails[0].KompOutputNumber.split(";")
+    }
+
+    if(requestdetails[0].kompPercent)
+    {
+      arrkompPercent=requestdetails[0].kompPercent.split(";")
+    }
+
+    var fieldlength=arrKompOutputNumber.length-1;
+    if(arrkompPercent.length>arrKompOutputNumber.length)
+    fieldlength=arrkompPercent.length;
+
+    for(var i=0;i<fieldlength;i++)
+    {
+      if(i!=0)
+      $('.clsaddkompoutput').trigger('click');
+
+      if(arrKompOutputNumber[i])
+      {
+          $(".clsindexforoutputnumber"+i+"").val(arrKompOutputNumber[i]);
+      }
+
+      if(arrkompPercent[i])
+      {
+        $(".clsindexforpercent"+i+"").val(arrkompPercent[i]);
+      }
+    }
+
+    /*  End for kompoutput fields*/
+
   }
+
+
+
 }

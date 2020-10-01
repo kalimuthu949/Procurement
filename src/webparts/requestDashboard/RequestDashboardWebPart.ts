@@ -40,6 +40,7 @@ SPComponentLoader.loadCss(
 
 declare var $;
 var flgSystemAdmin = false;
+var flgHOD=false;
 var LoggedUserEmail = "";
 var LoggedUserName = "";
 var CrntUserID = "";
@@ -60,6 +61,7 @@ var oTablesubsidy;
 var oTablelease;
 var oTableidpp;
 var Procurementusers = [];
+var adminusers=[];
 var sheetNames = [];
 /* start Html for status change in popup*/
 var htmlforstatuschange = `
@@ -360,7 +362,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
     $("body").addClass("body-hidden");
 
     getLoggedInUserDetails();
-
+    LoadsystemadminTeamMembers();
     /*LoadGoodsRequest();
     LoadServiceRequest();
     LoadSubsidyRequest();
@@ -2033,10 +2035,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
 
-      if (flgSystemAdmin)
+      if (flgSystemAdmin||flgHOD)
         $(".UserDropdownSERPopup" + indexofEdit + "").attr("disabled", false);
 
-      if (CrntUserID == AssignedTo||flgSystemAdmin)
+      if (CrntUserID == AssignedTo||flgSystemAdmin||flgHOD)
         $(".StatusDropdownSERPopup" + indexofEdit + "").attr("disabled", false);
       //alert($(".UserDropdownSER"+indexofEdit+" option:selected").val());
     });
@@ -2100,10 +2102,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
 
-      if (flgSystemAdmin)
+      if (flgSystemAdmin||flgHOD)
         $(".UserDropdownGDSPopup" + indexofEdit + "").attr("disabled", false);
 
-      if (CrntUserID == AssignedTo||flgSystemAdmin)
+      if (CrntUserID == AssignedTo||flgSystemAdmin||flgHOD)
         $(".StatusDropdownGDSPopup" + indexofEdit + "").attr("disabled", false);
     });
 
@@ -2165,10 +2167,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
 
-      if (flgSystemAdmin)
+      if (flgSystemAdmin||flgHOD)
         $(".UserDropdownSubPopup" + indexofEdit + "").attr("disabled", false);
 
-      if (CrntUserID == AssignedTo||flgSystemAdmin)
+      if (CrntUserID == AssignedTo||flgSystemAdmin||flgHOD)
         $(".StatusDropdownSubPopup" + indexofEdit + "").attr("disabled", false);
     });
 
@@ -2230,10 +2232,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
 
-      if (flgSystemAdmin)
+      if (flgSystemAdmin||flgHOD)
         $(".UserDropdownLeasePopup" + indexofEdit + "").attr("disabled", false);
 
-      if (CrntUserID == AssignedTo||flgSystemAdmin)
+      if (CrntUserID == AssignedTo||flgSystemAdmin||flgHOD)
         $(".StatusDropdownLeasePopup" + indexofEdit + "").attr(
           "disabled",
           false
@@ -2298,10 +2300,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
       $("#divforbtn").html(htmlbutton);
 
-      if (flgSystemAdmin)
+      if (flgSystemAdmin||flgHOD)
         $(".UserDropdownidppPopup" + indexofEdit + "").attr("disabled", false);
 
-      if (CrntUserID == AssignedTo||flgSystemAdmin)
+      if (CrntUserID == AssignedTo||flgSystemAdmin||flgHOD)
         $(".StatusDropdownidppPopup" + indexofEdit + "").attr(
           "disabled",
           false
@@ -2657,6 +2659,164 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       sendfollowup(IdppItems[indexofEdit]);
     });
 
+    /*Asking Permission functionality*/
+    $(document).on("click", ".gdsAskPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=GoodsRequest[indexofEdit].ID;
+      var data={
+        PermissionForEdit:true
+      };
+      updaterequest(itemid, data, "ProcurementGoods", false);
+      sendmailforPermission(GoodsRequest[indexofEdit]);
+      $(this).remove();
+    });
+    $(document).on("click", ".serviceAskPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=ServiceRequest[indexofEdit].ID;
+      var data={
+        PermissionForEdit:true
+      };
+      updaterequest(itemid, data, "ProcurementService", false);
+      sendmailforPermission(ServiceRequest[indexofEdit]);
+      $(this).remove();
+    });
+    $(document).on("click", ".leaseAskPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=LeaseAgreementItems[indexofEdit].ID;
+      var data={
+        PermissionForEdit:true
+      };
+      updaterequest(itemid, data, "LeaseAgreement", false);
+      sendmailforPermission(LeaseAgreementItems[indexofEdit]);
+      $(this).remove();
+    });
+    $(document).on("click", ".subsidyAskPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=LocalSubsidyItems[indexofEdit].ID;
+      var data={
+        PermissionForEdit:true
+      };
+      updaterequest(itemid, data, "LocalSubsidy", false);
+      sendmailforPermission(LocalSubsidyItems[indexofEdit]);
+      $(this).remove();
+    });
+    $(document).on("click", ".idppAskPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=IdppItems[indexofEdit].ID;
+      var data={
+        PermissionForEdit:true
+      };
+      updaterequest(itemid, data, "idpp", false);
+      sendmailforPermission(IdppItems[indexofEdit]);
+      $(this).remove();
+    });
+
+    /*grant persmission*/
+
+    $(document).on("click", ".gdsGrantPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=GoodsRequest[indexofEdit].ID;
+      var data={
+        GrantPermission:true
+      };
+      updaterequest(itemid, data, "ProcurementGoods", true);
+      sendmailforgrantPermission(GoodsRequest[indexofEdit]);
+      $(this).remove();
+    });
+    $(document).on("click", ".serviceGrantPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=ServiceRequest[indexofEdit].ID;
+      var data={
+        GrantPermission:true
+      };
+      updaterequest(itemid, data, "ProcurementService", true);
+      sendmailforgrantPermission(ServiceRequest[indexofEdit]);
+      $(this).remove();
+    });
+    $(document).on("click", ".leaseGrantPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=LeaseAgreementItems[indexofEdit].ID;
+      var data={
+        GrantPermission:true
+      };
+      updaterequest(itemid, data, "LeaseAgreement", true);
+      sendmailforgrantPermission(LeaseAgreementItems[indexofEdit]);
+      $(this).remove();
+    });
+    $(document).on("click", ".subsidyGrantPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=LocalSubsidyItems[indexofEdit].ID;
+      var data={
+        GrantPermission:true
+      };
+      updaterequest(itemid, data, "LocalSubsidy", true);
+      sendmailforgrantPermission(LocalSubsidyItems[indexofEdit]);
+      $(this).remove();
+    });
+    $(document).on("click", ".idppGrantPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=IdppItems[indexofEdit].ID;
+      var data={
+        GrantPermission:true
+      };
+      updaterequest(itemid, data, "idpp", true);
+      sendmailforgrantPermission(IdppItems[indexofEdit]);
+      $(this).remove();
+    });
+
+    /*revoke permission*/
+    $(document).on("click", ".gdsrevokePersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=GoodsRequest[indexofEdit].ID;
+      var data={
+        GrantPermission:false,
+        PermissionForEdit:false
+      };
+      updaterequest(itemid, data, "ProcurementGoods", true);
+      $(this).remove();
+    });
+    $(document).on("click", ".servicerevokePersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=ServiceRequest[indexofEdit].ID;
+      var data={
+        GrantPermission:false,
+        PermissionForEdit:false
+      };
+      updaterequest(itemid, data, "ProcurementService", true);
+      $(this).remove();
+    });
+    $(document).on("click", ".leaserevokePersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=LeaseAgreementItems[indexofEdit].ID;
+      var data={
+        GrantPermission:false,
+        PermissionForEdit:false
+      };
+      updaterequest(itemid, data, "LeaseAgreement", true);
+      $(this).remove();
+    });  
+    $(document).on("click", ".subsidyrevokePersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=LocalSubsidyItems[indexofEdit].ID;
+      var data={
+        GrantPermission:false,
+        PermissionForEdit:false
+      };
+      updaterequest(itemid, data, "LocalSubsidy", true);
+      $(this).remove();
+    });
+    $(document).on("click", ".idpprevokePersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=IdppItems[indexofEdit].ID;
+      var data={
+        GrantPermission:false,
+        PermissionForEdit:false
+      };
+      updaterequest(itemid, data, "idpp", true);
+      $(this).remove();
+    });
+    
+
     /*datatable search*/
     $("#drpStatusforgoods").change(function () {
       if ($("#drpStatusforgoods option:selected").val() == "Select") {
@@ -2717,7 +2877,6 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           .draw();
       }
     });
-
     /*Bind date field and notes field*/
     $(document).on("change", ".statuspopup", function () {
       $("#divfordatefield").html(htmlforstatuschange);
@@ -2762,7 +2921,7 @@ async function LoadGoodsRequest() {
   await sp.web.lists
     .getByTitle("ProcurementGoods")
     .items.select(
-      "ProjectName,ProjectNumber,ID,RequestType,AVName/EMail,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,AssignedTo1/EMail,RequestStatus/ID,RequestStatus/Title,Author/Title,Author/ID,Author/EMail,Created,Modified,KompOutputNumber,kompPercent,isKompOutput,Specifications,ShortDesc,RequestItem,JOD,EUR,DeliveryTime,WarrantyTime,FullAddress,ContactPersonName,PersonEmail,PersonMobile,ProsoftNumber,Agreement,GoodsCategory,StatusSummary"
+      "ProjectName,ProjectNumber,ID,RequestType,AVName/EMail,AVName/ID,Representative/ID,Specifications,RequestItem,PNForZAS,NameOfAV,AssignedTo1/Title,AssignedTo1/ID,AssignedTo1/EMail,RequestStatus/ID,RequestStatus/Title,Author/Title,Author/ID,Author/EMail,Created,Modified,KompOutputNumber,kompPercent,isKompOutput,Specifications,ShortDesc,RequestItem,JOD,EUR,DeliveryTime,WarrantyTime,FullAddress,ContactPersonName,PersonEmail,PersonMobile,ProsoftNumber,Agreement,GoodsCategory,StatusSummary,PermissionForEdit,GrantPermission,Representative/EMail"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -2774,10 +2933,21 @@ async function LoadGoodsRequest() {
       for (var index = 0; index < allItems.length; index++) 
       {
         var assgnuser = "select";
+        
         if (allItems[index].AssignedTo1)
           assgnuser = allItems[index].AssignedTo1.ID;
+
+          var Representative=false;
+          for (var indexForRep = 0;indexForRep < allItems[index].Representative.length;indexForRep++) 
+          {
+            if (CrntUserID == allItems[index].Representative[indexForRep].ID) 
+            {
+              Representative = true;
+            }
+          }
+
         
-        if (flgSystemAdmin ||allItems[index].AVName.ID == CrntUserID ||CrntUserID == assgnuser ||CrntUserID == allItems[index].Author.ID ) 
+        if (flgSystemAdmin||flgHOD ||Representative||allItems[index].AVName.ID == CrntUserID ||CrntUserID == assgnuser ||CrntUserID == allItems[index].Author.ID ) 
         {
           goodsHTML += "<tr>";
           goodsHTML += "<td>" + allItems[index].Modified + "</td>";
@@ -2810,18 +2980,37 @@ async function LoadGoodsRequest() {
             '<a href="#" req-id="' +
             allItems[index].ID +
             '" class="GdsdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></span></a>';
-          if (flgSystemAdmin || CrntUserID == assgnuser) 
+          if (flgSystemAdmin||flgHOD || CrntUserID == assgnuser) 
           {
             goodsHTML +='<a href="#" data-av="'+allItems[index].AVName.EMail+'" index-value='+index +' req-id="' +allItems[index].ID +'" class="GdsEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></span></a>';
 
-            if(flgSystemAdmin)
+          }
+          
+          if(flgSystemAdmin||flgHOD||((Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
             {
               goodsHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Goods"><span class="icon-action icon-admin-edit"></span></a>';
             }
 
-          }
+            /* starts logics for asking permission and revoking permission based on user request*/
+            if((Representative||allItems[index].AVName.ID == CrntUserID)&&!allItems[index].PermissionForEdit&&assgnuser != "select")
+            {
+              goodsHTML +='<a href="#" index-value='+index +' class="gdsAskPersmission"><span class="icon-action icon-permission"></span></a>';
+            }
 
-          if ((assgnuser != "select" && CrntUserID == allItems[index].Author.ID)||flgSystemAdmin)
+            if((Representative||allItems[index].AVName.ID == CrntUserID||(flgSystemAdmin||flgHOD))&&allItems[index].GrantPermission)
+            {
+              goodsHTML +='<a href="#" index-value='+index +' class="gdsrevokePersmission"><span class="icon-action icon-revoke"></span></a>';
+            }
+
+            if((flgSystemAdmin||flgHOD)&&allItems[index].PermissionForEdit&&!allItems[index].GrantPermission)
+            {
+              
+              goodsHTML +='<a href="#" index-value='+index +' class="gdsGrantPersmission"><span class="icon-action icon-grant-permission"></span></a>';
+            }
+
+            /* ends logics for asking permission and revoking permission based on user request*/
+
+          if (assgnuser != "select" && (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD))
             goodsHTML +=
               '<a href="#" req-id="' +
               allItems[index].ID +
@@ -2831,7 +3020,7 @@ async function LoadGoodsRequest() {
               index +
               ' class="Gdsfollowup"><span class="icon-action icon-mail"></span></a>';
 
-          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin)
+          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
             goodsHTML +=
               "<a href=" +
               siteURL +
@@ -2876,7 +3065,7 @@ async function LoadServiceRequest() {
   await sp.web.lists
     .getByTitle("ProcurementService")
     .items.select(
-      "ProjectName,ProjectNumber,ID,RequestType,Author/Title,Author/ID,Author/EMail,AVName/EMail,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus,StatusSummary,Agreement"
+      "ProjectName,ProjectNumber,ID,RequestType,Author/Title,Author/ID,Author/EMail,AVName/EMail,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus,StatusSummary,Agreement,PermissionForEdit,GrantPermission,Representative/EMail"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -2889,8 +3078,18 @@ async function LoadServiceRequest() {
         var assgnuser = "select";
         if (allItems[index].AssignedTo1)
           assgnuser = allItems[index].AssignedTo1.ID;
+
+          var Representative=false;
+          for (var indexForRep = 0;indexForRep < allItems[index].Representative.length;indexForRep++) 
+          {
+            if (CrntUserID == allItems[index].Representative[indexForRep].ID) 
+            {
+              Representative = true;
+            }
+          }
+
         if (
-          flgSystemAdmin ||
+          flgSystemAdmin||flgHOD ||Representative||
           allItems[index].AVName.ID == CrntUserID ||
           CrntUserID == assgnuser ||
           CrntUserID == allItems[index].Author.ID
@@ -2924,17 +3123,36 @@ async function LoadServiceRequest() {
             '<a href="#" req-id="' +
             allItems[index].ID +
             '" class="serdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
-          if (flgSystemAdmin || CrntUserID == assgnuser) 
+          if (flgSystemAdmin||flgHOD || CrntUserID == assgnuser) 
           {
             
             serviceHTML +='<a href="#" data-av="'+allItems[index].AVName.EMail+'" index-value=' +index +' req-id="' +allItems[index].ID +'" class="SerEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
-            
-            if(flgSystemAdmin)
+   
+          }
+
+
+          if(flgSystemAdmin||flgHOD||((Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
             {
               serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Service"><span class="icon-action icon-admin-edit"></span></a>';
-            }    
-          }
-          if ((assgnuser != "select" && CrntUserID == allItems[index].Author.ID)||flgSystemAdmin)
+            }
+            
+            if((Representative||allItems[index].AVName.ID == CrntUserID)&&!allItems[index].PermissionForEdit&&assgnuser != "select")
+            {
+              serviceHTML +='<a href="#" index-value='+index +' class="serviceAskPersmission"><span class="icon-action icon-permission"></span></a>';
+            }
+
+            if((Representative||allItems[index].AVName.ID == CrntUserID||(flgSystemAdmin||flgHOD))&&allItems[index].GrantPermission)
+            {
+              serviceHTML +='<a href="#" index-value='+index +' class="servicerevokePersmission"><span class="icon-action icon-revoke"></span></a>';
+            }
+
+            if((flgSystemAdmin||flgHOD)&&allItems[index].PermissionForEdit&&!allItems[index].GrantPermission)
+            {
+              
+              serviceHTML +='<a href="#" index-value='+index +' class="serviceGrantPersmission"><span class="icon-action icon-grant-permission"></span></a>';
+            }
+
+          if (assgnuser != "select" && (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD))
             serviceHTML +=
               '<a href="#" req-id="' +
               allItems[index].ID +
@@ -2944,7 +3162,7 @@ async function LoadServiceRequest() {
               index +
               ' class="servicefollowup"><span class="icon-action icon-mail"></span></a>';
 
-          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin)
+          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
             serviceHTML +=
               "<a href=" +
               siteURL +
@@ -2990,7 +3208,7 @@ async function LoadSubsidyRequest() {
   await sp.web.lists
     .getByTitle("LocalSubsidy")
     .items.select(
-      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,SubsidyCategory,isKompOutput,KompOutputNumber,kompPercent,JOD,EUR,ShortDesc,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,NameOfBeneficiary,DurationFrom,DurationTo,CoSoftNumber,PaymentStatus,CoSoftNumber,StatusSummary"
+      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,SubsidyCategory,isKompOutput,KompOutputNumber,kompPercent,JOD,EUR,ShortDesc,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,NameOfBeneficiary,DurationFrom,DurationTo,CoSoftNumber,PaymentStatus,CoSoftNumber,StatusSummary,PermissionForEdit,GrantPermission,Representative/EMail"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -3003,9 +3221,18 @@ async function LoadSubsidyRequest() {
         var assgnuser = "select";
         if (allItems[index].AssignedTo1)
           assgnuser = allItems[index].AssignedTo1.ID;
+
+          var Representative=false;
+          for (var indexForRep = 0;indexForRep < allItems[index].Representative.length;indexForRep++) 
+          {
+            if (CrntUserID == allItems[index].Representative[indexForRep].ID) 
+            {
+              Representative = true;
+            }
+          }
         
         if (
-          flgSystemAdmin ||
+          flgSystemAdmin||flgHOD ||Representative||
           allItems[index].AVName.ID == CrntUserID ||
           CrntUserID == assgnuser ||
           CrntUserID == allItems[index].Author.ID
@@ -3039,16 +3266,33 @@ async function LoadSubsidyRequest() {
             '<a href="#" req-id="' +
             allItems[index].ID +
             '" class="subdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
-          if (flgSystemAdmin || CrntUserID == assgnuser) 
+          if (flgSystemAdmin||flgHOD || CrntUserID == assgnuser) 
           {
             serviceHTML +='<a href="#" data-av="'+allItems[index].AVName.EMail+'" index-value=' +index +' req-id="' +allItems[index].ID +'" class="SubEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
 
-            if(flgSystemAdmin)
-            {
-              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Subsidy"><span class="icon-action icon-admin-edit"></span></a>';
-            }
           }
-          if ((assgnuser != "select" && CrntUserID == allItems[index].Author.ID)||flgSystemAdmin)
+          
+          if(flgSystemAdmin||flgHOD||((Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
+          {
+            serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Subsidy"><span class="icon-action icon-admin-edit"></span></a>';
+          }
+          if((Representative||allItems[index].AVName.ID == CrntUserID)&&!allItems[index].PermissionForEdit&&assgnuser != "select")
+            {
+              serviceHTML +='<a href="#" index-value='+index +' class="subsidyAskPersmission"><span class="icon-action icon-permission"></span></a>';
+            }
+
+            if((Representative||allItems[index].AVName.ID == CrntUserID||(flgSystemAdmin||flgHOD))&&allItems[index].GrantPermission)
+            {
+              serviceHTML +='<a href="#" index-value='+index +' class="subsidyrevokePersmission"><span class="icon-action icon-revoke"></span></a>';
+            }
+
+            if((flgSystemAdmin||flgHOD)&&allItems[index].PermissionForEdit&&!allItems[index].GrantPermission)
+            {
+              
+              serviceHTML +='<a href="#" index-value='+index +' class="subsidyGrantPersmission"><span class="icon-action icon-grant-permission"></span></a>';
+            }
+
+          if (assgnuser != "select" && (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD))
             serviceHTML +=
               '<a href="#" req-id="' +
               allItems[index].ID +
@@ -3058,7 +3302,7 @@ async function LoadSubsidyRequest() {
               index +
               ' class="subsidyfollowup"><span class="icon-action icon-mail"></span></a>';
 
-          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin)
+          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
             serviceHTML +=
               "<a href=" +
               siteURL +
@@ -3104,7 +3348,7 @@ async function LoadLeaseAgreement() {
   await sp.web.lists
     .getByTitle("LeaseAgreement")
     .items.select(
-      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,LessorPapers,LessorName,EmailAddress,MobileNumber,FullAddress,TelephoneNumber,DurationFrom,DurationTo,NameOfConsultingFirm,ContactPerson,CoSoftNumber,LeaseAgreementCategory,StatusSummary"
+      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,LessorPapers,LessorName,EmailAddress,MobileNumber,FullAddress,TelephoneNumber,DurationFrom,DurationTo,NameOfConsultingFirm,ContactPerson,CoSoftNumber,LeaseAgreementCategory,StatusSummary,PermissionForEdit,GrantPermission,Representative/EMail"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -3117,9 +3361,18 @@ async function LoadLeaseAgreement() {
         var assgnuser = "select";
         if (allItems[index].AssignedTo1)
           assgnuser = allItems[index].AssignedTo1.ID;
+
+          var Representative=false;
+          for (var indexForRep = 0;indexForRep < allItems[index].Representative.length;indexForRep++) 
+          {
+            if (CrntUserID == allItems[index].Representative[indexForRep].ID) 
+            {
+              Representative = true;
+            }
+          }
         
         if (
-          flgSystemAdmin ||
+          flgSystemAdmin||flgHOD ||Representative||
           allItems[index].AVName.ID == CrntUserID ||
           CrntUserID == assgnuser ||
           CrntUserID == allItems[index].Author.ID
@@ -3150,16 +3403,33 @@ async function LoadLeaseAgreement() {
             '<a href="#" req-id="' +
             allItems[index].ID +
             '" class="LeasedetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
-          if (flgSystemAdmin || CrntUserID == assgnuser) 
+          if (flgSystemAdmin||flgHOD || CrntUserID == assgnuser) 
           {
             serviceHTML +='<a href="#" data-av="'+allItems[index].AVName.EMail+'" index-value=' +index +' req-id="' +allItems[index].ID +'" class="LeaseEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
 
-            if(flgSystemAdmin)
-            {
-              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Lease"><span class="icon-action icon-admin-edit"></span></a>';
-            }
           }
-          if ((assgnuser != "select" && CrntUserID == allItems[index].Author.ID)||flgSystemAdmin)
+          
+          if(flgSystemAdmin||flgHOD||((Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
+          {
+            serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Lease"><span class="icon-action icon-admin-edit"></span></a>';
+          }
+          if((Representative||allItems[index].AVName.ID == CrntUserID)&&!allItems[index].PermissionForEdit&&assgnuser != "select")
+            {
+              serviceHTML +='<a href="#" index-value='+index +' class="leaseAskPersmission"><span class="icon-action icon-permission"></span></a>';
+            }
+
+            if((Representative||allItems[index].AVName.ID == CrntUserID||(flgSystemAdmin||flgHOD))&&allItems[index].GrantPermission)
+            {
+              serviceHTML +='<a href="#" index-value='+index +' class="leaserevokePersmission"><span class="icon-action icon-revoke"></span></a>';
+            }
+
+            if((flgSystemAdmin||flgHOD)&&allItems[index].PermissionForEdit&&!allItems[index].GrantPermission)
+            {
+              
+              serviceHTML +='<a href="#" index-value='+index +' class="leaseGrantPersmission"><span class="icon-action icon-grant-permission"></span></a>';
+            }
+
+          if (assgnuser != "select" && (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD))
             serviceHTML +=
               '<a href="#" req-id="' +
               allItems[index].ID +
@@ -3169,7 +3439,7 @@ async function LoadLeaseAgreement() {
               index +
               ' class="Leasefollowup"><span class="icon-action icon-mail"></span></a>';
 
-          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin)
+          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
             serviceHTML +=
               "<a href=" +
               siteURL +
@@ -3215,7 +3485,7 @@ async function Loadidpp() {
   await sp.web.lists
     .getByTitle("idpp")
     .items.select(
-      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,DurationFrom,DurationTo,StatusSummary"
+      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,DurationFrom,DurationTo,StatusSummary,PermissionForEdit,GrantPermission,Representative/EMail"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -3228,8 +3498,18 @@ async function Loadidpp() {
         var assgnuser = "select";
         if (allItems[index].AssignedTo1)
           assgnuser = allItems[index].AssignedTo1.ID;
+
+          var Representative=false;
+          for (var indexForRep = 0;indexForRep < allItems[index].Representative.length;indexForRep++) 
+          {
+            if (CrntUserID == allItems[index].Representative[indexForRep].ID) 
+            {
+              Representative = true;
+            }
+          }
+
         if (
-          flgSystemAdmin ||
+          flgSystemAdmin||flgHOD ||Representative||
           allItems[index].AVName.ID == CrntUserID ||
           CrntUserID == assgnuser ||
           CrntUserID == allItems[index].Author.ID
@@ -3263,17 +3543,33 @@ async function Loadidpp() {
             '<a href="#" req-id="' +
             allItems[index].ID +
             '" class="idppdetailView" data-toggle="modal" data-target="#myModal"><span class="icon-action icon-view"></a>';
-          if (flgSystemAdmin || CrntUserID == assgnuser) 
+          if (flgSystemAdmin||flgHOD || CrntUserID == assgnuser) 
           {
             serviceHTML +='<a href="#" data-av="'+allItems[index].AVName.EMail+'" index-value=' +index +' req-id="' +allItems[index].ID +'" class="idppEdit" data-toggle="modal" data-target="#myModalEdit"><span class="icon-action icon-edit"></a>';
-
-            if(flgSystemAdmin)
-            {
-              serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=idpp"><span class="icon-action icon-admin-edit"></span></a>';
-            }
-            
+ 
           }
-          if ((assgnuser != "select" && CrntUserID == allItems[index].Author.ID)||flgSystemAdmin)
+
+          if(flgSystemAdmin||flgHOD||((Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
+          {
+            serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=idpp"><span class="icon-action icon-admin-edit"></span></a>';
+          }
+          if((Representative||allItems[index].AVName.ID == CrntUserID)&&!allItems[index].PermissionForEdit&&assgnuser != "select")
+            {
+              serviceHTML +='<a href="#" index-value='+index +' class="idppAskPersmission"><span class="icon-action icon-permission"></span></a>';
+            }
+
+            if((Representative||allItems[index].AVName.ID == CrntUserID||(flgSystemAdmin||flgHOD))&&allItems[index].GrantPermission)
+            {
+              serviceHTML +='<a href="#" index-value='+index +' class="idpprevokePersmission"><span class="icon-action icon-revoke"></span></a>';
+            }
+
+            if((flgSystemAdmin||flgHOD)&&allItems[index].PermissionForEdit&&!allItems[index].GrantPermission)
+            {
+              
+              serviceHTML +='<a href="#" index-value='+index +' class="idppGrantPersmission"><span class="icon-action icon-grant-permission"></span></a>';
+            }
+
+          if (assgnuser != "select" && (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD))
             serviceHTML +=
               '<a href="#" req-id="' +
               allItems[index].ID +
@@ -3282,7 +3578,7 @@ async function Loadidpp() {
               " index-value=" +
               index +
               ' class="idppfollowup"><span class="icon-action icon-mail"></span></a>'; 
-          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin)
+          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
             serviceHTML +=
               "<a href=" +
               siteURL +
@@ -3310,6 +3606,9 @@ async function Loadidpp() {
       $(".icon-edit").attr('title','Edit Status');
       $(".icon-timeline").attr('title','Track');
       $(".icon-admin-edit").attr('title','Edit Request');
+      $(".icon-permission").attr('title','Ask Permission');
+      $(".icon-grant-permission").attr('title','Grant Permission');
+      $(".icon-revoke").attr('title',"Revoke Permission");
 
       $(".loading-modal").removeClass("active");
       $("body").removeClass("body-hidden");
@@ -3334,6 +3633,22 @@ async function Loadidpp() {
   $(".UserDropdown").attr("disabled", true);
 }
 
+async function LoadHODTeam() {
+  await sp.web.siteGroups
+    .getByName("HeadOfProcurement")
+    .users.filter("Email eq '" + LoggedUserEmail + "'")
+    .get()
+    .then(async (allItems: any[]) => {
+      if (allItems.length > 0) {
+        flgHOD = true;
+      }
+      LoadAdminTeam();
+    })
+    .catch(function (error) {
+      ErrorCallBack(error, "LoadHODTeam");
+    });
+}
+
 async function LoadAdminTeam() {
   await sp.web.siteGroups
     .getByName("SystemAdmin")
@@ -3344,7 +3659,7 @@ async function LoadAdminTeam() {
       {
         flgSystemAdmin = true;
       }
-      if (flgSystemAdmin)
+      if (flgSystemAdmin||flgHOD)
         {
           $(".btnHODExcel").show();
         }
@@ -3391,7 +3706,23 @@ async function LoadProcurementTeamMembers() {
       ErrorCallBack(error, "LoadProcurementTeamMembers");
     });
 }
-
+async function LoadsystemadminTeamMembers() {
+  await sp.web.siteGroups
+    .getByName("SystemAdmin")
+    .users.get()
+    .then((allItems: any[]) => {
+      if (allItems.length > 0) 
+      {
+        for(var i=0;i<allItems.length;i++)
+        {
+          adminusers.push(allItems[i].Email);
+        }
+      }
+    })
+    .catch(function (error) {
+      ErrorCallBack(error, "LoadProcurementTeamMembers");
+    });
+}
 async function LoadStatus() {
   await sp.web.lists
     .getByTitle("Status")
@@ -3471,7 +3802,7 @@ async function LoadProjects() {
       LoadLeaseAgreement();
       Loadidpp();
 
-      if (!flgRepUser&&!flgSystemAdmin) 
+      if (!flgRepUser&&!flgSystemAdmin&&!flgHOD) 
       {
         $("#btnGoods").prop("disabled", true);
         $("#btnService").prop("disabled", true);
@@ -3492,7 +3823,7 @@ async function getLoggedInUserDetails() {
       if (allItems) {
         CrntUserID = allItems.Id;
       }
-      LoadAdminTeam();
+      LoadHODTeam();
     })
     .catch(function (error) {
       ErrorCallBack(error, "getLoggedInUserDetails");
@@ -3525,9 +3856,10 @@ async function updaterequest(itemid, data, listname, close) {
     .getById(itemid)
     .update(data)
     .then(async (allItems: any) => {
-      if (close) {
+      
         $(".loading-modal").removeClass("active");
         $("body").removeClass("body-hidden");
+        if (close) {
         location.reload(true);
       }
     })
@@ -3585,6 +3917,41 @@ async function sendfollowup(arrmaildetails) {
   await sendemail(maildetails);
 }
 
+async function sendmailforPermission(arrmaildetails) 
+{
+
+  $(".loading-modal").addClass("active");
+  $("body").addClass("body-hidden");
+  var maildetails = {
+    To: adminusers,
+    CC: [],
+    Subject: "'"+arrmaildetails.RequestType+"' Request ["+arrmaildetails.ProjectName+"-"+arrmaildetails.ID+"]",
+    Body: "<p>Hi Admin<br><br>Need permission for Edit the request. <a href='"+siteURL + "/SitePages/RequestDashboard.aspx'>Please visit the dashboard to get more details</a>.<br><br>Thanks<br>"+arrmaildetails.AssignedTo1.Title+"</p>",
+  };
+  await sendemailforstatus(maildetails,"Permission Request has been sent");
+}
+
+async function sendmailforgrantPermission(arrmaildetails) 
+{
+
+  $(".loading-modal").addClass("active");
+  $("body").addClass("body-hidden");
+
+          var Representativeusers=[];
+          for (var indexForRep = 0;indexForRep < arrmaildetails.Representative.length;indexForRep++) 
+          {
+                Representativeusers.push(arrmaildetails.Representative[indexForRep].EMail);
+          }
+          var projectav=arrmaildetails.AVName.EMail;
+
+  var maildetails = {
+    To: Representativeusers,
+    CC: [projectav],
+    Subject: "'"+arrmaildetails.RequestType+"' Request ["+arrmaildetails.ProjectName+"-"+arrmaildetails.ID+"]",
+    Body: "<p>Hi <br><br>Permission for the request has been given. <a href='"+siteURL + "/SitePages/RequestDashboard.aspx'>Please visit the dashboard to get more details</a>.<br><br>Thanks<br>"+arrmaildetails.AssignedTo1.Title+"</p>",
+  };
+  await sendemailforstatus(maildetails,"");
+}
 
 async function sendmailforstatuschange(arrmaildetails,Newstatus) 
 {
@@ -3597,10 +3964,10 @@ async function sendmailforstatuschange(arrmaildetails,Newstatus)
     Subject: "'"+arrmaildetails.RequestType+"' Request ["+arrmaildetails.ProjectName+"-"+arrmaildetails.ID+"]",
     Body: "<p>Hi "+arrmaildetails.Author.Title+",<br><br>Your status has been updated to '"+Newstatus+"'.<a href='"+siteURL + "/SitePages/RequestDashboard.aspx'>Please visit the dashboard to get more details</a>.<br><br>Thanks<br>"+arrmaildetails.AssignedTo1.Title+"</p>",
   };
-  await sendemailforstatus(maildetails);
+  await sendemailforstatus(maildetails,"");
 }
 
-async function sendemailforstatus(maildetails) {
+async function sendemailforstatus(maildetails,message) {
   let emailProps: EmailProperties = maildetails;
 
   await sp.utility
@@ -3608,7 +3975,10 @@ async function sendemailforstatus(maildetails) {
     .then(async (_) => {
       $(".loading-modal").removeClass("active");
       $("body").removeClass("body-hidden");
-      //AlertMessage("Followup mail sent");
+
+      if(message)
+      AlertMessage(message);
+
     })
     .catch(function (error) {
       ErrorCallBack(error, "sendemail");
@@ -3647,6 +4017,23 @@ function AlertMessage(strMewssageEN) {
     .set("closable", false);
 }
 
+function AlertErrorMessage(strMewssageEN) {
+  alertify
+    .alert()
+    .setting({
+      label: "OK",
+
+      message: strMewssageEN,
+
+      onok: function () {
+        window.location.href = "#";
+      },
+    })
+    .show()
+    .setHeader("<em>Error</em> ")
+    .set("closable", false);
+}
+
 async function ErrorCallBack(error, methodname) {
   try {
     var errordata = {
@@ -3660,13 +4047,13 @@ async function ErrorCallBack(error, methodname) {
       .then(async function (data) {
         $(".loading-modal").removeClass("active");
         $("body").removeClass("body-hidden");
-        AlertMessage("Something went wrong.please contact system admin");
+        AlertErrorMessage("Something went wrong.please contact system admin");
       });
   } catch (e) {
     //alert(e.message);
     $(".loading-modal").removeClass("active");
     $("body").removeClass("body-hidden");
-    AlertMessage("Something went wrong.please contact system admin");
+    AlertErrorMessage("Something went wrong.please contact system admin");
   }
 }
 async function UploadFile(FolderUrl, files) {
@@ -3729,9 +4116,9 @@ function generateExcel() {
     loopArray.forEach(function (item, index) 
     {
       
-      if(item.AssignedTo1||flgSystemAdmin)
+      if(item.AssignedTo1||flgSystemAdmin||flgHOD)
       {
-        if(item.AssignedTo1.ID==CrntUserID||flgSystemAdmin)
+        if(item.AssignedTo1.ID==CrntUserID||flgSystemAdmin||flgHOD)
         {
           var AssignedToValue = "";
           var status = "";
