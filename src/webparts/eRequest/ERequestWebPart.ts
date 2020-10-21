@@ -269,15 +269,16 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 
   private readonly newgoodskompcheckbox = `
 
-  <div class="col-sm-4">
-  <div class="form-group">
-  <input type="text" id="percent" class="form-control clspercent" placeholder="Percentage(s)" value="">
-  </div>
-  </div>
-  
+
   <div class="col-sm-4">
   <div class="form-group">
   <input type="text" id="outputnumber" class="form-control clsoutputnumber" placeholder=" Output number(s)" value="">
+  </div>
+  </div>
+
+  <div class="col-sm-4">
+  <div class="form-group">
+  <input type="text" id="percent" class="form-control clspercent" placeholder="Percentage(s)" value="">
   </div>
   </div>
 
@@ -500,7 +501,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 <div class="row">
 <div class="col-sm-6">
 <div class="form-group">
-<label id="lbljustification">justification<span class="star"></span></label>
+<label id="lbljustification">Justification<span class="star"></span></label>
 <div class="input-group">
 <div class="custom-file">
   <input type="file" id="nonneutralFile" class="form-control custom-file-input">
@@ -575,6 +576,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 `;
 
   private readonly newcostHtml = `
+  <label>Attach Cost Breakdown:<span class="star">*</span></label>
 <div class="input-group">
 <div class="custom-file">
 <input type="file" id="costFile" class="custom-file-input">
@@ -707,7 +709,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 <div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Additional Information<span class="star">*</span></label>
+  <label id='lblAdditional'>Additional Information</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="AdditionalInformation" value="" class="custom-file-input">
@@ -903,6 +905,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     <div class="form-group">
     <label>Duration of the assignment (From Date)<span class="star">*</span></label>
      <input class="form-control form-control-datepicker" type="text" id="Fromdate">
+     <span class="star">Note:please refer to the corresponding SLA</span>
     </div>
     </div>
     <div class="col-sm-6">
@@ -942,7 +945,13 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 <div class="col-sm-6" id="divForMarketSheet" style="display:none">
 <div class="form-group">
   <label>Market Survey Sheet (showing unique characteristics) :<span class="star">*</span></label>
-  <input class="form-control" type="text" id="MarketSurvey" value="">
+  <!--<input class="form-control" type="text" id="MarketSurvey" value="">-->
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="MarketSurvey" value="" class="custom-file-input">
+  <label class="custom-file-label" id="MarketSurveyFileName" for="MarketSurvey">Choose File</label>
+  </div>
+  </div>
   </div>
 </div>
 
@@ -953,12 +962,13 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 <div class="col-sm-6">
  <div class="form-group">
   <label>Justification For Direct Award<span class="star">*</span></label>
-  <div class="input-group">
+  <textarea class="form-control" id="txtjustification"></textarea>
+  <!--<div class="input-group">
   <div class="custom-file">
   <input type="file" id="justification" value="" class="custom-file-input">
   <label class="custom-file-label" for="justification">Choose File</label>
   </div>
-  </div>
+  </div>-->
 </div>
 </div>
 
@@ -1146,8 +1156,14 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   </div>
   <div class="col-sm-6">
     <div class="form-group">
-      <label id="lblgridforassess">Grid for Assessing the Eligibility of Consulting Firms:<span class="star">*</span></label>
-      <input class="form-control" id="gridforassess">
+      <label id="lblgridforassess">Grid for Assessing the Eligibility of Consulting Firms:</label>
+      <!--<input class="form-control" id="gridforassess">-->
+      <div class="input-group">
+      <div class="custom-file">
+      <input type="file" id="gridforassess" value="" class="custom-file-input">
+      <label class="custom-file-label" for="gridforassess">Choose File</label>
+      </div>
+      </div>
   </div>
   </div>
 </div> 
@@ -1211,6 +1227,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 <div class="form-group">
 <label>Duration of the assignment (From Date)<span class="star">*</span></label>
  <input class="form-control form-control-datepicker" type="text" id="Fromdate">
+ <span class="star">Note:please refer to the corresponding SLA</span>
 </div>
 </div>
 <div class="col-sm-6">
@@ -1276,7 +1293,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     <div class="form-group">
       <label>Contract Number<span class="star">*</span></label>
       <!--<textarea class="form-control" id="CntrctNum"></textarea>-->
-      <input class="form-control" type="number" id="CntrctNum" maxlength="10" />
+      <input class="form-control" type="text" id="CntrctNum" maxlength="8" />
   </div>
   </div>
   <div class="col-sm-6">
@@ -1344,7 +1361,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
 
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Justification for Extension</label>
+     <label>Justification for Extension<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="justification" value="" class="custom-file-input">
@@ -1371,7 +1388,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   <div class="row">
   <div class="col-sm-6">
   <div class="form-group">
-   <label>Financial status of the done payments<span class="star">*</span></label>
+   <label id="lblfinance">Financial status of the done payments<span class="star">*</span></label>
    <div class="input-group">
    <div class="custom-file">
    <input type="file" id="Financialstatus" value="" class="custom-file-input">
@@ -1651,7 +1668,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
  <div class='row'>
  <div class="col-sm-6">
  <div class="form-group">
-  <label>Bank Details<span class="star">*</span></label>
+  <label id="lblBankdetails">Bank Details</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="BankDetails" value="" class="custom-file-input">
@@ -1660,13 +1677,13 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
   </div>
  </div>
  </div>
- <div class="col-sm-6">
+ <div class="col-sm-6" id="divForHQApproval" style="display:none">
   <div class="form-group">
    <label>Checklist for HQ Approval<span class="star">*</span></label>
    <div class="input-group">
    <div class="custom-file">
    <input type="file" id="HQApproval" value="" class="custom-file-input">
-   <label class="custom-file-label" for="HQApproval">Choose File</label>
+   <label class="custom-file-label" id="HQApprovalFilename" for="HQApproval">Choose File</label>
    </div>
    </div></div></div>
    </div>
@@ -1769,7 +1786,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     <div class="row">
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Financial status of the done payments:<span class="star">*</span></label>
+     <label id="lblfinance">Financial status of the done payments:<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="Financialstatus" value="" class="custom-file-input">
@@ -2199,7 +2216,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     <div class="row">
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Financial status of the done payments:<span class="star">*</span></label>
+     <label id="lblfinance">Financial status of the done payments:<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="Financialstatus" value="" class="custom-file-input">
@@ -2388,7 +2405,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
  
  <div class="col-sm-6">
  <div class="form-group">
-  <label>Competition Report <span class="star">*</span></label>
+  <label>Competition Report</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="CompetitionReport" value="" class="custom-file-input">
@@ -2545,8 +2562,10 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
         $(".page-heading").text("Local Subsidy Amendment");
       } else if (projectname == "Lease") {
         $(".page-heading").text("New Lease Agreement");
-        $("#Fromdate").datepicker({ autoclose: true });
-        $("#Todate").datepicker({ autoclose: true });
+        $("#Fromdate").datepicker({ autoclose: true,
+          daysOfWeekDisabled: [5, 6], });
+        $("#Todate").datepicker({ autoclose: true,
+          daysOfWeekDisabled: [5, 6], });
       } else if (projectname == "Leaseamendment") {
         $(".page-heading").text("Lease Agreement Amendment");
       }
@@ -2813,6 +2832,31 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     Common Events start.. 
     //Summary
     */
+
+   $(document).on("click", "#chkfinstatus",function()
+   {
+       if(!$(this).prop('checked'))
+       {
+           $("#lblfinance").html("Financial status of the done payments<span class='star'>*</span>");
+       }
+       else
+       {
+           $("#lblfinance").html("Financial status of the done payments");
+       }
+   });
+
+   $(document).on("click", "input[name='Agreement']",function(){
+
+    if($(this).val()=="Furniture Framework Agreement")
+    {
+        $("#lblAdditional").html("Additional Information<span class='star'>*</span>");
+    }
+    else
+    {
+        $("#lblAdditional").html("Additional Information");
+    }
+    });
+
     $(document).on("change", ".custom-file-input", function () {
       if (ValidateSingleInput($(this)[0])) {
         if ($(this).val()) {
@@ -2896,21 +2940,38 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
         ) {
           $("#divforJustification").show();
         } else if (
-          $(this).val() >= 8000 &&
+          $(this).val() > 8000 &&
           $("#choicesservices option:selected").val() == "Direct Award"
         ) {
           $("#divForMarketSheet").show();
           $("#MarketSurvey").val("");
+          
+          
         } else if (
-          $(this).val() < 8000 &&
+          $(this).val() <= 8000 &&
           $("#choicesservices option:selected").val() == "Direct Award"
         ) {
           $("#divForMarketSheet").hide();
           $("#MarketSurvey").val("");
+          $("#MarketSurveyFileName").text("Choose File");
         } else {
           $("#divforJustification").hide();
           $("#justification").val("");
           $("#justification").text("Choose File");
+        }
+      }else if ($("#DrpProjectName option:selected").val() == "Subsidy") 
+      {
+        if ($(this).val() >= 50000)
+        {
+          $("#divForHQApproval").show();
+          $("#lblBankdetails").html("Bank Details<span class='star'>*</span>"); 
+        }
+        else
+        {
+          $("#divForHQApproval").hide();
+          $("#HQApproval").val("");
+          $("#HQApprovalFilename").text("Choose File");
+          $("#lblBankdetails").html("Bank Details"); 
         }
       }
     });
@@ -2974,7 +3035,7 @@ export default class ERequestWebPart extends BaseClientSideWebPart<
     $(document).on("change", ".clsfirm", function () {
       if ($("#choicesservices option:selected").val() == "Public tender") {
         if (
-          $("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm"
+          $("input[name='ConsultingFirm']:checked").val() == "ConsultingFirm"
         ) {
           $("#lblgridforassess").html(
             "Grid for Assessing the Eligibility of Consulting Firms:<span class=star>*</span>"
@@ -3117,18 +3178,19 @@ function addkompoutput()
     komphtml+='<div class="row">';
     komphtml+='<div class="col-sm-6"><div class="form-group"></div></div>';
     komphtml+='<div class="clskomp col-sm-6"><div class="form-group">';
-    komphtml+='<div class="col-sm-4">';
-    komphtml+='<div class="form-group">';
-    komphtml+='<input type="text" id="percent" class="form-control clspercent" placeholder="Percentage(s)" value="">';
-    komphtml+='</div>';
-    komphtml+=' </div>';
     
     komphtml+='<div class="col-sm-4">';
     komphtml+='<div class="form-group">';
     komphtml+='<input type="text" id="outputnumber" class="form-control clsoutputnumber" placeholder=" Output number(s)" value="">';
     komphtml+='</div>';
     komphtml+=' </div>';
- 
+    
+    komphtml+='<div class="col-sm-4">';
+    komphtml+='<div class="form-group">';
+    komphtml+='<input type="text" id="percent" class="form-control clspercent" placeholder="Percentage(s)" value="">';
+    komphtml+='</div>';
+    komphtml+=' </div>';
+  
     komphtml+='<div class="col-sm-4">';
     komphtml+='<div class="form-group" style="margin-top:6px;">';
     //komphtml+='<a href="#" class="clsaddkompoutput"><span class="icon-action icon-add"></span></a>';
@@ -3623,6 +3685,7 @@ function createrequestframework() {
   }
 }
 async function InsertGoodsRequest(Servicedata, arrFiles) {
+  $("#btnSubmit").prop('disabled',true);
   if(filesotherAttachment.length>0)
   pdfdetails.push({ Title: "Other Attachments", Value: "Attached" });
 
@@ -3796,7 +3859,7 @@ function MandatoryValidation() {
     $("#chkMoreItem").prop("checked") &&
     $("#costFile")[0].files.length <= 0
   ) {
-    alertify.error("Please Select Attachment");
+    alertify.error("Please upload a file for Attach Cost Breakdown");
     isAllValueFilled = false;
   } else if (!$.trim($("#JOD").val())) {
     alertify.error("Please Enter JOD");
@@ -4114,14 +4177,17 @@ function CreateService() {
           isKompOutput: $("#chkKomp").prop("checked"),
           kompPercent: kompPercent,
           KompOutputNumber: KompOutputNumber,
-          RequestType :$("#Drpreqcategories option:selected").text()
+          RequestType :$("#Drpreqcategories option:selected").text(),
+          DirectAwardJustification:$("#txtjustification").val()
         };
 
         //arrFiles.push({'FolderName':'EstimatedCost','files':$('#Estimation')[0].files});
-        arrFiles.push({
-          FolderName: "Justification",
-          files: $("#justification")[0].files,
-        });
+        //arrFiles.push({FolderName: "Justification",files: $("#justification")[0].files, });
+
+        if($("#MarketSurvey")[0].files.length>0)
+        {
+          arrFiles.push({ FolderName: "Market Survey", files: $("#MarketSurvey")[0].files });
+        }
         arrFiles.push({ FolderName: "Terms", files: $("#terms")[0].files });
 
         if (filesotherAttachment.length > 0) {
@@ -4171,6 +4237,7 @@ function CreateService() {
         });
         pdfdetails.push({ Title: "JOD", Value: $("#JOD").val() });
         pdfdetails.push({ Title: "EUR", Value: $("#EUR").val() });
+        pdfdetails.push({ Title: "Justification For Direct Award", Value: $("#txtjustification").val() });
         $(".custom-file-input").each(function () {
           if ($(this)[0].files.length > 0) {
             var name = $(this)
@@ -4336,6 +4403,11 @@ function CreateService() {
           files: $("#Estimation")[0].files,
         });
         arrFiles.push({ FolderName: "Terms", files: $("#terms")[0].files });
+
+        if($("#gridforassess")[0].files.length>0)
+        {
+          arrFiles.push({ FolderName: "EligibilityGrid", files: $("#gridforassess")[0].files });
+        }
 
         if (filesotherAttachment.length > 0) {
           for (var i = 0; i < filesotherAttachment.length; i++) {
@@ -4678,10 +4750,15 @@ function CreateService() {
           FolderName: "SummaryActionPlan",
           files: $("#Actionplan")[0].files,
         });
-        arrFiles.push({
-          FolderName: "CompetitionReport",
-          files: $("#CompetitionReport")[0].files,
-        });
+
+        if($("#CompetitionReport")[0].files.length>0)
+        {
+          arrFiles.push({
+            FolderName: "CompetitionReport",
+            files: $("#CompetitionReport")[0].files,
+          });
+        }
+        
         arrFiles.push({ FolderName: "Budget", files: $("#Budget")[0].files });
 
         InsertService(Servicedata, arrFiles);
@@ -4870,7 +4947,7 @@ function CreateService() {
 }
 
 async function InsertService(Servicedata, arrFiles) {
-  
+  $("#btnSubmit").prop('disabled',true);
   if(filesotherAttachment.length>0)
   pdfdetails.push({ Title: "Other Attachments", Value: "Attached" });
 
@@ -5005,13 +5082,18 @@ function mandatoryfordirectaward() {
   } else if (!$.trim($("#EUR").val())) {
     alertify.error("Please Enter EUR");
     isAllValueFilled = false;
-  } else if ($("#EUR").val() > 8000 && !$("#MarketSurvey").val()) {
-    alertify.error("Please Enter Market Survey Sheet");
+  } else if ($("#EUR").val() > 8000 &&$("#MarketSurvey")[0].files.length <= 0) {
+    alertify.error("Please upload a file for Market Survey Sheet");
     isAllValueFilled = false;
-  } else if ($("#justification")[0].files.length <= 0) {
+  } /*else if ($("#justification")[0].files.length <= 0) {
     alertify.error("Please upload a file for Justification for direct award");
     isAllValueFilled = false;
-  } else if ($("#terms")[0].files.length <= 0) {
+  } */
+  else if (!$.trim($("#txtjustification").val())) {
+    alertify.error("Please Enter Justification for direct award");
+    isAllValueFilled = false;
+  } 
+  else if ($("#terms")[0].files.length <= 0) {
     alertify.error("Please upload a file for Terms of Reference");
     isAllValueFilled = false;
   } /*else if (filesotherAttachment.length <= 0) {
@@ -5089,11 +5171,11 @@ function mandatoryforpublictender() {
     alertify.error("Please Enter Short Description");
     isAllValueFilled = false;
   } else if (
-    !$.trim($("#gridforassess").val()) &&
+    $("#gridforassess")[0].files.length <= 0 &&
     $("input[id='ConsultingFirm']").prop("checked")
   ) {
     alertify.error(
-      "Please Enter Grid for Assessing the Eligibility of Consulting Firms"
+      "Please upload a file for Grid for Assessing the Eligibility of Consulting Firms"
     );
     isAllValueFilled = false;
   } else if ($("#Estimation")[0].files.length <= 0) {
@@ -5291,10 +5373,10 @@ function mandatoryforiDPP() {
   } else if ($("#Vergabedok")[0].files.length <= 0) {
     alertify.error("Please upload a file for Vergabedok");
     isAllValueFilled = false;
-  } else if ($("#CompetitionReport")[0].files.length <= 0) {
+  } /*else if ($("#CompetitionReport")[0].files.length <= 0) {
     alertify.error("Please upload a file for Competition Report");
     isAllValueFilled = false;
-  } else if (!$.trim($("#Fromdate").val())) {
+  } */else if (!$.trim($("#Fromdate").val())) {
     alertify.error("Please Enter Duration of the assignment (From Date)");
     isAllValueFilled = false;
   } else if (!$.trim($("#Todate").val())) {
@@ -5352,7 +5434,12 @@ function mandatoryforcontract() {
   } else if (!$.trim($("#MobileNumber").val())) {
     alertify.error("Please Enter Mobile Number");
     isAllValueFilled = false;
-  } else if ($("#terms")[0].files.length <= 0) {
+  }else if ($("#justification")[0].files.length <= 0) 
+  {
+    alertify.error("Please upload a file for Justification for Extension");
+    isAllValueFilled = false;
+  } 
+  else if ($("#terms")[0].files.length <= 0) {
     /*else if(!$.trim($("#justification").val()))
   {
     alertify.error('Please Enter Justification for Extension');
@@ -5537,6 +5624,9 @@ function CreateLeaseAgreement() {
               results: ProjectDetails[ProjectIndex].RepId,
             },
             KOMPOuput: $("#KompOptPT").val(),
+            isKompOutput: $("#chkKomp").prop("checked"),
+            kompPercent: kompPercent,
+            KompOutputNumber: KompOutputNumber,
             //ChoicesOfServices:$("#choicesservices option:selected").val(),
             ShortDesc: $("#shortDescription").val(),
             LessorPapers: $("input[name='LessorPapers']:checked").val(),
@@ -5634,6 +5724,9 @@ function CreateLeaseAgreement() {
               results: ProjectDetails[ProjectIndex].RepId,
             },
             KOMPOuput: $("#KompOptPT").val(),
+            isKompOutput: $("#chkKomp").prop("checked"),
+            kompPercent: kompPercent,
+            KompOutputNumber: KompOutputNumber,
             //ChoicesOfServices:$("#choicesservices option:selected").val(),
             LeaseAgreementCategory: $(
               "#Drpreqcategories option:selected"
@@ -5645,7 +5738,7 @@ function CreateLeaseAgreement() {
             EmailAddress: $("#Email").val(),
             MobileNumber: $("#MobileNumber").val(),
             FullAddress: $("#FullAddress").val(),
-            TelephoneNumber: $("#PhoneNumber").val(),
+            TelephoneNumber: $("#TeleNumber").val(),
             DurationFrom: FromDate,
             DurationTo: Todate,
           };
@@ -5879,7 +5972,7 @@ function mandatoryforleaseamendment() {
 }
 
 async function InsertLease(Servicedata, arrFiles) {
-  
+  $("#btnSubmit").prop('disabled',true);
   if(filesotherAttachment.length>0)
   pdfdetails.push({ Title: "Other Attachments", Value: "Attached" });
 
@@ -6017,10 +6110,12 @@ function CreateSubsidy() {
         FolderName: "RegCert",
         files: $("#Certificate")[0].files,
       });
+      if ($("#HQApproval")[0].files.length > 0) {
       arrFiles.push({
         FolderName: "HQApproval",
         files: $("#HQApproval")[0].files,
       });
+    }
       arrFiles.push({
         FolderName: "MinisterApproval",
         files: $("#MinisterApproval")[0].files,
@@ -6247,7 +6342,7 @@ function CreateSubsidyAmendemnt() {
 }
 
 async function InsertSubsidy(Servicedata, arrFiles) {
-  
+  $("#btnSubmit").prop('disabled',true);
   if(filesotherAttachment.length>0)
   pdfdetails.push({ Title: "Other Attachments", Value: "Attached" });
 
@@ -6343,8 +6438,8 @@ function mandatoryforsubsidy() {
     alertify.error("Please upload a file for Bank Details");
     isAllValueFilled = false;
   } else if (
-    $("#HQApproval").val() >= 50000 &&
-    $("#BankDetails")[0].files.length <= 0
+    $("#EUR").val() >= 50000 &&
+    $("#HQApproval")[0].files.length <= 0
   ) {
     alertify.error("Please upload a file for Checklist for HQ Approval");
     isAllValueFilled = false;
@@ -6495,10 +6590,15 @@ function createIdpp() {
         FolderName: "SummaryActionPlan",
         files: $("#Actionplan")[0].files,
       });
-      arrFiles.push({
-        FolderName: "CompetitionReport",
-        files: $("#CompetitionReport")[0].files,
-      });
+
+      if($("#CompetitionReport")[0].files.length>0)
+      {
+        arrFiles.push({
+          FolderName: "CompetitionReport",
+          files: $("#CompetitionReport")[0].files,
+        });
+      }
+      
       arrFiles.push({ FolderName: "Budget", files: $("#Budget")[0].files });
 
       pdfdetails = [];
@@ -6558,7 +6658,7 @@ function createIdpp() {
 }
 
 async function InsertIdpp(Servicedata, arrFiles) {
-  
+  $("#btnSubmit").prop('disabled',true);
   if(filesotherAttachment.length>0)
   pdfdetails.push({ Title: "Other Attachments", Value: "Attached" });
 
@@ -6889,7 +6989,7 @@ function ValidateSingleInput(oInput) {
 
       if (!blnValid) {
         alertify.error(
-          "Sorry allowed extensions are: " + _validFileExtensions.join(", ")
+          "Sorry allowed file extensions are: " + _validFileExtensions.join(", ")
         );
         oInput.value = "";
         return false;
