@@ -620,14 +620,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         GoodsRequest[index].ProjectNumber +
         "</p></div></div>";
-      if (GoodsRequest[index].isKompOutput == "Yes")
-        HTMLGoods +=
-          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          GoodsRequest[index].KompOutputNumber +
-          " - " +
-          GoodsRequest[index].kompPercent +
-          "</p></div></div>";
-
+      if (GoodsRequest[index].isKompOutput)
+      {
+        HTMLGoods +=getkompvalues(GoodsRequest[index]);
+      }
       //goods request popup
       if (GoodsRequest[index].GoodsCategory == "goods") {
         HTMLGoods +=
@@ -1019,13 +1015,14 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         ServiceRequest[index].PNForZAS +
         "</p></div></div>";
-      if (ServiceRequest[index].isKompOutput == "Yes")
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          ServiceRequest[index].KompOutputNumber +
-          " - " +
-          ServiceRequest[index].kompPercent +
-          "</p></div></div>";
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        ServiceRequest[index].ProjectNumber +
+        "</p></div></div>";
+        if (ServiceRequest[index].isKompOutput)
+        {
+          HTMLservice +=getkompvalues(ServiceRequest[index]);
+        }
 
       if (ServiceRequest[index].ChoicesOfServices == "Direct Award") {
         HTMLservice +=
@@ -1066,11 +1063,11 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           "</p></div></div>";
         HTMLservice +=
           '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          ServiceRequest[index].DurationFrom +
+          moment(ServiceRequest[index].DurationFrom ).format("MM/DD/YYYY")+
           "</p></div></div>";
         HTMLservice +=
           '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          ServiceRequest[index].DurationTo +
+          moment(ServiceRequest[index].DurationTo).format("MM/DD/YYYY") +
           "</p></div></div>";
         HTMLservice +=
           '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
@@ -1079,6 +1076,10 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         HTMLservice +=
           '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">EUR</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
           ServiceRequest[index].EUR +
+          "</p></div></div>";
+          HTMLservice +=
+          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Justification For Direct Award</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+          ServiceRequest[index].DirectAwardJustification +
           "</p></div></div>";
       }
       if (ServiceRequest[index].ChoicesOfServices == "Shortlisted tender") {
@@ -1239,12 +1240,13 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       let arrFiles = [];
       let otherFiles = [];
 
-      arrFiles.push({
-        Name: "Others",
-        FileName: "N/A",
-        FileURl: "N/A",
-        displayname: "Other Attachments",
-      });
+      if (LocalSubsidyItems[index].SubsidyCategory == "Subsidy"){
+        arrFiles.push({
+          Name: "Others",
+          FileName: "N/A",
+          FileURl: "N/A",
+          displayname: "Other Attachments",
+        });
       arrFiles.push({
         Name: "ProjectProposal",
         FileName: "N/A",
@@ -1294,6 +1296,9 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         displayname: "Checklist for HQ Approval",
       });
 
+    }
+    else
+    {
       arrFiles.push({
         Name: "MinisterApproval",
         FileName: "N/A",
@@ -1324,7 +1329,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         FileURl: "N/A",
         displayname: "Financial status of the done payments",
       });
-
+    }
       $.each(arrFiles, function (key, val) {
         for (var i = 0; i < ProcurementServiceFiles["Folders"].length; i++) {
           if (ProcurementServiceFiles["Folders"][i].Name == val.Name) {
@@ -1403,13 +1408,16 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         LocalSubsidyItems[index].PNForZAS +
         "</p></div></div>";
-      if (LocalSubsidyItems[index].isKompOutput == "Yes")
+
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          LocalSubsidyItems[index].KompOutputNumber +
-          " - " +
-          LocalSubsidyItems[index].kompPercent +
-          "</p></div></div>";
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        LocalSubsidyItems[index].ProjectNumber +
+        "</p></div></div>";
+        
+        if (LocalSubsidyItems[index].isKompOutput)
+        {
+          HTMLservice +=getkompvalues(LocalSubsidyItems[index]);
+        }
 
       if (LocalSubsidyItems[index].SubsidyCategory == "Subsidy") {
         HTMLservice +=
@@ -1438,15 +1446,15 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           "</p></div></div>";
         HTMLservice +=
           '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Mobile Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          LocalSubsidyItems[index].TelephoneNumber +
+          LocalSubsidyItems[index].MobileNumber +
           "</p></div></div>";
         HTMLservice +=
           '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">From Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          LocalSubsidyItems[index].DurationFrom +
+          moment(LocalSubsidyItems[index].DurationFrom).format("MM/DD/YYYY")+
           "</p></div></div>";
         HTMLservice +=
           '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">To Date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          LocalSubsidyItems[index].DurationTo +
+          moment(LocalSubsidyItems[index].DurationTo).format("MM/DD/YYYY") +
           "</p></div></div>";
         HTMLservice +=
           '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">JOD</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
@@ -1469,7 +1477,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         if (arrFiles[i].FileURl != "N/A") {
           HTMLservice +=
             '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">' +
-            arrFiles[i].Name +
+            arrFiles[i].displayname +
             ' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href=' +
             encodeURI(arrFiles[i].FileURl) +
             ' target="_blank"> ' +
@@ -1676,13 +1684,16 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         LeaseAgreementItems[index].PNForZAS +
         "</p></div></div>";
-      if (LeaseAgreementItems[index].isKompOutput == "Yes")
+
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          LeaseAgreementItems[index].KompOutputNumber +
-          " - " +
-          LeaseAgreementItems[index].kompPercent +
-          "</p></div></div>";
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        LeaseAgreementItems[index].ProjectNumber +
+        "</p></div></div>";
+     
+        if (LeaseAgreementItems[index].isKompOutput)
+        {
+          HTMLservice +=getkompvalues(LeaseAgreementItems[index]);
+        }
 
       if (LeaseAgreementItems[index].LeaseAgreementCategory == "Lease") {
         HTMLservice +=
@@ -1691,11 +1702,11 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
           "</p></div></div>";
         HTMLservice +=
           '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">From date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          LeaseAgreementItems[index].DurationFrom +
+           moment(LeaseAgreementItems[index].DurationFrom).format("MM/DD/YYYY") +
           "</p></div></div>";
         HTMLservice +=
           '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">To date</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          LeaseAgreementItems[index].DurationTo +
+          moment(LeaseAgreementItems[index].DurationTo).format("MM/DD/YYYY") +
           "</p></div></div>";
 
         if (
@@ -1931,13 +1942,17 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">PN for ZAS</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
         IdppItems[index].PNForZAS +
         "</p></div></div>";
-      if (LeaseAgreementItems[index].isKompOutput == "Yes")
+
         HTMLservice +=
-          '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">KompOutput</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
-          IdppItems[index].KompOutputNumber +
-          " - " +
-          IdppItems[index].kompPercent +
-          "</p></div></div>";
+        '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Project Number</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+        IdppItems[index].ProjectNumber +
+        "</p></div></div>";
+     
+        if (IdppItems[index].isKompOutput)
+        {
+          HTMLservice +=getkompvalues(IdppItems[index]);
+        }
+
 
       HTMLservice +=
         '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">Short Description</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
@@ -1956,7 +1971,7 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
         if (arrFiles[i].FileURl != "N/A") {
           HTMLservice +=
             '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">' +
-            arrFiles[i].Name +
+            arrFiles[i].displayname +
             ' </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult"><a href=' +
             encodeURI(arrFiles[i].FileURl) +
             ' target="_blank"> ' +
@@ -2764,6 +2779,64 @@ export default class RequestDashboardWebPart extends BaseClientSideWebPart<
       $(this).remove();
     });
 
+    /*Reject Permission*/
+    $(document).on("click", ".gdsRejectPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=GoodsRequest[indexofEdit].ID;
+      var data={
+        GrantPermission:false,
+        PermissionForEdit:false
+      };
+      updaterequest(itemid, data, "ProcurementGoods", true);
+      sendmailforRejectPermission(GoodsRequest[indexofEdit]);
+      $(this).remove();
+    });
+    $(document).on("click", ".serviceRejectPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=ServiceRequest[indexofEdit].ID;
+      var data={
+        GrantPermission:false,
+        PermissionForEdit:false
+      };
+      updaterequest(itemid, data, "ProcurementService", true);
+      sendmailforRejectPermission(ServiceRequest[indexofEdit]);
+      $(this).remove();
+    });
+    $(document).on("click", ".leaseRejectPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=LeaseAgreementItems[indexofEdit].ID;
+      var data={
+        GrantPermission:false,
+        PermissionForEdit:false
+      };
+      updaterequest(itemid, data, "LeaseAgreement", true);
+      sendmailforRejectPermission(LeaseAgreementItems[indexofEdit]);
+      $(this).remove();
+    });
+    $(document).on("click", ".subsidyRejectPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=LocalSubsidyItems[indexofEdit].ID;
+      var data={
+        GrantPermission:false,
+        PermissionForEdit:false
+      };
+      updaterequest(itemid, data, "LocalSubsidy", true);
+      sendmailforRejectPermission(LocalSubsidyItems[indexofEdit]);
+      $(this).remove();
+    });
+    
+    $(document).on("click", ".idppRejectPersmission", function () {
+      var indexofEdit = $(this).attr("index-value");
+      var itemid=IdppItems[indexofEdit].ID;
+      var data={
+        GrantPermission:false,
+        PermissionForEdit:false
+      };
+      updaterequest(itemid, data, "idpp", true);
+      sendmailforRejectPermission(IdppItems[indexofEdit]);
+      $(this).remove();
+    });
+
     /*revoke permission*/
     $(document).on("click", ".gdsrevokePersmission", function () {
       var indexofEdit = $(this).attr("index-value");
@@ -2986,7 +3059,7 @@ async function LoadGoodsRequest() {
 
           }
           
-          if(flgSystemAdmin||flgHOD||((Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
+          if(flgSystemAdmin||flgHOD||((allItems[index].Author.ID == CrntUserID||Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
             {
               goodsHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Goods"><span class="icon-action icon-admin-edit"></span></a>';
             }
@@ -3006,6 +3079,7 @@ async function LoadGoodsRequest() {
             {
               
               goodsHTML +='<a href="#" index-value='+index +' class="gdsGrantPersmission"><span class="icon-action icon-grant-permission"></span></a>';
+              goodsHTML +='<a href="#" index-value='+index +' class="gdsRejectPersmission"><span class="icon-action icon-delete"></span></a>';
             }
 
             /* ends logics for asking permission and revoking permission based on user request*/
@@ -3020,7 +3094,7 @@ async function LoadGoodsRequest() {
               index +
               ' class="Gdsfollowup"><span class="icon-action icon-mail"></span></a>';
 
-          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
+          if (Representative||CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
             goodsHTML +=
               "<a href=" +
               siteURL +
@@ -3065,7 +3139,7 @@ async function LoadServiceRequest() {
   await sp.web.lists
     .getByTitle("ProcurementService")
     .items.select(
-      "ProjectName,ProjectNumber,ID,RequestType,Author/Title,Author/ID,Author/EMail,AVName/EMail,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus,StatusSummary,Agreement,PermissionForEdit,GrantPermission,Representative/EMail"
+      "ProjectName,ProjectNumber,ID,RequestType,Author/Title,Author/ID,Author/EMail,AVName/EMail,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus,StatusSummary,Agreement,PermissionForEdit,GrantPermission,Representative/EMail,DirectAwardJustification"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -3131,7 +3205,7 @@ async function LoadServiceRequest() {
           }
 
 
-          if(flgSystemAdmin||flgHOD||((Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
+          if(flgSystemAdmin||flgHOD||((allItems[index].Author.ID == CrntUserID||Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
             {
               serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Service"><span class="icon-action icon-admin-edit"></span></a>';
             }
@@ -3162,7 +3236,7 @@ async function LoadServiceRequest() {
               index +
               ' class="servicefollowup"><span class="icon-action icon-mail"></span></a>';
 
-          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
+          if (Representative||CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
             serviceHTML +=
               "<a href=" +
               siteURL +
@@ -3272,7 +3346,7 @@ async function LoadSubsidyRequest() {
 
           }
           
-          if(flgSystemAdmin||flgHOD||((Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
+          if(flgSystemAdmin||flgHOD||((allItems[index].Author.ID == CrntUserID||Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
           {
             serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Subsidy"><span class="icon-action icon-admin-edit"></span></a>';
           }
@@ -3290,6 +3364,7 @@ async function LoadSubsidyRequest() {
             {
               
               serviceHTML +='<a href="#" index-value='+index +' class="subsidyGrantPersmission"><span class="icon-action icon-grant-permission"></span></a>';
+              serviceHTML +='<a href="#" index-value='+index +' class="subsidyRejectPersmission"><span class="icon-action icon-delete"></span></a>';
             }
 
           if (assgnuser != "select" && (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD))
@@ -3302,7 +3377,7 @@ async function LoadSubsidyRequest() {
               index +
               ' class="subsidyfollowup"><span class="icon-action icon-mail"></span></a>';
 
-          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
+          if (Representative||CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
             serviceHTML +=
               "<a href=" +
               siteURL +
@@ -3348,7 +3423,7 @@ async function LoadLeaseAgreement() {
   await sp.web.lists
     .getByTitle("LeaseAgreement")
     .items.select(
-      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,LessorPapers,LessorName,EmailAddress,MobileNumber,FullAddress,TelephoneNumber,DurationFrom,DurationTo,NameOfConsultingFirm,ContactPerson,CoSoftNumber,LeaseAgreementCategory,StatusSummary,PermissionForEdit,GrantPermission,Representative/EMail"
+      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,LessorPapers,LessorName,EmailAddress,MobileNumber,FullAddress,TelephoneNumber,DurationFrom,DurationTo,NameOfConsultingFirm,ContactPerson,CoSoftNumber,LeaseAgreementCategory,StatusSummary,PermissionForEdit,GrantPermission,Representative/EMail,KompOutputNumber,kompPercent,isKompOutput"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -3409,7 +3484,7 @@ async function LoadLeaseAgreement() {
 
           }
           
-          if(flgSystemAdmin||flgHOD||((Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
+          if(flgSystemAdmin||flgHOD||((allItems[index].Author.ID == CrntUserID||Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
           {
             serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=Lease"><span class="icon-action icon-admin-edit"></span></a>';
           }
@@ -3427,6 +3502,7 @@ async function LoadLeaseAgreement() {
             {
               
               serviceHTML +='<a href="#" index-value='+index +' class="leaseGrantPersmission"><span class="icon-action icon-grant-permission"></span></a>';
+              serviceHTML +='<a href="#" index-value='+index +' class="leaseRejectPersmission"><span class="icon-action icon-delete"></span></a>';
             }
 
           if (assgnuser != "select" && (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD))
@@ -3439,7 +3515,7 @@ async function LoadLeaseAgreement() {
               index +
               ' class="Leasefollowup"><span class="icon-action icon-mail"></span></a>';
 
-          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
+          if (Representative||CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
             serviceHTML +=
               "<a href=" +
               siteURL +
@@ -3485,7 +3561,7 @@ async function Loadidpp() {
   await sp.web.lists
     .getByTitle("idpp")
     .items.select(
-      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,DurationFrom,DurationTo,StatusSummary,PermissionForEdit,GrantPermission,Representative/EMail"
+      "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,Author/EMail,AVName/EMail,RequestType,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,AssignedTo1/EMail,RequestStatus/Title,RequestStatus/ID,Created,Modified,ShortDesc,DurationFrom,DurationTo,StatusSummary,PermissionForEdit,GrantPermission,Representative/EMail,KompOutputNumber,kompPercent,isKompOutput"
     )
     .orderBy("Modified", false)
     .expand("AssignedTo1,AVName,Representative,RequestStatus,Author")
@@ -3549,7 +3625,7 @@ async function Loadidpp() {
  
           }
 
-          if(flgSystemAdmin||flgHOD||((Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
+          if(flgSystemAdmin||flgHOD||((allItems[index].Author.ID == CrntUserID||Representative||allItems[index].AVName.ID == CrntUserID)&&assgnuser == "select")||((Representative||allItems[index].AVName.ID == CrntUserID)&&allItems[index].GrantPermission))
           {
             serviceHTML +='<a href="'+siteURL+'/SitePages/EditRequest.aspx?itemid='+allItems[index].ID+'&code=idpp"><span class="icon-action icon-admin-edit"></span></a>';
           }
@@ -3567,6 +3643,7 @@ async function Loadidpp() {
             {
               
               serviceHTML +='<a href="#" index-value='+index +' class="idppGrantPersmission"><span class="icon-action icon-grant-permission"></span></a>';
+              serviceHTML +='<a href="#" index-value='+index +' class="idppRejectPersmission"><span class="icon-action icon-delete"></span></a>';
             }
 
           if (assgnuser != "select" && (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD))
@@ -3578,7 +3655,7 @@ async function Loadidpp() {
               " index-value=" +
               index +
               ' class="idppfollowup"><span class="icon-action icon-mail"></span></a>'; 
-          if (CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
+          if (Representative||CrntUserID == allItems[index].Author.ID||flgSystemAdmin||flgHOD||CrntUserID ==assgnuser||allItems[index].AVName.ID == CrntUserID)
             serviceHTML +=
               "<a href=" +
               siteURL +
@@ -3609,6 +3686,7 @@ async function Loadidpp() {
       $(".icon-permission").attr('title','Ask Permission');
       $(".icon-grant-permission").attr('title','Grant Permission');
       $(".icon-revoke").attr('title',"Revoke Permission");
+      $(".icon-delete").attr('title',"Reject Permission");
 
       $(".loading-modal").removeClass("active");
       $("body").removeClass("body-hidden");
@@ -3953,6 +4031,28 @@ async function sendmailforgrantPermission(arrmaildetails)
   await sendemailforstatus(maildetails,"");
 }
 
+async function sendmailforRejectPermission(arrmaildetails) 
+{
+
+  $(".loading-modal").addClass("active");
+  $("body").addClass("body-hidden");
+
+          var Representativeusers=[];
+          for (var indexForRep = 0;indexForRep < arrmaildetails.Representative.length;indexForRep++) 
+          {
+                Representativeusers.push(arrmaildetails.Representative[indexForRep].EMail);
+          }
+          var projectav=arrmaildetails.AVName.EMail;
+
+  var maildetails = {
+    To: Representativeusers,
+    CC: [projectav],
+    Subject: "'"+arrmaildetails.RequestType+"' Request ["+arrmaildetails.ProjectName+"-"+arrmaildetails.ID+"]",
+    Body: "<p>Hi <br><br>Permission for the request has been Rejected. <a href='"+siteURL + "/SitePages/RequestDashboard.aspx'>Please visit the dashboard to get more details</a>.<br><br>Thanks<br>"+arrmaildetails.AssignedTo1.Title+"</p>",
+  };
+  await sendemailforstatus(maildetails,"");
+}
+
 async function sendmailforstatuschange(arrmaildetails,Newstatus) 
 {
   var ccUser=arrmaildetails.AssignedTo1.EMail;
@@ -3998,6 +4098,43 @@ async function sendemail(maildetails) {
     .catch(function (error) {
       ErrorCallBack(error, "sendemail");
     });
+}
+
+function getkompvalues(arrRequestitems)
+{
+  var HTML="";
+  var arrkomppercent=[];
+          var arrkompoutputnumber=[];
+
+              if(arrRequestitems.KompOutputNumber)
+              arrkompoutputnumber=arrRequestitems.KompOutputNumber.split(";");
+
+              if(arrRequestitems.kompPercent)
+              arrkomppercent=arrRequestitems.kompPercent.split(";");
+
+              for(var i=0;i<arrkompoutputnumber.length-1;i++)
+              {
+                  if(i==0)
+                  {
+                    HTML +=
+                    '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label">KOMP Output</h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+                    arrkompoutputnumber[i] +
+                    " - " +
+                    arrkomppercent[i] +
+                    "</p></div></div>";
+                  }
+                  else
+                  {
+                    HTML +=
+                    '<div class="row goods-details"><div class="col-sm-5"><h5 class="goods-label"> </h5></div><div class="col-sm-1 text-center">:</div><div class="col-sm-6"><p class="goodsresult">' +
+                    arrkompoutputnumber[i] +
+                    " - " +
+                    arrkomppercent[i] +
+                    "</p></div></div>";
+                  }
+              }
+
+              return HTML;
 }
 
 function AlertMessage(strMewssageEN) {

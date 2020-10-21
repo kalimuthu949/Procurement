@@ -273,16 +273,16 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 
   <div class="col-sm-4">
   <div class="form-group">
-  <input type="text" id="percent" class="form-control clspercent clsindexforpercent0" placeholder="Percentage(s)" value="">
+  <input type="text" id="outputnumber" class="form-control clsoutputnumber clsindexforoutputnumber0" placeholder=" Output number(s)" value="">
   </div>
   </div>
   
   <div class="col-sm-4">
   <div class="form-group">
-  <input type="text" id="outputnumber" class="form-control clsoutputnumber clsindexforoutputnumber0" placeholder=" Output number(s)" value="">
+  <input type="text" id="percent" class="form-control clspercent clsindexforpercent0" placeholder="Percentage(s)" value="">
   </div>
   </div>
-
+  
   <div class="col-sm-4">
   <div class="form-group" style="margin-top:7px;">
   <a href="#" class="clsaddkompoutput"><span class="icon-action icon-add-circle"></span></a>
@@ -501,7 +501,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 <div class="row">
 <div class="col-sm-6">
 <div class="form-group">
-<label id="lbljustification">justification<span class="star">*</span></label>
+<label id="lbljustification">Justification<span class="star">*</span></label>
 <div class="input-group">
 <div class="custom-file">
   <input type="file" id="nonneutralFile" class="form-control custom-file-input">
@@ -576,6 +576,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 `;
 
   private readonly newcostHtml = `
+  <label>Attach Cost Breakdown:<span class="star">*</span></label>
 <div class="input-group">
 <div class="custom-file">
 <input type="file" id="costFile" class="custom-file-input">
@@ -708,7 +709,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 <div class='row'>
 <div class="col-sm-6">
  <div class="form-group">
-  <label>Additional Information<span class="star">*</span></label>
+  <label id='lblAdditional'>Additional Information</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="AdditionalInformation" value="" class="custom-file-input">
@@ -904,6 +905,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     <div class="form-group">
     <label>Duration of the assignment (From Date)<span class="star">*</span></label>
      <input class="form-control form-control-datepicker" type="text" id="Fromdate">
+     <span class="star">Note:please refer to the corresponding SLA</span>
     </div>
     </div>
     <div class="col-sm-6">
@@ -940,10 +942,16 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
   </div>
 </div>
 
-<div class="col-sm-6" id="divForMarketSheet">
+<div class="col-sm-6" id="divForMarketSheet" style="display:none">
 <div class="form-group">
-  <label>Market Survey Sheet (showing unique characteristics) :<span class="star"></span></label>
-  <input class="form-control" type="text" id="MarketSurvey" value="">
+  <label>Market Survey Sheet (showing unique characteristics) :<span class="star">*</span></label>
+  <!--<input class="form-control" type="text" id="MarketSurvey" value="">-->
+  <div class="input-group">
+  <div class="custom-file">
+  <input type="file" id="MarketSurvey" value="" class="custom-file-input">
+  <label class="custom-file-label" id="MarketSurveyFileName" for="MarketSurvey">Choose File</label>
+  </div>
+  </div>
   </div>
 </div>
 </div>
@@ -952,12 +960,13 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 <div class="col-sm-6">
  <div class="form-group">
   <label>Justification For Direct Award<span class="star">*</span></label>
-  <div class="input-group">
+  <textarea class="form-control" id="txtjustification"></textarea>
+  <!--<div class="input-group">
   <div class="custom-file">
   <input type="file" id="justification" value="" class="custom-file-input">
   <label class="custom-file-label" for="justification">Choose File</label>
   </div>
-  </div>
+  </div>-->
 </div>
 </div>
 <div class="col-sm-6">
@@ -1145,8 +1154,14 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
   </div>
   <div class="col-sm-6">
   <div class="form-group">
-    <label id="lblgridforassess">Grid for Assessing the Eligibility of Consulting Firms:<span class="star">*</span></label>
-    <input class="form-control" id="gridforassess">
+    <label id="lblgridforassess">Grid for Assessing the Eligibility of Consulting Firms:</label>
+    <!--<input class="form-control" id="gridforassess">-->
+    <div class="input-group">
+    <div class="custom-file">
+    <input type="file" id="gridforassess" value="" class="custom-file-input">
+    <label class="custom-file-label" for="gridforassess">Choose File</label>
+    </div>
+    </div>
 </div>
 </div>
 </div> 
@@ -1210,6 +1225,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 <div class="form-group">
 <label>Duration of the assignment (From Date)<span class="star">*</span></label>
  <input class="form-control form-control-datepicker" type="text" id="Fromdate">
+ <span class="star">Note:please refer to the corresponding SLA</span>
 </div>
 </div>
 <div class="col-sm-6">
@@ -1275,7 +1291,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     <div class="form-group">
       <label>Contract Number<span class="star">*</span></label>
       <!--<textarea class="form-control" id="CntrctNum"></textarea>-->
-      <input class="form-control" type="number" id="CntrctNum" maxlength="10" />
+      <input class="form-control" type="text" id="CntrctNum" maxlength="8" />
   </div>
   </div>
   <div class="col-sm-6">
@@ -1343,7 +1359,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
 
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Justification for Extension</label>
+     <label>Justification for Extension<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="justification" value="" class="custom-file-input">
@@ -1370,7 +1386,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
   <div class="row">
   <div class="col-sm-6">
   <div class="form-group">
-   <label>Financial status of the done payments<span class="star">*</span></label>
+   <label id="lblfinance">Financial status of the done payments<span class="star">*</span></label>
    <div class="input-group">
    <div class="custom-file">
    <input type="file" id="Financialstatus" value="" class="custom-file-input">
@@ -1650,7 +1666,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
  <div class='row'>
  <div class="col-sm-6">
  <div class="form-group">
-  <label>Bank Details<span class="star">*</span></label>
+  <label id="lblBankdetails">Bank Details</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="BankDetails" value="" class="custom-file-input">
@@ -1659,13 +1675,13 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
   </div>
  </div>
  </div>
- <div class="col-sm-6">
+ <div class="col-sm-6" id="divForHQApproval" style="display:none">
   <div class="form-group">
    <label>Checklist for HQ Approval<span class="star">*</span></label>
    <div class="input-group">
    <div class="custom-file">
    <input type="file" id="HQApproval" value="" class="custom-file-input">
-   <label class="custom-file-label" for="HQApproval">Choose File</label>
+   <label class="custom-file-label" id="HQApprovalFilename" for="HQApproval">Choose File</label>
    </div>
    </div></div></div>
    </div>
@@ -1768,7 +1784,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     <div class="row">
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Financial status of the done payments:<span class="star">*</span></label>
+     <label id="lblfinance">Financial status of the done payments:<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="Financialstatus" value="" class="custom-file-input">
@@ -2198,7 +2214,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     <div class="row">
     <div class="col-sm-6">
     <div class="form-group">
-     <label>Financial status of the done payments:<span class="star">*</span></label>
+     <label id="lblfinance">Financial status of the done payments:<span class="star">*</span></label>
      <div class="input-group">
      <div class="custom-file">
      <input type="file" id="Financialstatus" value="" class="custom-file-input">
@@ -2387,7 +2403,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
  
  <div class="col-sm-6">
  <div class="form-group">
-  <label>Competition Report <span class="star">*</span></label>
+  <label>Competition Report</label>
   <div class="input-group">
   <div class="custom-file">
   <input type="file" id="CompetitionReport" value="" class="custom-file-input">
@@ -2543,8 +2559,10 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
         $(".page-heading").text("Local Subsidy Amendment");
       } else if (projectname == "Lease") {
         $(".page-heading").text("New Lease Agreement");
-        $("#Fromdate").datepicker({ autoclose: true });
-        $("#Todate").datepicker({ autoclose: true });
+        $("#Fromdate").datepicker({ autoclose: true,
+          daysOfWeekDisabled: [5, 6], });
+        $("#Todate").datepicker({ autoclose: true,
+          daysOfWeekDisabled: [5, 6], });
       } else if (projectname == "Leaseamendment") {
         $(".page-heading").text("Lease Agreement Amendment");
       }
@@ -2821,6 +2839,30 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     Common Events start.. 
     //Summary
     */
+   $(document).on("click", "#chkfinstatus",function()
+   {
+       if(!$(this).prop('checked'))
+       {
+           $("#lblfinance").html("Financial status of the done payments<span class='star'>*</span>");
+       }
+       else
+       {
+           $("#lblfinance").html("Financial status of the done payments");
+       }
+   });
+
+   $(document).on("click", "input[name='Agreement']",function(){
+
+    if($(this).val()=="Furniture Framework Agreement")
+    {
+        $("#lblAdditional").html("Additional Information<span class='star'>*</span>");
+    }
+    else
+    {
+        $("#lblAdditional").html("Additional Information");
+    }
+    });
+   
     $(document).on("change", ".custom-file-input", function () {
       if (ValidateSingleInput($(this)[0])) {
         if ($(this).val()) {
@@ -2900,16 +2942,40 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
           $("#chkPublictender").prop("checked", false);
           $("#news-span").hide();
         }
-      } else if ($("#DrpProjectName option:selected").val() == "Service") {
-        if (
-          $(this).val() >= 50000 &&
-          $("#choicesservices option:selected").val() == "Shortlisted tender"
-        ) {
+      } else if ($("#DrpProjectName option:selected").val() == "Service") 
+      {
+        if ($(this).val() >= 50000 &&$("#choicesservices option:selected").val() == "Shortlisted tender") 
+        {
           $("#divforJustification").show();
-        } else {
+        }
+        else if ($(this).val() > 8000 &&$("#choicesservices option:selected").val() == "Direct Award") 
+        {
+          $("#divForMarketSheet").show();
+          $("#MarketSurvey").val("");   
+        } else if ($(this).val() <= 8000 &&$("#choicesservices option:selected").val() == "Direct Award") 
+        {
+          $("#divForMarketSheet").hide();
+          $("#MarketSurvey").val("");
+          $("#MarketSurveyFileName").text("Choose File");
+        } 
+        else {
           $("#divforJustification").hide();
           $("#justification").val("");
           $("#justification").text("Choose File");
+        }
+      }else if ($("#DrpProjectName option:selected").val() == "Subsidy") 
+      {
+        if ($(this).val() >= 50000)
+        {
+          $("#divForHQApproval").show(); 
+          $("#lblBankdetails").html("Bank Details<span class='star'>*</span>");
+        }
+        else
+        {
+          $("#divForHQApproval").hide();
+          $("#HQApproval").val("");
+          $("#HQApprovalFilename").text("Choose File");
+          $("#lblBankdetails").html("Bank Details"); 
         }
       }
     });
@@ -2974,7 +3040,7 @@ export default class EditrequestWebPart extends BaseClientSideWebPart<
     {
       if($("#choicesservices option:selected").val()=="Public tender")
       {
-        if ($("input[name='ConsultingFirm']:checked").val() != "ConsultingFirm")
+        if ($("input[name='ConsultingFirm']:checked").val() == "ConsultingFirm")
         {
             $("#lblgridforassess").html("Grid for Assessing the Eligibility of Consulting Firms:<span class=star>*</span>");
         }
@@ -3085,15 +3151,16 @@ function addkompoutput()
     komphtml+='<div class="row">';
     komphtml+='<div class="col-sm-6"><div class="form-group"></div></div>';
     komphtml+='<div class="clskomp col-sm-6"><div class="form-group">';
-    komphtml+='<div class="col-sm-4">';
-    komphtml+='<div class="form-group">';
-    komphtml+='<input type="text" id="percent" class="form-control clspercent clsindexforpercent'+length+'" placeholder="Percentage(s)" value="">';
-    komphtml+='</div>';
-    komphtml+=' </div>';
-    
+   
     komphtml+='<div class="col-sm-4">';
     komphtml+='<div class="form-group">';
     komphtml+='<input type="text" id="outputnumber" class="form-control clsoutputnumber clsindexforoutputnumber'+length+'" placeholder=" Output number(s)" value="">';
+    komphtml+='</div>';
+    komphtml+=' </div>';
+
+    komphtml+='<div class="col-sm-4">';
+    komphtml+='<div class="form-group">';
+    komphtml+='<input type="text" id="percent" class="form-control clspercent clsindexforpercent'+length+'" placeholder="Percentage(s)" value="">';
     komphtml+='</div>';
     komphtml+=' </div>';
  
@@ -3643,14 +3710,14 @@ async function InsertGoodsRequest(Servicedata, arrFiles) {
 
       await deletefile(filesgoingtoonlydelete);
 
-      if (arrFiles.length <= 0) Showpopup();
-
       //await createpdf(pdfdetails, "GD-" + data.data.ID);
       await deletefile(arrFiles);
       await deletefile(arrAbtToDel);
       
       if ($("#Drpreqcategories option:selected").val() == "goods")
       await createContact("GD-" + itemid);
+
+      if (arrFiles.length <= 0) Showpopup();
 
       for (var i = 0; i < arrFiles.length; i++) {
         await createFolder(
@@ -3815,7 +3882,7 @@ function MandatoryValidation() {
     $("#costFile")[0].files.length <= 0 &&
     $("label[for='costFile']").text() == "Choose File"
   ) {
-    alertify.error("Please Select Attachment");
+    alertify.error("Please upload a file for Attach Cost Breakdown");
     isAllValueFilled = false;
   } else if (!$.trim($("#JOD").val())) {
     alertify.error("Please Enter JOD");
@@ -4125,13 +4192,14 @@ function CreateService() {
           DurationTo: Todate,
           JOD: $("#JOD").val(),
           EUR: $("#EUR").val(),
-          MarketSurvey:$("#MarketSurvey").val(),
+          //MarketSurvey:$("#MarketSurvey").val(),
           isKompOutput: $("#chkKomp").prop("checked"),
           kompPercent: kompPercent,
           RequestType :$("#Drpreqcategories option:selected").text(),
           KompOutputNumber: KompOutputNumber,
+          DirectAwardJustification:$("#txtjustification").val()
         };
-        if ($("#justification")[0].files.length > 0) {
+        /*if ($("#justification")[0].files.length > 0) {
           arrFiles.push({
             FolderName: "Justification",
             files: $("#justification")[0].files,
@@ -4139,7 +4207,19 @@ function CreateService() {
               "previousfileid"
             ),
           });
+        }*/
+
+        if($("#MarketSurvey")[0].files.length>0)
+        {
+          arrFiles.push({
+            FolderName: "Market Survey",
+            files: $("#MarketSurvey")[0].files,
+            previousfileid: $("label[for='MarketSurvey']").attr(
+              "previousfileid"
+            ),
+          });
         }
+
         if ($("#terms")[0].files.length > 0) {
           arrFiles.push({
             FolderName: "Terms",
@@ -4358,7 +4438,7 @@ function CreateService() {
           JOD: $("#JOD").val(),
           EUR: $("#EUR").val(),
           ShortDesc: $("#shortDescription").val(),
-          Assessgrid:$("#gridforassess").val(),
+          //Assessgrid:$("#gridforassess").val(),
           DurationFrom: FromDate,
           DurationTo: Todate,
         };
@@ -4372,6 +4452,15 @@ function CreateService() {
           files: $("#terms")[0].files,
           previousfileid: $("label[for='terms']").attr("previousfileid"),
         });
+
+        if($("#gridforassess")[0].files.length>0)
+        {
+          arrFiles.push({
+            FolderName: "EligibilityGrid",
+            files: $("#gridforassess")[0].files,
+            previousfileid: $("label[for='gridforassess']").attr("previousfileid"),
+          });
+        }
 
         if (filesotherAttachment.length > 0) {
           for (var i = 0; i < filesotherAttachment.length; i++) {
@@ -4721,10 +4810,14 @@ function CreateService() {
           FolderName: "SummaryActionPlan",
           files: $("#Actionplan")[0].files,
         });
-        arrFiles.push({
-          FolderName: "CompetitionReport",
-          files: $("#CompetitionReport")[0].files,
-        });
+        if($("#CompetitionReport")[0].files.length>0)
+        {
+          arrFiles.push({
+            FolderName: "CompetitionReport",
+            files: $("#CompetitionReport")[0].files,
+          });
+        }
+        
         arrFiles.push({ FolderName: "Budget", files: $("#Budget")[0].files });
 
         InsertService(Servicedata, arrFiles);
@@ -4958,12 +5051,11 @@ async function InsertService(Servicedata, arrFiles) {
       });
 
       await deletefile(filesgoingtoonlydelete);
-
-      if (arrFiles.length <= 0) Showpopup();
-
       //await createpdf(pdfdetails, "SR-" + data.data.ID);
       await deletefile(arrFiles);
       await deletefile(arrAbtToDel);
+
+      if (arrFiles.length <= 0) Showpopup();
 
       for (var i = 0; i < arrFiles.length; i++) {
         createFolder(arrFiles[i].FolderName, itemid, arrFiles[i].files);
@@ -5078,17 +5170,22 @@ function mandatoryfordirectaward() {
   } else if (!$.trim($("#EUR").val())) {
     alertify.error("Please Enter EUR");
     isAllValueFilled = false;
-  } else if ($("#EUR").val()>8000 && !$("#MarketSurvey").val()) {
-    alertify.error("Please Enter Market Survey Sheet");
+  } else if ($("#EUR").val()>8000 && $("#MarketSurvey")[0].files.length <= 0&&$("label[for='MarketSurvey']").text() == "Choose File") {
+    alertify.error("Please upload a file for Market Survey Sheet");
     isAllValueFilled = false;
   }
-  else if (
+  /*else if (
     $("#justification")[0].files.length <= 0 &&
     $("label[for='justification']").text() == "Choose File"
   ) {
     alertify.error("Please upload a file for Justification for direct award");
     isAllValueFilled = false;
-  } else if (
+  }*/
+  else if (!$.trim($("#txtjustification").val())) {
+    alertify.error("Please Enter Justification for direct award");
+    isAllValueFilled = false;
+  }
+  else if (
     $("#terms")[0].files.length <= 0 &&
     $("label[for='terms']").text() == "Choose File"
   ) {
@@ -5178,8 +5275,8 @@ function mandatoryforpublictender() {
   } else if (!$.trim($("#shortDescription").val())) {
     alertify.error("Please Enter Short Description");
     isAllValueFilled = false;
-  }else if (!$.trim($("#gridforassess").val())&&$("input[id='ConsultingFirm']").prop("checked")) {
-    alertify.error("Please Enter Grid for Assessing the Eligibility of Consulting Firms");
+  }else if ($("#gridforassess")[0].files.length <= 0 && $("input[id='ConsultingFirm']").prop("checked")&&$("label[for='gridforassess']").text() == "Choose File") {
+    alertify.error("Please upload a file for Grid for Assessing the Eligibility of Consulting Firms");
     isAllValueFilled = false;
   }
   else if (
@@ -5446,13 +5543,13 @@ function mandatoryforiDPP() {
   ) {
     alertify.error("Please upload a file for Vergabedok");
     isAllValueFilled = false;
-  } else if (
+  } /*else if (
     $("#CompetitionReport")[0].files.length <= 0 &&
     $("label[for='CompetitionReport']").text() == "Choose File"
   ) {
     alertify.error("Please upload a file for Competition Report");
     isAllValueFilled = false;
-  } else if (!$.trim($("#Fromdate").val())) {
+  }*/ else if (!$.trim($("#Fromdate").val())) {
     alertify.error("Please Enter Duration of the assignment (From Date)");
     isAllValueFilled = false;
   } else if (!$.trim($("#Todate").val())) {
@@ -5508,7 +5605,13 @@ function mandatoryforcontract() {
   } else if (!$.trim($("#MobileNumber").val())) {
     alertify.error("Please Enter Mobile Number");
     isAllValueFilled = false;
-  } else if (
+  }
+  else if ($("#justification")[0].files.length <= 0&&$("label[for='justification']").text() == "Choose File") 
+  {
+    alertify.error("Please upload a file for Justification for Extension");
+    isAllValueFilled = false;
+  }
+  else if (
     $("#terms")[0].files.length <= 0 &&
     $("label[for='terms']").text() == "Choose File"
   ) {
@@ -5704,6 +5807,9 @@ function CreateLeaseAgreement() {
               results: ProjectDetails[ProjectIndex].RepId,
             },
             KOMPOuput: $("#KompOptPT").val(),
+            isKompOutput: $("#chkKomp").prop("checked"),
+            kompPercent: kompPercent,
+            KompOutputNumber: KompOutputNumber,
             //ChoicesOfServices:$("#choicesservices option:selected").val(),
             ShortDesc: $("#shortDescription").val(),
             LessorPapers: $("input[name='LessorPapers']:checked").val(),
@@ -5815,6 +5921,9 @@ function CreateLeaseAgreement() {
               results: ProjectDetails[ProjectIndex].RepId,
             },
             KOMPOuput: $("#KompOptPT").val(),
+            isKompOutput: $("#chkKomp").prop("checked"),
+            kompPercent: kompPercent,
+            KompOutputNumber: KompOutputNumber,
             //ChoicesOfServices:$("#choicesservices option:selected").val(),
             LeaseAgreementCategory: $(
               "#Drpreqcategories option:selected"
@@ -5827,7 +5936,7 @@ function CreateLeaseAgreement() {
             EmailAddress: $("#Email").val(),
             MobileNumber: $("#MobileNumber").val(),
             FullAddress: $("#FullAddress").val(),
-            TelephoneNumber: $("#PhoneNumber").val(),
+            TelephoneNumber: $("#TeleNumber").val(),
             DurationFrom: FromDate,
             DurationTo: Todate,
           };
@@ -6116,11 +6225,11 @@ async function InsertLease(Servicedata, arrFiles) {
       });
 
       await deletefile(filesgoingtoonlydelete);
+      await deletefile(arrFiles);
+      await deletefile(arrAbtToDel);
 
       if (arrFiles.length <= 0) Showpopup();
 
-      await deletefile(arrFiles);
-      await deletefile(arrAbtToDel);
       for (var i = 0; i < arrFiles.length; i++) {
         createFolder(arrFiles[i].FolderName, "LA-" + itemid, arrFiles[i].files);
       }
@@ -6252,11 +6361,13 @@ function CreateSubsidy() {
         files: $("#Certificate")[0].files,
         previousfileid: $("label[for='Certificate']").attr("previousfileid"),
       });
+      if ($("#HQApproval")[0].files.length > 0) {
       arrFiles.push({
         FolderName: "HQApproval",
         files: $("#HQApproval")[0].files,
         previousfileid: $("label[for='HQApproval']").attr("previousfileid"),
       });
+    }
       arrFiles.push({
         FolderName: "MinisterApproval",
         files: $("#MinisterApproval")[0].files,
@@ -6527,11 +6638,10 @@ async function InsertSubsidy(Servicedata, arrFiles) {
       });
 
       await deletefile(filesgoingtoonlydelete);
-
-      if (arrFiles.length <= 0) Showpopup();
-
       await deletefile(arrFiles);
       await deletefile(arrAbtToDel);
+
+      if (arrFiles.length <= 0) Showpopup();
 
       for (var i = 0; i < arrFiles.length; i++) {
         createFolder(arrFiles[i].FolderName, "LS-" + itemid, arrFiles[i].files);
@@ -6627,9 +6737,9 @@ function mandatoryforsubsidy() {
     alertify.error("Please upload a file for Bank Details");
     isAllValueFilled = false;
   } else if (
-    $("#HQApproval").val() >= 50000 &&
-    $("#BankDetails")[0].files.length <= 0 &&
-    $("label[for='BankDetails']").text() == "Choose File"
+    $("#EUR").val() >= 50000 &&
+    $("#HQApproval")[0].files.length <= 0 &&
+    $("label[for='HQApproval']").text() == "Choose File"
   ) {
     alertify.error("Please upload a file for Checklist for HQ Approval");
     isAllValueFilled = false;
@@ -6808,13 +6918,16 @@ function createIdpp() {
         files: $("#Actionplan")[0].files,
         previousfileid: $("label[for='Actionplan']").attr("previousfileid"),
       });
-      arrFiles.push({
-        FolderName: "CompetitionReport",
-        files: $("#CompetitionReport")[0].files,
-        previousfileid: $("label[for='CompetitionReport']").attr(
-          "previousfileid"
-        ),
-      });
+      if($("#CompetitionReport")[0].files.length>0){
+        arrFiles.push({
+          FolderName: "CompetitionReport",
+          files: $("#CompetitionReport")[0].files,
+          previousfileid: $("label[for='CompetitionReport']").attr(
+            "previousfileid"
+          ),
+        });
+      }
+      
       arrFiles.push({
         FolderName: "Budget",
         files: $("#Budget")[0].files,
@@ -6905,11 +7018,10 @@ async function InsertIdpp(Servicedata, arrFiles) {
       });
 
       await deletefile(filesgoingtoonlydelete);
-
-      if (arrFiles.length <= 0) Showpopup();
-
       await deletefile(arrFiles);
       await deletefile(arrAbtToDel);
+
+      if (arrFiles.length <= 0) Showpopup();
 
       for (var i = 0; i < arrFiles.length; i++) {
         createFolder(
@@ -7234,7 +7346,7 @@ function ValidateSingleInput(oInput) {
 
       if (!blnValid) {
         alertify.error(
-          "Sorry allowed extensions are: " + _validFileExtensions.join(", ")
+          "Sorry allowed file extensions are: " + _validFileExtensions.join(", ")
         );
         oInput.value = "";
         return false;
@@ -7542,7 +7654,11 @@ async function FetchGoodsDetails() {
     if (goodsdetails[0].Agreement == "IT Framework Agreement")
       $("#ITFramework").prop("checked", true);
     else if (goodsdetails[0].Agreement == "Furniture Framework Agreement")
+    {
       $("#FurnitureFramework").prop("checked", true);
+      $("#lblAdditional").html('');
+      $("#lblAdditional").html("Additional Information<span class='star'>*</span>");
+    }
     else if (goodsdetails[0].Agreement == "Stationary Framework Agreement")
       $("#StationaryFramework").prop("checked", true);
   }
@@ -7558,7 +7674,7 @@ async function FetchGoodsDetails() {
 
 async function FetchserviceDetails() {
   var columns =
-    "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus,StatusSummary,Agreement,ServiceCategory,Explanation,Assessgrid";
+    "ProjectName,ProjectNumber,ID,Author/Title,Author/ID,AVName/ID,Representative/ID,PNForZAS,NameOfAV,AssignedTo1/ID,AssignedTo1/Title,RequestStatus/Title,RequestStatus/ID,Created,Modified,ConsultingFirm,ChoicesOfServices,NameOfConsultingFirm,AreaOfActivity,TelephoneNumber,ContactPerson,EmailAddress,MobileNumber,FullAddress,ShortDesc,DurationFrom,DurationTo,JOD,EUR,isKompOutput,KompOutputNumber,kompPercent,NameOfBeneficiary,CostExtension,ContractNumber,PaymentStatus,StatusSummary,Agreement,ServiceCategory,Explanation,Assessgrid,DirectAwardJustification";
   var lookup = "AssignedTo1,AVName,Representative,RequestStatus,Author,MarketSurvey";
   var ID = itemid;
   var listname = "ProcurementService";
@@ -7594,6 +7710,7 @@ async function FetchserviceDetails() {
     $("#AreaActivy").val(servicedetails[0].AreaOfActivity);
     $("#shortDescription").val(servicedetails[0].ShortDesc);
     $("#FullAddress").val(servicedetails[0].FullAddress);
+    $("#txtjustification").val(servicedetails[0].DirectAwardJustification);
 
     if (servicedetails[0].ConsultingFirm == "ConsultingFirm") {
       $("#CntctPrsn").val(servicedetails[0].ContactPerson);
@@ -7611,7 +7728,12 @@ async function FetchserviceDetails() {
     $("#Todate").val(moment(servicedetails[0].DurationTo).format("MM/DD/YYYY"));
     $("#JOD").val(servicedetails[0].JOD);
     $("#EUR").val(servicedetails[0].EUR);
-    $("#MarketSurvey").val(servicedetails[0].MarketSurvey);
+
+    if(servicedetails[0].EUR>8000)
+    {
+      $("#divForMarketSheet").show();
+    }
+    //$("#MarketSurvey").val(servicedetails[0].MarketSurvey);
   } else if (
     $("#choicesservices option:selected").val() == "Shortlisted tender"
   ) {
@@ -7633,7 +7755,12 @@ async function FetchserviceDetails() {
       moment(servicedetails[0].DurationFrom).format("MM/DD/YYYY")
     );
     $("#Todate").val(moment(servicedetails[0].DurationTo).format("MM/DD/YYYY"));
-    $("#gridforassess").val(servicedetails[0].Assessgrid),
+    //$("#gridforassess").val(servicedetails[0].Assessgrid),
+
+    if($("input[id='ConsultingFirm']").prop("checked"))
+    {
+      $("#lblgridforassess").html("Grid for Assessing the Eligibility of Consulting Firms:<span class=star>*</span>");
+    }
     $("#JOD").val(servicedetails[0].JOD);
     $("#EUR").val(servicedetails[0].EUR);
   } else if (
@@ -7647,6 +7774,8 @@ async function FetchserviceDetails() {
     $(".CstExtension").trigger("change");
     if (servicedetails[0].PaymentStatus) {
       $("#chkfinstatus").prop("checked", true);
+      $("#lblfinance").html('');
+      $("#lblfinance").html("Financial status of the done payments");
     }
     $("#NameOfFirm").val(servicedetails[0].NameOfConsultingFirm);
     $("#CntrctNum").val(servicedetails[0].ContractNumber);
@@ -7717,11 +7846,25 @@ async function FetchLocalSubsidy() {
     $("#Todate").val(moment(subsidydetails[0].DurationTo).format("MM/DD/YYYY"));
     $("#JOD").val(subsidydetails[0].JOD);
     $("#EUR").val(subsidydetails[0].EUR);
+
+    if(subsidydetails[0].EUR>=50000)
+    {
+      $("#divForHQApproval").show(); 
+    }
+    else
+    {
+      $("#lblBankdetails").html("Bank Details");
+    }
   } else if (subsidydetails[0].SubsidyCategory == "Subsidyamendment") {
     $("#cosoftnum").val(subsidydetails[0].CoSoftNumber);
 
     if (subsidydetails[0].PaymentStatus)
+    {
       $("#chkfinstatus").prop("checked", true);
+      $("#lblfinance").html('');
+      $("#lblfinance").html("Financial status of the done payments");
+    }
+      
   }
 
   $("#projectName").val(subsidydetails[0].ProjectName);
@@ -7773,7 +7916,12 @@ async function FetchLeaseAgreement() {
   } else if (Leasedetails[0].LeaseAgreementCategory == "Leaseamendment") {
     $("#cosoftnum").val(Leasedetails[0].CoSoftNumber);
 
-    if (Leasedetails[0].PaymentStatus) $("#chkfinstatus").prop("checked", true);
+    if (Leasedetails[0].PaymentStatus)
+    {
+      $("#chkfinstatus").prop("checked", true);
+      $("#lblfinance").html('');
+      $("#lblfinance").html("Financial status of the done payments");
+    } 
   }
   await getfiles("Lease", "LA-" + itemid);
   $("#projectName").val(Leasedetails[0].ProjectName);
@@ -7970,6 +8118,22 @@ function getfiles(category, gdsID) {
       FileURl: "N/A",
       displayname: "Justification",
       ID: "justification",
+      FileID: "N/A",
+    });
+    Files.push({
+      Name: "Market Survey",
+      FileName: "N/A",
+      FileURl: "N/A",
+      displayname: "Market Survey",
+      ID: "MarketSurvey",
+      FileID: "N/A",
+    });
+    Files.push({
+      Name: "EligibilityGrid",
+      FileName: "N/A",
+      FileURl: "N/A",
+      displayname: "EligibilityGrid",
+      ID: "gridforassess",
       FileID: "N/A",
     });
     Files.push({
@@ -8452,9 +8616,9 @@ async function BindCommonvalues(requestdetails)
   }
   if (requestdetails[0].PNForZAS) {
     var PNForZAS = requestdetails[0].PNForZAS;
-    var PNForZAS1 = PrjctNum.split("-");
-    var PNForZAS2 = PrjctNum1[0].split(".");
-    var PNForZAS3 = PrjctNum1[1].split(".");
+    var PNForZAS1 = PNForZAS.split("-");
+    var PNForZAS2 = PNForZAS1[0].split(".");
+    var PNForZAS3 = PNForZAS1[1].split(".");
     $("#txtpnforzas1").val(PNForZAS2[0]);
     $("#txtpnforzas2").val(PNForZAS2[1]);
     $("#txtpnforzas3").val(PNForZAS2[2]);

@@ -252,6 +252,8 @@ div.dataTables_length {
   text-align: center;
   box-sizing: border-box;
   margin-top: 5px;
+  font-weight: bold;
+  margin-left: 5px;
 }
 .cross-pos {
   position: absolute;
@@ -394,9 +396,10 @@ div.dataTables_length {
 }
 .clsRemove,
 .clsothersRemove {
-  color: #ff6347;
+  /*color: #ff6347;*/
+  color: tomato;
   display: inline-block;
-  font-weight: 400;
+  font-weight: 700;
   font-size: 14px;
   vertical-align: middle;
 }
@@ -620,6 +623,22 @@ td:last-child {
 div#Goods_filter, #Service_filter, #Subsidy_filter, #Lease_filter, #idpp_filter {
   top: -44px !important;
 }
+.statuspopup {
+  width: 350px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 /* Fixes Maasi*/
 /* ! workbench size Dont Forget to comment after works done */
 #workbenchPageContent {
