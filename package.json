@@ -32,7 +32,7 @@
     "datatables-buttons": "^1.0.3",
     "exceljs": "^4.1.1",
     "file-saver": "^2.0.2",
-    "html2pdf.js": "^0.9.0",
+    "html2pdf.js": "^0.14.0",
     "jspdf-html2canvas": "^1.2.3",
     "moment": "^2.24.0",
     "sp-pnp-js": "^3.0.10"
